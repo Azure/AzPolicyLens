@@ -55,8 +55,18 @@ Below is the sample content of this configuration file:
           "gitUserName": "AzPolicyLens Pipeline",
           "gitUserEmail": "policyDoc@contoso.com",
           "subscriptionIds": [
-            "46aa6fb9-01f8-4acc-b67c-ee355f6b6fa0"
+            "636c9e85-dfd2-4eda-b65d-436aed59345b"
           ]
+        },
+        "platform": {
+          "title": "PLATFORM DEV POLICY",
+          "gitRepository": "https://dev.azure.com/contoso/Policy.Documentation/_git/platform-dev-doc",
+          "gitBranch": "main",
+          "pageStyle": "detailed",
+          "gitRepoPath": "docs/policy-documentation-platform",
+          "gitUserName": "AzPolicyLens Pipeline",
+          "gitUserEmail": "policyDoc@contoso.com",
+          "childManagementGroupId": "CONTOSO-DEV-Platform"
         }
       }
     },
@@ -81,9 +91,19 @@ Below is the sample content of this configuration file:
           "gitUserName": "AzPolicyLens Pipeline",
           "gitUserEmail": "policyDoc@contoso.com",
           "subscriptionIds": [
-            "681512a3-2969-4449-b1b0-5b8dcad20059",
-            "61e03022-b49e-440e-a906-2d0224755165"
+            "61b84c68-1e41-419a-a339-53cedc4dcb8e",
+            "3dafb756-e2a1-4bc0-a67a-ac6aba34de72"
           ]
+        },
+        "platform": {
+          "title": "PLATFORM PROD POLICY",
+          "gitRepository": "https://dev.azure.com/contoso/Policy.Documentation/_git/platform-prod-doc",
+          "gitBranch": "main",
+          "pageStyle": "detailed",
+          "gitRepoPath": "docs/policy-documentation-platform",
+          "gitUserName": "AzPolicyLens Pipeline",
+          "gitUserEmail": "policyDoc@contoso.com",
+          "childManagementGroupId": "CONTOSO-Platform"
         }
       }
     }
@@ -103,8 +123,8 @@ Under each environment, each property under `wiki` represents a wiki instance. f
 - `gitRepoPath`: the path within the git repository where the wiki content is stored. This must be aligned with how the code wiki is configured in your Azure DevOps project.
 - `gitUserName`: the git username to use when committing changes to the git repository. Note: This is not the username for authentication, but just the name that will be displayed in the commit history for the commits made by the pipeline. The Azure DevOps pipeline does not use any ADO users for pushing changes to the git repository. details can be found in the [Azure DevOps Wiki Setup Guide](ado-wiki-setup.md).
 - `gitUserEmail`: the git email address to use when committing changes to the git repository.
-- `subscriptionIds`: an array of subscription IDs that the wiki is associated with. This is typically used for 'basic' page style wikis.
-
+- `subscriptionIds`: optional. An array of subscription IDs that the wiki is associated with. This is typically used for 'basic' page style wikis. This setting cannot be used together with `childManagementGroupId`.
+- `childManagementGroupId`: optional. The child management group ID that the wiki is associated with. This is used when you want to generate wiki content for policies that are assigned at the management group level and you want to scope down the wiki content to only include the policies that are assigned at a specific child management group. This is can be used in both 'detailed' and 'basic' page style wikis. This setting cannot be used together with `subscriptionIds`.
 
 ### `github-config.jsonc`
 
@@ -112,6 +132,7 @@ This file defines the configurations for the GitHub action workflow that generat
 
 Below is the sample content of this configuration file:
 
+```jsonc
 {
   "environment": {
     "dev": {
@@ -135,6 +156,15 @@ Below is the sample content of this configuration file:
           "subscriptionIds": [
             "46aa6fb9-01f8-4acc-b67c-ee355f6b6fa0"
           ]
+        },
+        "platform": {
+          "title": "PLATFORM DEV POLICY",
+          "gitRepository": "https://github.com/contoso/azure.policy.doc.platform.dev.wiki.git",
+          "gitBranch": "master",
+          "pageStyle": "detailed",
+          "gitUserName": "AzPolicyLens Pipeline",
+          "gitUserEmail": "policyDoc@contoso.com",
+          "childManagementGroupId": "CONTOSO-DEV-Platform"
         }
       }
     },
@@ -145,7 +175,7 @@ Below is the sample content of this configuration file:
           "title": "CONTOSO PROD POLICY",
           "gitRepository": "https://github.com/contoso/azure.policy.doc.eng.prod.wiki.git",
           "gitBranch": "master",
-          "pageStyle": "detailed"
+          "pageStyle": "detailed",
           "gitUserName": "AzPolicyLens Pipeline",
           "gitUserEmail": "policyDoc@contoso.com",
         },
@@ -160,12 +190,21 @@ Below is the sample content of this configuration file:
             "681512a3-2969-4449-b1b0-5b8dcad20059",
             "61e03022-b49e-440e-a906-2d0224755165"
           ]
+        },
+        "platform": {
+          "title": "PLATFORM PROD POLICY",
+          "gitRepository": "https://github.com/contoso/azure.policy.doc.platform.prod.wiki.git",
+          "gitBranch": "master",
+          "pageStyle": "detailed",
+          "gitUserName": "AzPolicyLens Pipeline",
+          "gitUserEmail": "policyDoc@contoso.com",
+          "childManagementGroupId": "CONTOSO-Platform"
         }
       }
     }
   }
 }
-
+```
 
 The top level property `environment` defines the environments that you have for hosting the policy wikis. This maps to the environment specific data discovery and wiki generation stages of the GitHub Actions workflow. You can have multiple environments such as `dev`, `prod`, `pre-prod` etc. under the `environment` property. the environment specific workflow stages will get the configuration for the corresponding environment from this configuration file.
 
@@ -177,4 +216,5 @@ Under each environment, each property under `wiki` represents a wiki instance. f
 - `pageStyle`: the page style for the generated wiki, which can be either `detailed` or `basic`. Generally speaking, the `detailed` page style is designed for the cloud platform team, cloud architect and security operations teams on the enterprise level. Whereas the 'basic' page style is normally limited to a subset of subscriptions and is designed for application teams.
 - `gitUserName`: the git username to use when committing changes to the git repository. Note: This is not the username for authentication, but just the name that will be displayed in the commit history for the commits made by the workflow. The GitHub Actions workflow uses a pre-defined fine grained personal access token (PAT) for pushing changes to the git repository. details can be found in the [GitHub Wiki Setup Guide](github-wiki-setup.md).
 - `gitUserEmail`: the git email address to use when committing changes to the git repository.
-- `subscriptionIds`: an array of subscription IDs that the wiki is associated with. This is typically used for 'basic' page style wikis.
+- `subscriptionIds`: optional. An array of subscription IDs that the wiki is associated with. This is typically used for 'basic' page style wikis. This setting cannot be used together with `childManagementGroupId`.
+- `childManagementGroupId`: optional. The child management group ID that the wiki is associated with. This is used when you want to generate wiki content for policies that are assigned at the management group level and you want to scope down the wiki content to only include the policies that are assigned at a specific child management group. This is can be used in both 'detailed' and 'basic' page style wikis. This setting cannot be used together with `subscriptionIds`.
