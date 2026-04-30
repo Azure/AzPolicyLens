@@ -1,5 +1,7 @@
 # Documentation and Instructions
 
+![logo](./images/logo.png)
+
 ## Supported Platforms
 
 The following DevOps / CICD platforms are supported:

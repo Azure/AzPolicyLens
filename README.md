@@ -1,5 +1,7 @@
 # Automated Azure Policy Documentation
 
+![banner](./images/banner.png)
+
 ## Introduction
 
 Azure Policy can feel overwhelming due to its complexity and the sheer volume of policies that need to be managed. Organizations often struggle with:
