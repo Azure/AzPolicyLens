@@ -1,0 +1,25 @@
+name: 'Initiation'
+description: 'Initiating GitHub Action'
+
+inputs:
+  variablesPath:
+    description: 'The path to the YAML file that contains the key value pairs for environment variables'
+    required: true
+runs:
+  using: 'composite'
+  steps:
+    - name: List Environment Variables
+      shell: pwsh # PowerShell Core
+      run: |
+        . ./scripts/helper/helper-functions.ps1
+        Write-Output "Current Date Time: $([DateTime]::UtcNow.ToString('u')) UTC"
+        Write-Output "Pipeline Type: $(getPipelineType)"
+        Write-Output "Environment Variables:"
+        Write-Output "----------------------------------------"
+        Get-ChildItem Env:
+        Write-Output "----------------------------------------"
+        Write-Output "Git Local Configuration:"
+        Write-Output "----------------------------------------"
+        git config --list
+        Write-Output "----------------------------------------"
+        Write-Output '::endgroup::'

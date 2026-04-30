@@ -1,0 +1,13 @@
+{
+  "$schema": "../security-control.schema.json",
+  "ControlID": "ISO27001-2022_A.8.24",
+  "Category": "Technological Controls",
+  "Name": "Use of cryptography",
+  "Description": "Rules for the effective use of cryptography, including cryptographic key management, shall be defined and implemented.",
+  "Publisher": "ISO/IEC",
+  "Framework": "ISO 27001:2022",
+  "AdditionalInfo": {
+    "Edition": "3",
+    "PublishDate": "2022-10"
+  }
+}

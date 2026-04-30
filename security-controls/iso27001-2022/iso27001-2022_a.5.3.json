@@ -1,0 +1,13 @@
+{
+  "$schema": "../security-control.schema.json",
+  "ControlID": "ISO27001-2022_A.5.3",
+  "Category": "Organizational Controls",
+  "Name": "Segregation of duties",
+  "Description": "Conflicting duties and conflicting areas of responsibility shall be segregated.",
+  "Publisher": "ISO/IEC",
+  "Framework": "ISO 27001:2022",
+  "AdditionalInfo": {
+    "Edition": "3",
+    "PublishDate": "2022-10"
+  }
+}

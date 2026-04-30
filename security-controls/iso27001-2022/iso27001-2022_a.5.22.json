@@ -1,0 +1,13 @@
+{
+  "$schema": "../security-control.schema.json",
+  "ControlID": "ISO27001-2022_A.5.22",
+  "Category": "Organizational Controls",
+  "Name": "Monitoring, review and change management of supplier services",
+  "Description": "The organization shall regularly monitor, review, evaluate and manage change in supplier information security practices and service delivery.",
+  "Publisher": "ISO/IEC",
+  "Framework": "ISO 27001:2022",
+  "AdditionalInfo": {
+    "Edition": "3",
+    "PublishDate": "2022-10"
+  }
+}

@@ -1,0 +1,13 @@
+{
+  "$schema": "../security-control.schema.json",
+  "ControlID": "ISO27001-2022_A.8.10",
+  "Category": "Technological Controls",
+  "Name": "Information deletion",
+  "Description": "Information stored in information systems, devices or in any other storage media shall be deleted when no longer required.",
+  "Publisher": "ISO/IEC",
+  "Framework": "ISO 27001:2022",
+  "AdditionalInfo": {
+    "Edition": "3",
+    "PublishDate": "2022-10"
+  }
+}

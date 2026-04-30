@@ -1,0 +1,13 @@
+{
+  "$schema": "../security-control.schema.json",
+  "ControlID": "ISO27001-2022_A.5.2",
+  "Category": "Organizational Controls",
+  "Name": "Information security roles and responsibilities",
+  "Description": "Information security roles and responsibilities shall be defined and allocated according to the organization needs.",
+  "Publisher": "ISO/IEC",
+  "Framework": "ISO 27001:2022",
+  "AdditionalInfo": {
+    "Edition": "3",
+    "PublishDate": "2022-10"
+  }
+}

@@ -1,0 +1,13 @@
+{
+  "$schema": "../security-control.schema.json",
+  "ControlID": "ISO27001-2022_A.5.26",
+  "Category": "Organizational Controls",
+  "Name": "Response to information security incidents",
+  "Description": "Information security incidents shall be responded to in accordance with the documented procedures.",
+  "Publisher": "ISO/IEC",
+  "Framework": "ISO 27001:2022",
+  "AdditionalInfo": {
+    "Edition": "3",
+    "PublishDate": "2022-10"
+  }
+}

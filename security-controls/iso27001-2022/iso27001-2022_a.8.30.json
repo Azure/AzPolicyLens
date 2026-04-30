@@ -1,0 +1,13 @@
+{
+  "$schema": "../security-control.schema.json",
+  "ControlID": "ISO27001-2022_A.8.30",
+  "Category": "Technological Controls",
+  "Name": "Outsourced development",
+  "Description": "The organization shall direct, monitor and review the activities related to outsourced system development.",
+  "Publisher": "ISO/IEC",
+  "Framework": "ISO 27001:2022",
+  "AdditionalInfo": {
+    "Edition": "3",
+    "PublishDate": "2022-10"
+  }
+}

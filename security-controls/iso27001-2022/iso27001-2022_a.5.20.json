@@ -1,0 +1,13 @@
+{
+  "$schema": "../security-control.schema.json",
+  "ControlID": "ISO27001-2022_A.5.20",
+  "Category": "Organizational Controls",
+  "Name": "Addressing information security within supplier agreements",
+  "Description": "Relevant information security requirements shall be established and agreed with each supplier based on the type of supplier relationship.",
+  "Publisher": "ISO/IEC",
+  "Framework": "ISO 27001:2022",
+  "AdditionalInfo": {
+    "Edition": "3",
+    "PublishDate": "2022-10"
+  }
+}

@@ -1,0 +1,13 @@
+{
+  "$schema": "../security-control.schema.json",
+  "ControlID": "ISO27001-2022_A.5.19",
+  "Category": "Organizational Controls",
+  "Name": "Information security in supplier relationships",
+  "Description": "Processes and procedures shall be defined and implemented to manage the information security risks associated with the use of supplier's products or services.",
+  "Publisher": "ISO/IEC",
+  "Framework": "ISO 27001:2022",
+  "AdditionalInfo": {
+    "Edition": "3",
+    "PublishDate": "2022-10"
+  }
+}

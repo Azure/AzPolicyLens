@@ -1,0 +1,468 @@
+<?xml version="1.0" encoding="utf-8"?>
+<helpItems xmlns:maml="http://schemas.microsoft.com/maml/2004/10" xmlns:command="http://schemas.microsoft.com/maml/dev/command/2004/10" xmlns:dev="http://schemas.microsoft.com/maml/dev/2004/10" schema="maml" xmlns="http://msh">
+  <command:command>
+    <command:details>
+      <command:name>Invoke-AzplEnvironmentDiscovery</command:name>
+      <maml:description>
+        <maml:para>Perform Azure environment discovery and collect required data for the Policy Documentation.</maml:para>
+      </maml:description>
+      <command:verb>Invoke</command:verb>
+      <command:noun>AzplEnvironmentDiscovery</command:noun>
+    </command:details>
+    <maml:description>
+      <maml:para>Perform Azure environment discovery and collect required data for the Policy Documentation. It get all relevant policy resources and management group hierarchy based on a management group scope.</maml:para>
+    </maml:description>
+    <command:syntax>
+      <command:syntaxItem>
+        <maml:name>Invoke-AzplEnvironmentDiscovery</maml:name>
+        <command:parameter required="true" variableLength="false" globbing="false" pipelineInput="false" position="Named" aliases="none">
+          <maml:name>AdditionalBuiltInPolicyMetadataConfig</maml:name>
+          <maml:description>
+            <maml:para>Additional builtin Policy Metadata from security control frameworks to include.</maml:para>
+          </maml:description>
+          <command:parameterValue required="true" variableLength="true">AzPolicyLens.Discovery.Models.BuiltInSecurityControlConfig[]</command:parameterValue>
+        </command:parameter>
+        <command:parameter required="true" variableLength="false" globbing="false" pipelineInput="false" position="Named" aliases="none">
+          <maml:name>EncryptionIV</maml:name>
+          <maml:description>
+            <maml:para>AES Encryption Initialization Vector (IV) Content.</maml:para>
+          </maml:description>
+          <command:parameterValue required="true" variableLength="true">System.String</command:parameterValue>
+        </command:parameter>
+        <command:parameter required="true" variableLength="false" globbing="false" pipelineInput="false" position="Named" aliases="none">
+          <maml:name>EncryptionKey</maml:name>
+          <maml:description>
+            <maml:para>AES Encryption Key Content.</maml:para>
+          </maml:description>
+          <command:parameterValue required="true" variableLength="true">System.String</command:parameterValue>
+        </command:parameter>
+        <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="false" position="Named" aliases="none">
+          <maml:name>OutputFileBaseName</maml:name>
+          <maml:description>
+            <maml:para>Export file base name (without file extension)</maml:para>
+          </maml:description>
+          <command:parameterValue required="false" variableLength="true">System.String</command:parameterValue>
+        </command:parameter>
+        <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="false" position="Named" aliases="none">
+          <maml:name>OutputFileDirectory</maml:name>
+          <maml:description>
+            <maml:para>Export file directory</maml:para>
+          </maml:description>
+          <command:parameterValue required="false" variableLength="true">System.String</command:parameterValue>
+        </command:parameter>
+        <command:parameter required="true" variableLength="false" globbing="false" pipelineInput="false" position="Named" aliases="none">
+          <maml:name>Token</maml:name>
+          <maml:description>
+            <maml:para>The Azure OAuth token for accessing 'https://management.azure.com/'. This is required to invoke the Azure Resource Graph query via it's REST API.</maml:para>
+          </maml:description>
+          <command:parameterValue required="true" variableLength="true">System.String</command:parameterValue>
+        </command:parameter>
+        <command:parameter required="true" variableLength="false" globbing="false" pipelineInput="false" position="Named" aliases="none">
+          <maml:name>TopLevelManagementGroupName</maml:name>
+          <maml:description>
+            <maml:para>The Top-level Management Group name.</maml:para>
+          </maml:description>
+          <command:parameterValue required="true" variableLength="true">System.String</command:parameterValue>
+        </command:parameter>
+      </command:syntaxItem>
+      <command:syntaxItem>
+        <maml:name>Invoke-AzplEnvironmentDiscovery</maml:name>
+        <command:parameter required="true" variableLength="false" globbing="false" pipelineInput="false" position="Named" aliases="none">
+          <maml:name>AdditionalBuiltInPolicyMetadataConfig</maml:name>
+          <maml:description>
+            <maml:para>Additional builtin Policy Metadata from security control frameworks to include.</maml:para>
+          </maml:description>
+          <command:parameterValue required="true" variableLength="true">AzPolicyLens.Discovery.Models.BuiltInSecurityControlConfig[]</command:parameterValue>
+        </command:parameter>
+        <command:parameter required="true" variableLength="false" globbing="false" pipelineInput="false" position="Named" aliases="none">
+          <maml:name>EncryptionKeyFilePath</maml:name>
+          <maml:description>
+            <maml:para>AES Encryption key file path. If specified, the output file will be encrypted using this key.</maml:para>
+          </maml:description>
+          <command:parameterValue required="true" variableLength="true">System.String</command:parameterValue>
+        </command:parameter>
+        <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="false" position="Named" aliases="none">
+          <maml:name>OutputFileBaseName</maml:name>
+          <maml:description>
+            <maml:para>Export file base name (without file extension)</maml:para>
+          </maml:description>
+          <command:parameterValue required="false" variableLength="true">System.String</command:parameterValue>
+        </command:parameter>
+        <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="false" position="Named" aliases="none">
+          <maml:name>OutputFileDirectory</maml:name>
+          <maml:description>
+            <maml:para>Export file directory</maml:para>
+          </maml:description>
+          <command:parameterValue required="false" variableLength="true">System.String</command:parameterValue>
+        </command:parameter>
+        <command:parameter required="true" variableLength="false" globbing="false" pipelineInput="false" position="Named" aliases="none">
+          <maml:name>Token</maml:name>
+          <maml:description>
+            <maml:para>The Azure OAuth token for accessing 'https://management.azure.com/'. This is required to invoke the Azure Resource Graph query via it's REST API.</maml:para>
+          </maml:description>
+          <command:parameterValue required="true" variableLength="true">System.String</command:parameterValue>
+        </command:parameter>
+        <command:parameter required="true" variableLength="false" globbing="false" pipelineInput="false" position="Named" aliases="none">
+          <maml:name>TopLevelManagementGroupName</maml:name>
+          <maml:description>
+            <maml:para>The Top-level Management Group name.</maml:para>
+          </maml:description>
+          <command:parameterValue required="true" variableLength="true">System.String</command:parameterValue>
+        </command:parameter>
+      </command:syntaxItem>
+      <command:syntaxItem>
+        <maml:name>Invoke-AzplEnvironmentDiscovery</maml:name>
+        <command:parameter required="true" variableLength="false" globbing="false" pipelineInput="false" position="Named" aliases="none">
+          <maml:name>AdditionalBuiltInPolicyMetadataConfig</maml:name>
+          <maml:description>
+            <maml:para>Additional builtin Policy Metadata from security control frameworks to include.</maml:para>
+          </maml:description>
+          <command:parameterValue required="true" variableLength="true">AzPolicyLens.Discovery.Models.BuiltInSecurityControlConfig[]</command:parameterValue>
+        </command:parameter>
+        <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="false" position="Named" aliases="none">
+          <maml:name>OutputFileBaseName</maml:name>
+          <maml:description>
+            <maml:para>Export file base name (without file extension)</maml:para>
+          </maml:description>
+          <command:parameterValue required="false" variableLength="true">System.String</command:parameterValue>
+        </command:parameter>
+        <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="false" position="Named" aliases="none">
+          <maml:name>OutputFileDirectory</maml:name>
+          <maml:description>
+            <maml:para>Export file directory</maml:para>
+          </maml:description>
+          <command:parameterValue required="false" variableLength="true">System.String</command:parameterValue>
+        </command:parameter>
+        <command:parameter required="true" variableLength="false" globbing="false" pipelineInput="false" position="Named" aliases="none">
+          <maml:name>Token</maml:name>
+          <maml:description>
+            <maml:para>The Azure OAuth token for accessing 'https://management.azure.com/'. This is required to invoke the Azure Resource Graph query via it's REST API.</maml:para>
+          </maml:description>
+          <command:parameterValue required="true" variableLength="true">System.String</command:parameterValue>
+        </command:parameter>
+        <command:parameter required="true" variableLength="false" globbing="false" pipelineInput="false" position="Named" aliases="none">
+          <maml:name>TopLevelManagementGroupName</maml:name>
+          <maml:description>
+            <maml:para>The Top-level Management Group name.</maml:para>
+          </maml:description>
+          <command:parameterValue required="true" variableLength="true">System.String</command:parameterValue>
+        </command:parameter>
+      </command:syntaxItem>
+    </command:syntax>
+    <command:parameters>
+      <command:parameter required="true" variableLength="false" globbing="false" pipelineInput="false" position="Named" aliases="none">
+        <maml:name>AdditionalBuiltInPolicyMetadataConfig</maml:name>
+        <maml:description>
+          <maml:para>Additional builtin Policy Metadata from security control frameworks to include.</maml:para>
+        </maml:description>
+        <command:parameterValue required="true" variableLength="true">AzPolicyLens.Discovery.Models.BuiltInSecurityControlConfig[]</command:parameterValue>
+      </command:parameter>
+      <command:parameter required="true" variableLength="false" globbing="false" pipelineInput="false" position="Named" aliases="none">
+        <maml:name>EncryptionIV</maml:name>
+        <maml:description>
+          <maml:para>AES Encryption Initialization Vector (IV) Content.</maml:para>
+        </maml:description>
+        <command:parameterValue required="true" variableLength="true">System.String</command:parameterValue>
+      </command:parameter>
+      <command:parameter required="true" variableLength="false" globbing="false" pipelineInput="false" position="Named" aliases="none">
+        <maml:name>EncryptionKey</maml:name>
+        <maml:description>
+          <maml:para>AES Encryption Key Content.</maml:para>
+        </maml:description>
+        <command:parameterValue required="true" variableLength="true">System.String</command:parameterValue>
+      </command:parameter>
+      <command:parameter required="true" variableLength="false" globbing="false" pipelineInput="false" position="Named" aliases="none">
+        <maml:name>EncryptionKeyFilePath</maml:name>
+        <maml:description>
+          <maml:para>AES Encryption key file path. If specified, the output file will be encrypted using this key.</maml:para>
+        </maml:description>
+        <command:parameterValue required="true" variableLength="true">System.String</command:parameterValue>
+      </command:parameter>
+      <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="false" position="Named" aliases="none">
+        <maml:name>OutputFileBaseName</maml:name>
+        <maml:description>
+          <maml:para>Export file base name (without file extension)</maml:para>
+        </maml:description>
+        <command:parameterValue required="false" variableLength="true">System.String</command:parameterValue>
+      </command:parameter>
+      <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="false" position="Named" aliases="none">
+        <maml:name>OutputFileDirectory</maml:name>
+        <maml:description>
+          <maml:para>Export file directory</maml:para>
+        </maml:description>
+        <command:parameterValue required="false" variableLength="true">System.String</command:parameterValue>
+      </command:parameter>
+      <command:parameter required="true" variableLength="false" globbing="false" pipelineInput="false" position="Named" aliases="none">
+        <maml:name>Token</maml:name>
+        <maml:description>
+          <maml:para>The Azure OAuth token for accessing 'https://management.azure.com/'. This is required to invoke the Azure Resource Graph query via it's REST API.</maml:para>
+        </maml:description>
+        <command:parameterValue required="true" variableLength="true">System.String</command:parameterValue>
+      </command:parameter>
+      <command:parameter required="true" variableLength="false" globbing="false" pipelineInput="false" position="Named" aliases="none">
+        <maml:name>TopLevelManagementGroupName</maml:name>
+        <maml:description>
+          <maml:para>The Top-level Management Group name.</maml:para>
+        </maml:description>
+        <command:parameterValue required="true" variableLength="true">System.String</command:parameterValue>
+      </command:parameter>
+    </command:parameters>
+    <command:inputTypes />
+    <command:returnValues>
+      <command:returnValue>
+        <dev:type>
+          <dev:name>String</dev:name>
+        </dev:type>
+        <maml:description>
+          <maml:para>The Output file path.</maml:para>
+        </maml:description>
+      </command:returnValue>
+    </command:returnValues>
+    <maml:alertSet>
+      <maml:alert>
+        <maml:para />
+      </maml:alert>
+    </maml:alertSet>
+    <command:examples>
+      <command:example>
+        <maml:title>--------- Example 1 - Perform environment discovery and output file in plain text (no encryption). The file name is based on the Top-level Management Group name since it is not specified. ---------</maml:title>
+        <maml:introduction>
+          <maml:para>PS C:\&gt; $token = ConvertFrom-SecureString (Get-AzAccessToken -ResourceUrl 'https://management.azure.com/').token -AsPlainText
+PS C:\&gt; Invoke-AzplEnvironmentDiscovery -TopLevelManagementGroupName 'MyManagementGroup' -OutputFilePath 'C:\Temp\output.json' -Token $token</maml:para>
+        </maml:introduction>
+        <dev:code />
+        <dev:remarks />
+      </command:example>
+      <command:example>
+        <maml:title>--------- Example 2 - Perform environment discovery and store the data in an output file encrypted. ---------</maml:title>
+        <maml:introduction>
+          <maml:para>PS C:\&gt; $token = ConvertFrom-SecureString (Get-AzAccessToken -ResourceUrl 'https://management.azure.com/').token -AsPlainText
+PS C:\&gt; Invoke-AzplEnvironmentDiscovery -TopLevelManagementGroupName 'MyManagementGroup' -OutputFileDirectory 'C:\Temp\' -OutputFileBaseName 'output' -EncryptionKeyFilePath 'C:\temp\EncryptionKey.json' -Token $token</maml:para>
+        </maml:introduction>
+        <dev:code />
+        <dev:remarks />
+      </command:example>
+      <command:example>
+        <maml:title>--------- Example 3 - Perform environment discovery output  encrypted file using the AES encryption key and AES encryption Initialization Vector. ---------</maml:title>
+        <maml:introduction>
+          <maml:para>PS C:\&gt; $token = ConvertFrom-SecureString (Get-AzAccessToken -ResourceUrl 'https://management.azure.com/').token -AsPlainText
+PS C:\&gt; Invoke-AzplEnvironmentDiscovery -TopLevelManagementGroupName 'MyManagementGroup' -OutputFileDirectory 'C:\Temp' -OutputFileBaseName 'output' -compressOutputFile $true -EncryptionKey 'w7naanmxtd23OMRjIhC+5YXJL40xa5lVJ/5zdrD8q3Y=' -EncryptionIV 'jaX7ALmAWVid64K45tjUQQ==' -Token $token</maml:para>
+        </maml:introduction>
+        <dev:code />
+        <dev:remarks />
+      </command:example>
+      <command:example>
+        <maml:title>--------- Example 4 - Perform environment discovery with additional built-in policy metadata defined and encrypted using the AES encryption key file. ---------</maml:title>
+        <maml:introduction>
+          <maml:para>PS C:\&gt; $additionalBuiltInPolicyMetadataConfig = @()
+PS C:\&gt; $additionalBuiltInPolicyMetadataConfig += @{
+  framework = 'ISO 27001:2013'
+  policyMetadataNameRegex = '^ISO27001-2013_A'
+}
+PS C:\&gt; $additionalBuiltInPolicyMetadataConfig += @{
+  framework = 'Microsoft Cloud Security Benchmark V3.0'
+  policyMetadataNameRegex = '^Azure_Security_Benchmark_v3\.0'
+}
+PS C:\&gt; $token = ConvertFrom-SecureString (Get-AzAccessToken -ResourceUrl 'https://management.azure.com/').token -AsPlainText
+PS C:\&gt; Invoke-AzplEnvironmentDiscovery -TopLevelManagementGroupName 'MyManagementGroup' -OutputFileDirectory 'C:\Temp\' -OutputFileBaseName 'output' -EncryptionKeyFilePath 'C:\temp\EncryptionKey.json' -Token $token -AdditionalBuiltInPolicyMetadataConfig $additionalBuiltInPolicyMetadataConfig</maml:para>
+          <maml:para>&#x80;</maml:para>
+          <maml:para>Perform environment discovery and store the data in an output file 'C:\Temp\output.zip', with additional built-in policy metadata defined in the $additionalBuiltInPolicyMetadataConfig and encrypted using the AES encryption key file 'C:\temp\EncryptionKey.json'.</maml:para>
+        </maml:introduction>
+        <dev:code />
+        <dev:remarks />
+      </command:example>
+    </command:examples>
+    <command:relatedLinks>
+      <maml:navigationLink>
+        <maml:linkText>Online Version</maml:linkText>
+        <command:uri />
+      </maml:navigationLink>
+      <maml:navigationLink>
+        <maml:linkText>AzPolicyLens Wiki Page</maml:linkText>
+        <command:uri>https://github.com/taoyangcloud/AzPolicyLens/wiki</command:uri>
+      </maml:navigationLink>
+    </command:relatedLinks>
+  </command:command>
+  <command:command>
+    <command:details>
+      <command:name>New-AzplEncryptionKey</command:name>
+      <maml:description>
+        <maml:para>Create AES encryption key and Initialization Vector for encrypting the environment discovery file for the Azure Policy Documentation.</maml:para>
+      </maml:description>
+      <command:verb>New</command:verb>
+      <command:noun>AzplEncryptionKey</command:noun>
+    </command:details>
+    <maml:description>
+      <maml:para>Create AES encryption key and Initialization Vector for encrypting the environment discovery file for the Azure Policy Documentation.</maml:para>
+    </maml:description>
+    <command:syntax>
+      <command:syntaxItem>
+        <maml:name>New-AzplEncryptionKey</maml:name>
+        <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="false" position="Named" aliases="none">
+          <maml:name>Confirm</maml:name>
+          <maml:description>
+            <maml:para>Prompts you for confirmation before running the cmdlet.</maml:para>
+          </maml:description>
+          <command:parameterValue required="false" variableLength="true">System.Management.Automation.SwitchParameter</command:parameterValue>
+        </command:parameter>
+        <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="false" position="Named" aliases="none">
+          <maml:name>FileName</maml:name>
+          <maml:description>
+            <maml:para>The file name for the encryption key.</maml:para>
+          </maml:description>
+          <command:parameterValue required="false" variableLength="true">System.String</command:parameterValue>
+        </command:parameter>
+        <command:parameter required="true" variableLength="false" globbing="false" pipelineInput="false" position="Named" aliases="none">
+          <maml:name>OutputDir</maml:name>
+          <maml:description>
+            <maml:para>The directory path for the encryption key.</maml:para>
+          </maml:description>
+          <command:parameterValue required="true" variableLength="true">System.String</command:parameterValue>
+        </command:parameter>
+        <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="false" position="Named" aliases="none">
+          <maml:name>WhatIf</maml:name>
+          <maml:description>
+            <maml:para>Shows what would happen if the cmdlet runs.
+The cmdlet is not run.</maml:para>
+          </maml:description>
+          <command:parameterValue required="false" variableLength="true">System.Management.Automation.SwitchParameter</command:parameterValue>
+        </command:parameter>
+      </command:syntaxItem>
+    </command:syntax>
+    <command:parameters>
+      <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="false" position="Named" aliases="none">
+        <maml:name>Confirm</maml:name>
+        <maml:description>
+          <maml:para>Prompts you for confirmation before running the cmdlet.</maml:para>
+        </maml:description>
+        <command:parameterValue required="false" variableLength="true">System.Management.Automation.SwitchParameter</command:parameterValue>
+      </command:parameter>
+      <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="false" position="Named" aliases="none">
+        <maml:name>FileName</maml:name>
+        <maml:description>
+          <maml:para>The file name for the encryption key.</maml:para>
+        </maml:description>
+        <command:parameterValue required="false" variableLength="true">System.String</command:parameterValue>
+      </command:parameter>
+      <command:parameter required="true" variableLength="false" globbing="false" pipelineInput="false" position="Named" aliases="none">
+        <maml:name>OutputDir</maml:name>
+        <maml:description>
+          <maml:para>The directory path for the encryption key.</maml:para>
+        </maml:description>
+        <command:parameterValue required="true" variableLength="true">System.String</command:parameterValue>
+      </command:parameter>
+      <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="false" position="Named" aliases="none">
+        <maml:name>WhatIf</maml:name>
+        <maml:description>
+          <maml:para>Shows what would happen if the cmdlet runs.
+The cmdlet is not run.</maml:para>
+        </maml:description>
+        <command:parameterValue required="false" variableLength="true">System.Management.Automation.SwitchParameter</command:parameterValue>
+      </command:parameter>
+    </command:parameters>
+    <command:inputTypes />
+    <command:returnValues>
+      <command:returnValue>
+        <dev:type>
+          <dev:name>System.Object</dev:name>
+        </dev:type>
+        <maml:description>
+          <maml:para>The AES Encryption key content.</maml:para>
+        </maml:description>
+      </command:returnValue>
+      <command:returnValue>
+        <dev:type>
+          <dev:name>AzPolicyLens.Discovery.Models.EncryptionKey</dev:name>
+        </dev:type>
+        <maml:description>
+          <maml:para>The AES Encryption key object.</maml:para>
+        </maml:description>
+      </command:returnValue>
+    </command:returnValues>
+    <maml:alertSet>
+      <maml:alert>
+        <maml:para />
+      </maml:alert>
+    </maml:alertSet>
+    <command:examples>
+      <command:example>
+        <maml:title>--------- Example 1 - Create an encryption key file in the directory 'C:\Temp' with the default file name 'AzplEncryptionKey.json'. ---------</maml:title>
+        <maml:introduction>
+          <maml:para>PS C:\&gt; New-AzplEncryptionKey -OutputDir 'C:\Temp'</maml:para>
+        </maml:introduction>
+        <dev:code />
+        <dev:remarks />
+      </command:example>
+      <command:example>
+        <maml:title>--------- Example 2 - Create an encryption key file in the directory 'C:\Temp' with the file name 'MyEncryptionKey.json'. ---------</maml:title>
+        <maml:introduction>
+          <maml:para>PS C:\&gt; New-AzplEncryptionKey -OutputDir 'C:\Temp' -FileName 'MyEncryptionKey.json'</maml:para>
+        </maml:introduction>
+        <dev:code />
+        <dev:remarks />
+      </command:example>
+    </command:examples>
+    <command:relatedLinks>
+      <maml:navigationLink>
+        <maml:linkText>Online Version</maml:linkText>
+        <command:uri />
+      </maml:navigationLink>
+      <maml:navigationLink>
+        <maml:linkText>AzPolicyLens Wiki Page</maml:linkText>
+        <command:uri>https://github.com/taoyangcloud/AzPolicyLens/wiki</command:uri>
+      </maml:navigationLink>
+    </command:relatedLinks>
+  </command:command>
+</helpItems>type>
+        <maml:description>
+          <maml:para>The AES Encryption key content.</maml:para>
+        </maml:description>
+      </command:returnValue>
+      <command:returnValue>
+        <dev:type>
+          <dev:name>AzPolicyLens.Discovery.Models.EncryptionKey</dev:name>
+        </dev:type>
+        <maml:description>
+          <maml:para>The AES Encryption key object.</maml:para>
+        </maml:description>
+      </command:returnValue>
+    </command:returnValues>
+    <maml:alertSet>
+      <maml:alert>
+        <maml:para />
+      </maml:alert>
+    </maml:alertSet>
+    <command:examples>
+      <command:example>
+        <maml:title>--------- Example 1 - Create an encryption key file in the directory 'C:\Temp' with the default file name 'AzplEncryptionKey.json'. ---------</maml:title>
+        <maml:introduction>
+          <maml:para>```powershell
+New-AzplEncryptionKey -OutputDir 'C:\Temp'
+```</maml:para>
+        </maml:introduction>
+        <dev:code />
+        <dev:remarks />
+      </command:example>
+      <command:example>
+        <maml:title>--------- Example 2 - Create an encryption key file in the directory 'C:\Temp' with the file name 'MyEncryptionKey.json'. ---------</maml:title>
+        <maml:introduction>
+          <maml:para>```powershell
+New-AzplEncryptionKey -OutputDir 'C:\Temp' -FileName 'MyEncryptionKey.json'
+```</maml:para>
+        </maml:introduction>
+        <dev:code />
+        <dev:remarks />
+      </command:example>
+    </command:examples>
+    <command:relatedLinks>
+      <maml:navigationLink>
+        <maml:linkText>Online Version</maml:linkText>
+        <command:uri />
+      </maml:navigationLink>
+      <maml:navigationLink>
+        <maml:linkText>AzPolicyLens Wiki Page</maml:linkText>
+        <command:uri>https://github.com/taoyangcloud/AzPolicyLens/wiki</command:uri>
+      </maml:navigationLink>
+    </command:relatedLinks>
+  </command:command>
+</helpItems>

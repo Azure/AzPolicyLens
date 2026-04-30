@@ -1,0 +1,104 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://github.com/taoyangcloud/AzPolicyLens/configurations/ado-config.schema.json",
+  "title": "AzPolicyLens ADO Config",
+  "description": "Schema for ado-config.jsonc used by AzPolicyLens to generate Azure DevOps wiki documentation.",
+  "type": "object",
+  "required": ["environment"],
+  "additionalProperties": false,
+  "properties": {
+    "environment": {
+      "type": "object",
+      "description": "Map of environment name to environment configuration.",
+      "minProperties": 1,
+      "additionalProperties": {
+        "$ref": "#/definitions/environment"
+      }
+    }
+  },
+  "definitions": {
+    "environment": {
+      "type": "object",
+      "required": ["wiki"],
+      "additionalProperties": false,
+      "properties": {
+        "description": {
+          "type": "string",
+          "description": "Human-readable description of the environment."
+        },
+        "wiki": {
+          "type": "object",
+          "description": "Map of wiki name to wiki configuration.",
+          "minProperties": 1,
+          "additionalProperties": {
+            "$ref": "#/definitions/wiki"
+          }
+        }
+      }
+    },
+    "wiki": {
+      "type": "object",
+      "required": [
+        "title",
+        "gitRepository",
+        "gitBranch",
+        "pageStyle",
+        "gitRepoPath",
+        "gitUserName",
+        "gitUserEmail"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "title": {
+          "type": "string",
+          "description": "Title for the wiki."
+        },
+        "gitRepository": {
+          "type": "string",
+          "format": "uri",
+          "description": "Git repository URL hosting the wiki content."
+        },
+        "gitBranch": {
+          "type": "string",
+          "description": "Git branch to commit wiki pages to."
+        },
+        "pageStyle": {
+          "type": "string",
+          "enum": ["basic", "detailed"],
+          "description": "Layout style for generated wiki pages."
+        },
+        "gitRepoPath": {
+          "type": "string",
+          "description": "Relative path inside the repository where wiki pages are written."
+        },
+        "gitUserName": {
+          "type": "string",
+          "description": "Git author name used for commits."
+        },
+        "gitUserEmail": {
+          "type": "string",
+          "format": "email",
+          "description": "Git author email used for commits."
+        },
+        "subscriptionIds": {
+          "type": "array",
+          "description": "Optional list of Azure subscription IDs to scope policy documentation. Mutually exclusive with childManagementGroupId.",
+          "items": {
+            "type": "string",
+            "pattern": "^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$"
+          },
+          "minItems": 1,
+          "uniqueItems": true
+        },
+        "childManagementGroupId": {
+          "type": "string",
+          "description": "Optional Azure management group ID to scope policy documentation. Mutually exclusive with subscriptionIds.",
+          "minLength": 1
+        }
+      },
+      "not": {
+        "required": ["subscriptionIds", "childManagementGroupId"]
+      }
+    }
+  }
+}

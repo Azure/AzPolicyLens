@@ -1,0 +1,13 @@
+{
+  "$schema": "../security-control.schema.json",
+  "ControlID": "ISO27001-2022_A.5.25",
+  "Category": "Organizational Controls",
+  "Name": "Assessment and decision on information security events",
+  "Description": "The organization shall assess information security events and decide if they are to be categorized as information security incidents.",
+  "Publisher": "ISO/IEC",
+  "Framework": "ISO 27001:2022",
+  "AdditionalInfo": {
+    "Edition": "3",
+    "PublishDate": "2022-10"
+  }
+}

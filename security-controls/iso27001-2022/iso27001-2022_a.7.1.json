@@ -1,0 +1,13 @@
+{
+  "$schema": "../security-control.schema.json",
+  "ControlID": "ISO27001-2022_A.7.1",
+  "Category": "Physical Controls",
+  "Name": "Physical security perimeters",
+  "Description": "Security perimeters shall be defined and used to protect areas that contain information and other associated assets.",
+  "Publisher": "ISO/IEC",
+  "Framework": "ISO 27001:2022",
+  "AdditionalInfo": {
+    "Edition": "3",
+    "PublishDate": "2022-10"
+  }
+}

@@ -1,0 +1,13 @@
+{
+  "$schema": "../security-control.schema.json",
+  "ControlID": "ISO27001-2022_A.8.27",
+  "Category": "Technological Controls",
+  "Name": "Secure system architecture and engineering principles",
+  "Description": "Principles for engineering secure systems shall be established, documented, maintained and applied to any information system development activities.",
+  "Publisher": "ISO/IEC",
+  "Framework": "ISO 27001:2022",
+  "AdditionalInfo": {
+    "Edition": "3",
+    "PublishDate": "2022-10"
+  }
+}

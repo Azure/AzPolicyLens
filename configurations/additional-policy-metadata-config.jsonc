@@ -1,0 +1,10 @@
+[
+  {
+    "framework": "ISO27001:2013",
+    "policyMetadataNameRegex": "^ISO27001-2013"
+  },
+  {
+    "framework": "Microsoft Cloud Security Benchmark V3.0",
+    "policyMetadataNameRegex": "^Azure_Security_Benchmark_v3\\.0"
+  }
+]

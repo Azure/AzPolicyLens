@@ -1,0 +1,13 @@
+{
+  "$schema": "../security-control.schema.json",
+  "ControlID": "ISO27001-2022_A.5.15",
+  "Category": "Organizational Controls",
+  "Name": "Access control",
+  "Description": "Rules to control physical and logical access to information and other associated assets shall be established and implemented based on business and information security requirements.",
+  "Publisher": "ISO/IEC",
+  "Framework": "ISO 27001:2022",
+  "AdditionalInfo": {
+    "Edition": "3",
+    "PublishDate": "2022-10"
+  }
+}

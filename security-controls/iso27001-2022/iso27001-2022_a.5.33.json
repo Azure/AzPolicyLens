@@ -1,0 +1,13 @@
+{
+  "$schema": "../security-control.schema.json",
+  "ControlID": "ISO27001-2022_A.5.33",
+  "Category": "Organizational Controls",
+  "Name": "Protection of records",
+  "Description": "Records shall be protected from loss, destruction, falsification, unauthorized access and unauthorized release.",
+  "Publisher": "ISO/IEC",
+  "Framework": "ISO 27001:2022",
+  "AdditionalInfo": {
+    "Edition": "3",
+    "PublishDate": "2022-10"
+  }
+}

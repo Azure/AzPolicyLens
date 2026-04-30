@@ -1,0 +1,13 @@
+{
+  "$schema": "../security-control.schema.json",
+  "ControlID": "ISO27001-2022_A.7.3",
+  "Category": "Physical Controls",
+  "Name": "Securing offices, rooms and facilities",
+  "Description": "Physical security for offices, rooms and facilities shall be designed and implemented.",
+  "Publisher": "ISO/IEC",
+  "Framework": "ISO 27001:2022",
+  "AdditionalInfo": {
+    "Edition": "3",
+    "PublishDate": "2022-10"
+  }
+}

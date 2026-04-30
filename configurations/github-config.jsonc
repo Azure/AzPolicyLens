@@ -1,0 +1,72 @@
+{
+  "environment": {
+    "dev": {
+      "description": "Development environment for policy documentation",
+      "wiki": {
+        "engineering": {
+          "title": "CONTOSO DEV POLICY",
+          "gitRepository": "https://github.com/taoyangcloud/azure.policy.doc.eng.dev.wiki.git",
+          "gitBranch": "master",
+          "pageStyle": "detailed",
+          "gitUserName": "AzPolicyLens Pipeline",
+          "gitUserEmail": "policyDoc@contoso.com"
+        },
+        "app1": {
+          "title": "APP 1 DEV POLICY",
+          "gitRepository": "https://github.com/taoyangcloud/azure.policy.doc.app.dev.wiki.git",
+          "gitBranch": "master",
+          "pageStyle": "basic",
+          "gitUserName": "AzPolicyLens Pipeline",
+          "gitUserEmail": "policyDoc@contoso.com",
+          "subscriptionIds": [
+            "dc2d72b7-a48d-45e8-91cc-81193ecc659b",
+            "f793e6e7-9219-4d57-8582-89bb7be49bba"
+          ]
+        },
+        "platform": {
+          "title": "PLATFORM DEV POLICY",
+          "gitRepository": "https://github.com/taoyangcloud/azure.policy.doc.platform.dev.wiki.git",
+          "gitBranch": "master",
+          "pageStyle": "detailed",
+          "gitUserName": "AzPolicyLens Pipeline",
+          "gitUserEmail": "policyDoc@contoso.com",
+          "childManagementGroupId": "CONTOSO-DEV-Platform"
+        }
+      }
+    },
+    "prod": {
+      "description": "Production environment for policy documentation",
+      "wiki": {
+        "engineering": {
+          "title": "CONTOSO PROD POLICY",
+          "gitRepository": "https://github.com/taoyangcloud/azure.policy.doc.eng.prod.wiki.git",
+          "gitBranch": "master",
+          "gitUserName": "AzPolicyLens Pipeline",
+          "gitUserEmail": "policyDoc@contoso.com",
+          "pageStyle": "detailed"
+        },
+        "app1": {
+          "title": "APP 1 PROD POLICY",
+          "gitRepository": "https://github.com/taoyangcloud/azure.policy.doc.app.prod.wiki.git",
+          "gitBranch": "master",
+          "pageStyle": "basic",
+          "gitUserName": "AzPolicyLens Pipeline",
+          "gitUserEmail": "policyDoc@contoso.com",
+          "subscriptionIds": [
+            "0f1b7d98-c832-4d46-8a29-a0c63d54a2fa",
+            "e371edfc-8526-4d2d-9493-ca2d3f18f465"
+          ]
+        },
+        "platform": {
+          "title": "PLATFORM PROD POLICY",
+          "gitRepository": "https://github.com/taoyangcloud/azure.policy.doc.platform.prod.wiki.git",
+          "gitBranch": "master",
+          "pageStyle": "detailed",
+          "gitUserName": "AzPolicyLens Pipeline",
+          "gitUserEmail": "policyDoc@contoso.com",
+          "childManagementGroupId": "CONTOSO-Platform"
+        }
+      }
+    }
+  }
+}

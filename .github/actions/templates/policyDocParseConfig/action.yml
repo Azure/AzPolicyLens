@@ -1,0 +1,26 @@
+name: 'Policy Documentation Parse Config'
+description: 'Parse configuration for Azure Policy wiki generation'
+
+inputs:
+  environment:
+    description: 'The target environment to parse the configuration for.'
+    required: true
+outputs:
+  wikiCount:
+    description: 'Number of wikis to generate'
+    value: ${{ steps.parse.outputs.wikiCount }}
+  wikis:
+    description: 'JSON array of wiki configurations'
+    value: ${{ steps.parse.outputs.wikis }}
+runs:
+  using: 'composite'
+  steps:
+    - name: Checkout source
+      uses: actions/checkout@v6
+      with:
+        fetch-depth: 0
+    - name: Parse Config File
+      id: parse
+      shell: pwsh
+      run: |
+        ./scripts/github-policy-doc-parse-config-file.ps1 -configFilePath 'configurations/github-config.jsonc' -configSchemaFilePath 'configurations/github-config.schema.json' -environment '${{ inputs.environment }}'

@@ -1,0 +1,13 @@
+{
+  "$schema": "../security-control.schema.json",
+  "ControlID": "ISO27001-2022_A.8.22",
+  "Category": "Technological Controls",
+  "Name": "Segregation of networks",
+  "Description": "Groups of information services, users and information systems shall be segregated in the organization's networks.",
+  "Publisher": "ISO/IEC",
+  "Framework": "ISO 27001:2022",
+  "AdditionalInfo": {
+    "Edition": "3",
+    "PublishDate": "2022-10"
+  }
+}

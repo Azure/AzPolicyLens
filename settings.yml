@@ -1,0 +1,13 @@
+variables:
+  - name: policyDocAdditionalBuiltInPolicyMetadataConfigFilePath
+    value: "configurations/additional-policy-metadata-config.jsonc"
+  - name: policyDocCustomSecurityControlPath
+    value: "security-controls"
+  - name: policyDocGitHubDomainName
+    value: "github.com"
+  - name: policyDocExemptionExpiresOnWarningDays
+    value: 30
+  - name: policyDocComplianceWarningPercentageThreshold
+    value: 80
+  - name: policyDocDiscoveryFileName
+    value: "EnvironmentDiscovery.zip"

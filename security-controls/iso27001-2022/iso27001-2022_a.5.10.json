@@ -1,0 +1,13 @@
+{
+  "$schema": "../security-control.schema.json",
+  "ControlID": "ISO27001-2022_A.5.10",
+  "Category": "Organizational Controls",
+  "Name": "Acceptable use of information and other associated assets",
+  "Description": "Rules for the acceptable use and procedures for handling information and other associated assets shall be identified, documented and implemented.",
+  "Publisher": "ISO/IEC",
+  "Framework": "ISO 27001:2022",
+  "AdditionalInfo": {
+    "Edition": "3",
+    "PublishDate": "2022-10"
+  }
+}
