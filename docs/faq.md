@@ -354,8 +354,8 @@ Although not explicitly tested, the wikis should also work correctly any other m
 
 <summary>Click to expand the answer</summary>
 
-You can find more information about AzPolicyLens on the [AzPolicyLens website](https://tbd).
+You can find more information about AzPolicyLens on the [AzPolicyLens GitHub repository](https://aka.ms/AzPolicyLens).
 
-If you have further questions, you can reach out to the AzPolicyLens support team at [Email address](mailto:support@tbd).
+If you have further questions, you can raise an issue in the GitHub repository.
 
 </details>
