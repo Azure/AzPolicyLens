@@ -5,7 +5,7 @@
       "wiki": {
         "engineering": {
           "title": "CONTOSO DEV POLICY",
-          "gitRepository": "https://dev.azure.com/taoyangcloud/Policy.Doc.Demo/_git/eng-dev-doc",
+          "gitRepository": "https://dev.azure.com/AzPolicyLens/Policy.Doc.Demo/_git/eng-dev-doc",
           "gitBranch": "main",
           "pageStyle": "detailed",
           "gitRepoPath": "docs/policy-documentation",
@@ -14,7 +14,7 @@
         },
         "app1": {
           "title": "APP 1 DEV POLICY",
-          "gitRepository": "https://dev.azure.com/taoyangcloud/Policy.Doc.Demo/_git/app1-dev-doc",
+          "gitRepository": "https://dev.azure.com/AzPolicyLens/Policy.Doc.Demo/_git/app1-dev-doc",
           "gitBranch": "main",
           "pageStyle": "basic",
           "gitRepoPath": "docs/policy-documentation-app1",
@@ -27,7 +27,7 @@
         },
         "platform": {
           "title": "PLATFORM DEV POLICY",
-          "gitRepository": "https://dev.azure.com/taoyangcloud/Policy.Doc.Demo/_git/platform-dev-doc",
+          "gitRepository": "https://dev.azure.com/AzPolicyLens/Policy.Doc.Demo/_git/platform-dev-doc",
           "gitBranch": "main",
           "pageStyle": "detailed",
           "gitRepoPath": "docs/policy-documentation-platform",
@@ -42,7 +42,7 @@
       "wiki": {
         "engineering": {
           "title": "CONTOSO PROD POLICY",
-          "gitRepository": "https://dev.azure.com/taoyangcloud/Policy.Doc.Demo/_git/eng-prod-doc",
+          "gitRepository": "https://dev.azure.com/AzPolicyLens/Policy.Doc.Demo/_git/eng-prod-doc",
           "gitBranch": "main",
           "pageStyle": "detailed",
           "gitRepoPath": "docs/policy-documentation",
@@ -51,7 +51,7 @@
         },
         "app1": {
           "title": "APP 1 PROD POLICY",
-          "gitRepository": "https://dev.azure.com/taoyangcloud/Policy.Doc.Demo/_git/app1-prod-doc",
+          "gitRepository": "https://dev.azure.com/AzPolicyLens/Policy.Doc.Demo/_git/app1-prod-doc",
           "gitBranch": "main",
           "pageStyle": "basic",
           "gitRepoPath": "docs/policy-documentation-app1",
@@ -64,7 +64,7 @@
         },
         "platform": {
           "title": "PLATFORM PROD POLICY",
-          "gitRepository": "https://dev.azure.com/taoyangcloud/Policy.Doc.Demo/_git/platform-prod-doc",
+          "gitRepository": "https://dev.azure.com/AzPolicyLens/Policy.Doc.Demo/_git/platform-prod-doc",
           "gitBranch": "main",
           "pageStyle": "detailed",
           "gitRepoPath": "docs/policy-documentation-platform",

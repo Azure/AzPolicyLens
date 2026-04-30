@@ -58,8 +58,8 @@ To create the token:
 4. Click on "Generate new token", provide a name and expiration for the token.
 5. Select the repositories that the token should have access to (the repositories where the wiki content will be pushed).
 6. Under "Permissions", grant the token the following permissions:
-   - `Commit statuses`
-   - `Contents`
+   - `Commit statuses`: `Read and write`
+   - `Contents`: `Read and write`
 
 ![1](../images/github-pat-01.jpg)
 
