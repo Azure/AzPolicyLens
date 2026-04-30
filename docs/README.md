@@ -79,6 +79,11 @@ The table below summarizes the key features of each wiki type:
     <td style="text-align: center">✅</td>
   </tr>
   <tr>
+    <td>Policy resources that affects a specific child management group</td>
+    <td style="text-align: center">✅</td>
+    <td style="text-align: center">✅</td>
+  </tr>
+  <tr>
     <td>All Policy Initiatives under Management Group</td>
     <td style="text-align: center">✅</td>
     <td style="text-align: center"></td>
