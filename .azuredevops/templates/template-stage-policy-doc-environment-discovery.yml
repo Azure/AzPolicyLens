@@ -1,0 +1,107 @@
+parameters:
+- name: poolName
+  displayName: "Self Hosted Agent Pool Name"
+  type: string
+  default: ""
+
+- name: vmImage
+  displayName: "MS Hosted Agent VM Image Name"
+  type: string
+  default: ""
+
+- name: stageName
+  displayName: "Stage Name"
+  type: string
+
+- name: condition
+  displayName: "Custom Stage Conditions"
+  type: string
+  default: "succeeded()"
+
+- name: dependsOn
+  displayName: "Depends On"
+  type: object
+  default: []
+
+- name: azureServiceConnection
+  displayName: "Name of the Azure Service Connection"
+  type: string
+
+- name: preferredAzurePowerShellVersion
+  displayName: "Az Powershell module version."
+  type: string
+  default: ""
+
+- name: topLevelManagementGroupName
+  displayName: "Top Level Management Group Name"
+  type: string
+
+- name: additionalBuiltInPolicyMetadataConfigFilePath
+  displayName: "Config File that contains additional builtin Policy Metadata from security control frameworks to include."
+  type: string
+  default: ""
+
+- name: environmentName
+  displayName: "Environment Name"
+  type: string
+
+- name: buildArtifactName
+  displayName: "Pipeline build artifact name for the environment discovery output"
+  type: string
+
+- name: aesEncryptionKey
+  displayName: "AES Encryption Key"
+  type: string
+
+- name: aesEncryptionIV
+  displayName: "AES Encryption Initialization Vector"
+  type: string
+
+stages:
+  - stage: "${{ parameters.stageName }}"
+    displayName: "${{ parameters.environmentName }} Discovery"
+    dependsOn: ${{ parameters.dependsOn }}
+    variables:
+      - template: ../../settings.yml
+      - name: scriptPath
+        value: "scripts/environment-discovery.ps1"
+    condition: ${{ parameters.condition }}
+    jobs:
+    - job: "environment_data_discovery"
+      displayName: "Environment Data Discovery"
+      pool:
+        ${{ if ne(parameters.vmImage, '') }}:
+          vmImage: ${{ parameters.vmImage }}
+        ${{ if ne(parameters.poolName, '') }}:
+          name: ${{ parameters.poolName }}
+      steps:
+        - checkout: self
+          fetchDepth: 0
+        - task: AzurePowerShell@5
+          displayName: "Discover Environment Data"
+          env:
+            #passing the encryption key and IV to the script as environment variables instead of parameters
+            #because this is enabled in ADO project: https://learn.microsoft.com/en-us/azure/devops/pipelines/security/inputs?view=azure-devops#enable-shell-tasks-arguments-parameter-validation
+            EncryptionKey: ${{parameters.aesEncryptionKey}}
+            EncryptionIV: ${{parameters.aesEncryptionIV}}
+          inputs:
+            azureSubscription: "${{ parameters.azureServiceConnection }}"
+            pwsh: true
+            #If preferredAzurePowerShellVersion is not provided, or it's running on Self-hosted agents, then use the latest version of Az module
+            ${{ if or(eq(parameters.preferredAzurePowerShellVersion, ''), ne(parameters.poolName, '')) }}:
+              azurePowerShellVersion: 'LatestVersion'
+            #if preferredAzurePowerShellVersion is provided, and it's running on MS-hosted agents, then use the provided version of Az module
+            ${{ else }}:
+              azurePowerShellVersion: 'OtherVersion'
+              preferredAzurePowerShellVersion: '${{parameters.preferredAzurePowerShellVersion}}'
+            scriptType: filePath
+            scriptPath: $(scriptPath)
+            scriptArguments:
+              -TopLevelManagementGroupName '${{ parameters.topLevelManagementGroupName }}' `
+              -AdditionalBuiltInPolicyMetadataConfigFilePath '${{ parameters.additionalBuiltInPolicyMetadataConfigFilePath }}' `
+              -OutputFilePath '$(Build.ArtifactStagingDirectory)/${{ parameters.buildArtifactName }}/$(policyDocDiscoveryFileName)'
+        - task: PublishBuildArtifacts@1
+          displayName: "Publish Artifact"
+          inputs:
+            artifactName: "${{ parameters.buildArtifactName }}"
+            PathtoPublish: "$(Build.ArtifactStagingDirectory)/${{ parameters.buildArtifactName }}"

@@ -1,0 +1,146 @@
+name: 'Policy Documentation Generate Wiki'
+description: 'Generate wiki documentation for Azure Policy from the discovery data'
+
+inputs:
+  title:
+    required: true
+    description: 'Title of the wiki'
+  wikiAlias:
+    required: true
+    description: 'Alias of the wiki'
+  pageStyle:
+    required: true
+    description: 'Wiki page style to use (allowed values are "detailed" or "basic")'
+  gitBranch:
+    required: true
+    description: 'Git branch to push the wiki changes to'
+  gitRepository:
+    required: true
+    description: 'Git repository URL for the wiki'
+  gitUserName:
+    required: true
+    description: 'Git user name'
+  gitUserEmail:
+    required: true
+    description: 'Git user email'
+  gitCommitMessage:
+    required: true
+    description: 'Git commit message'
+  subscriptionIds:
+    required: true
+    default: ''
+    description: 'Comma separated list of subscription IDs to include in the wiki
+      generation. Leave empty to include all subscriptions in the environment.'
+  childManagementGroupId:
+    required: true
+    default: ''
+    description: 'Child management group ID to scope the wiki generation. Only
+      management groups under the top level management group are allowed. If
+      specified, only the policies assigned to the specified management group
+      and its child resources will be included in the wiki generation. If not
+      specified, policies assigned to all management groups and subscriptions in
+      the environment will be included.'
+  buildArtifactName:
+    required: true
+    description: 'Pipeline build artifact name to get the environment discovery data from'
+  aesEncryptionKey:
+    required: true
+    description: 'AES Encryption Key'
+  aesEncryptionIV:
+    required: true
+    description: AES Encryption Initialization Vector
+  githubUserId:
+    description: 'GitHub User ID'
+    required: true
+  githubToken:
+    description: 'Personal Access Token for GitHub'
+    required: true
+runs:
+  using: 'composite'
+  steps:
+    - name: Checkout source
+      uses: actions/checkout@v6
+      with:
+        fetch-depth: 0
+
+    - name: 'Install PowerShell-Yaml Module'
+      shell: pwsh
+      run: |
+        if (-not (Get-Module -ListAvailable -Name powershell-yaml)) {
+          Write-Output "Installing powershell-yaml module..."
+          Install-Module -Name powershell-yaml -Force -Scope CurrentUser
+        }
+
+    - name: Import Variables
+      shell: pwsh # PowerShell Core
+      env:
+        variablesPath: 'settings.yml'
+      run: |
+        ./scripts/github-set-variables.ps1 -configFilePath ${{ env.variablesPath }}
+
+    - name: Download Environment Discovery Artifact
+      uses: actions/download-artifact@v8
+      with:
+        name: ${{ inputs.buildArtifactName }}
+        path: '${{ runner.temp }}/${{inputs.buildArtifactName}}'
+    - name: Configure Git
+      shell: pwsh
+      run: |
+        Write-Output "Git Configuration."
+    - name: Configure Git
+      shell: pwsh
+      run: |
+        Write-Output "Git Configuration"
+        $tokenBytes = [System.Text.Encoding]::Unicode.GetBytes("${env.policyDocGitHubUserID}:${{ inputs.githubToken }}")
+        $token = [Convert]::ToBase64String($tokenBytes)
+        git config --global user.name "${inputs.gitUserName}"
+        git config --global user.email "${inputs.gitUserEmail}"
+        #git config --global http.extraheader "AUTHORIZATION: basic $token"
+    - name: Generate Wiki
+      id: generate_wiki
+      continue-on-error: true
+      shell: pwsh
+      env:
+        EncryptionKey: ${{ inputs.aesEncryptionKey }}
+        EncryptionIV: ${{ inputs.aesEncryptionIV }}
+        gitRepository: ${{ inputs.gitRepository }}
+        gitUserName: ${{ inputs.gitUserName }}
+        gitUserEmail: ${{ inputs.gitUserEmail }}
+        githubToken: ${{ inputs.githubToken }}
+        githubUserID: ${{ inputs.githubUserId }}
+      run: |
+        $ErrorActionPreference = 'Stop'
+        $PSNativeCommandUseErrorActionPreference = $true
+        #Write-Output "Runner Temp Directory: ${{ runner.temp }}"
+        #Get-ChildItem -Path '${{ runner.temp }}' -Recurse
+        $params = @{
+          DiscoveryFilePath = '${{ runner.temp }}/${{inputs.buildArtifactName}}/${{ env.environmentDiscoveryFileName }}'
+          BaseOutputPath   = '${{ runner.temp }}'
+          wikiAlias        = '${{ inputs.wikiAlias }}'
+          pageStyle        = '${{ inputs.pageStyle }}'
+          gitPlatform    = 'GitHub'
+          gitBranch      = '${{ inputs.gitBranch }}'
+          gitCommitMessage = '${{ inputs.gitCommitMessage }}'
+          SubscriptionIds = '${{ inputs.subscriptionIds }}'
+          childManagementGroupId = '${{ inputs.childManagementGroupId }}'
+          ExemptionExpiresOnWarningDays = [int]${{ env.policyDocExemptionExpiresOnWarningDays }}
+          ComplianceWarningPercentageThreshold = [int]${{ env.policyDocComplianceWarningPercentageThreshold }}
+          customSecurityControlPath = '${{ env.policyDocCustomSecurityControlPath }}'
+          Title = '${{ inputs.title }}'
+        }
+        ./scripts/generate-wiki-pages.ps1 @params
+    - name: Remove Git Global Config
+      if: always()
+      shell: pwsh
+      run: |
+        Write-Output "Removing Git Global Config."
+        git config --global --unset user.name 2>$null
+        git config --global --unset user.email 2>$null
+        git config --global --unset http.extraheader 2>$null
+        exit 0
+    - name: Fail If Generate Wiki Failed
+      if: always() && steps.generate_wiki.outcome == 'failure'
+      shell: pwsh
+      run: |
+        Write-Error "Generate Wiki step failed. Failing the workflow."
+        exit 1

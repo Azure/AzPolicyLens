@@ -1,0 +1,1123 @@
+<?xml version="1.0" encoding="utf-8"?>
+<helpItems xmlns:maml="http://schemas.microsoft.com/maml/2004/10" xmlns:command="http://schemas.microsoft.com/maml/dev/command/2004/10" xmlns:dev="http://schemas.microsoft.com/maml/dev/2004/10" schema="maml" xmlns="http://msh">
+  <command:command>
+    <command:details>
+      <command:name>Import-AzplEnvironmentDiscovery</command:name>
+      <maml:description>
+        <maml:para>Import existing environment details previously exported using the `Invoke-AzplEnvironmentDiscovery` function from the `AzPolicyLens.Discovery` module.</maml:para>
+      </maml:description>
+      <command:verb>Import</command:verb>
+      <command:noun>AzplEnvironmentDiscovery</command:noun>
+    </command:details>
+    <maml:description>
+      <maml:para>Import existing environment details previously exported using the `Invoke-AzplEnvironmentDiscovery` function from the `AzPolicyLens.Discovery` module.</maml:para>
+    </maml:description>
+    <command:syntax>
+      <command:syntaxItem>
+        <maml:name>Import-AzplEnvironmentDiscovery</maml:name>
+        <command:parameter required="true" variableLength="false" globbing="false" pipelineInput="false" position="Named" aliases="none">
+          <maml:name>EncryptionIV</maml:name>
+          <maml:description>
+            <maml:para>AES Encryption Initialization Vector (IV) Content.</maml:para>
+          </maml:description>
+          <command:parameterValue required="true" variableLength="true">System.String</command:parameterValue>
+        </command:parameter>
+        <command:parameter required="true" variableLength="false" globbing="false" pipelineInput="false" position="Named" aliases="none">
+          <maml:name>EncryptionKey</maml:name>
+          <maml:description>
+            <maml:para>AES Encryption Key Content.</maml:para>
+          </maml:description>
+          <command:parameterValue required="true" variableLength="true">System.String</command:parameterValue>
+        </command:parameter>
+        <command:parameter required="true" variableLength="false" globbing="false" pipelineInput="false" position="Named" aliases="none">
+          <maml:name>FilePath</maml:name>
+          <maml:description>
+            <maml:para>File path for the Environment Data to import</maml:para>
+          </maml:description>
+          <command:parameterValue required="true" variableLength="true">System.String</command:parameterValue>
+        </command:parameter>
+      </command:syntaxItem>
+      <command:syntaxItem>
+        <maml:name>Import-AzplEnvironmentDiscovery</maml:name>
+        <command:parameter required="true" variableLength="false" globbing="false" pipelineInput="false" position="Named" aliases="none">
+          <maml:name>EncryptionKeyFilePath</maml:name>
+          <maml:description>
+            <maml:para>AES Encryption key file path. Use the same key to decrypt the file if it is encrypted.</maml:para>
+          </maml:description>
+          <command:parameterValue required="true" variableLength="true">System.String</command:parameterValue>
+        </command:parameter>
+        <command:parameter required="true" variableLength="false" globbing="false" pipelineInput="false" position="Named" aliases="none">
+          <maml:name>FilePath</maml:name>
+          <maml:description>
+            <maml:para>File path for the Environment Data to import</maml:para>
+          </maml:description>
+          <command:parameterValue required="true" variableLength="true">System.String</command:parameterValue>
+        </command:parameter>
+      </command:syntaxItem>
+      <command:syntaxItem>
+        <maml:name>Import-AzplEnvironmentDiscovery</maml:name>
+        <command:parameter required="true" variableLength="false" globbing="false" pipelineInput="false" position="Named" aliases="none">
+          <maml:name>FilePath</maml:name>
+          <maml:description>
+            <maml:para>File path for the Environment Data to import</maml:para>
+          </maml:description>
+          <command:parameterValue required="true" variableLength="true">System.String</command:parameterValue>
+        </command:parameter>
+      </command:syntaxItem>
+    </command:syntax>
+    <command:parameters>
+      <command:parameter required="true" variableLength="false" globbing="false" pipelineInput="false" position="Named" aliases="none">
+        <maml:name>EncryptionIV</maml:name>
+        <maml:description>
+          <maml:para>AES Encryption Initialization Vector (IV) Content.</maml:para>
+        </maml:description>
+        <command:parameterValue required="true" variableLength="true">System.String</command:parameterValue>
+      </command:parameter>
+      <command:parameter required="true" variableLength="false" globbing="false" pipelineInput="false" position="Named" aliases="none">
+        <maml:name>EncryptionKey</maml:name>
+        <maml:description>
+          <maml:para>AES Encryption Key Content.</maml:para>
+        </maml:description>
+        <command:parameterValue required="true" variableLength="true">System.String</command:parameterValue>
+      </command:parameter>
+      <command:parameter required="true" variableLength="false" globbing="false" pipelineInput="false" position="Named" aliases="none">
+        <maml:name>EncryptionKeyFilePath</maml:name>
+        <maml:description>
+          <maml:para>AES Encryption key file path. Use the same key to decrypt the file if it is encrypted.</maml:para>
+        </maml:description>
+        <command:parameterValue required="true" variableLength="true">System.String</command:parameterValue>
+      </command:parameter>
+      <command:parameter required="true" variableLength="false" globbing="false" pipelineInput="false" position="Named" aliases="none">
+        <maml:name>FilePath</maml:name>
+        <maml:description>
+          <maml:para>File path for the Environment Data to import</maml:para>
+        </maml:description>
+        <command:parameterValue required="true" variableLength="true">System.String</command:parameterValue>
+      </command:parameter>
+    </command:parameters>
+    <command:inputTypes />
+    <command:returnValues>
+      <command:returnValue>
+        <dev:type>
+          <dev:name>System.Collections.Specialized.OrderedDictionary</dev:name>
+        </dev:type>
+        <maml:description>
+          <maml:para>Imported environment discovery data.</maml:para>
+        </maml:description>
+      </command:returnValue>
+    </command:returnValues>
+    <maml:alertSet>
+      <maml:alert>
+        <maml:para />
+      </maml:alert>
+    </maml:alertSet>
+    <command:examples>
+      <command:example>
+        <maml:title>--------- Example 1 ---------</maml:title>
+        <maml:introduction>
+          <maml:para>PS C:\&gt; Import-AzplEnvironmentDiscovery -FilePath 'C:\Temp\output.zip'</maml:para>
+          <maml:para>&#x80;</maml:para>
+          <maml:para>Import environment details from the unencrypted discovery data from file `C:\Temp\output.zip`.</maml:para>
+        </maml:introduction>
+        <dev:code />
+        <dev:remarks />
+      </command:example>
+      <command:example>
+        <maml:title>--------- Example 2 ---------</maml:title>
+        <maml:introduction>
+          <maml:para>PS C:\&gt; Import-AzplEnvironmentDiscovery -FilePath 'C:\Temp\output.zip' -EncryptionKeyFilePath 'C:\Temp\AzplEncryptionKey.json'</maml:para>
+          <maml:para>&#x80;</maml:para>
+          <maml:para>Import environment details from the encrypted discovery data from file `C:\Temp\output.zip` using the encryption key stored in `C:\Temp\AzplEncryptionKey.json`.</maml:para>
+        </maml:introduction>
+        <dev:code />
+        <dev:remarks />
+      </command:example>
+      <command:example>
+        <maml:title>--------- Example 3 ---------</maml:title>
+        <maml:introduction>
+          <maml:para>PS C:\&gt; Import-AzplEnvironmentDiscovery -FilePath 'C:\Temp\output.zip' -EncryptionKey 'your-encryption-key' -EncryptionIV 'your-encryption-iv'</maml:para>
+          <maml:para>&#x80;</maml:para>
+          <maml:para>Import environment details from the encrypted discovery data from file `C:\Temp\output.zip` using the content of the AES encryption key and Initialization Vector.</maml:para>
+        </maml:introduction>
+        <dev:code />
+        <dev:remarks />
+      </command:example>
+    </command:examples>
+    <command:relatedLinks>
+      <maml:navigationLink>
+        <maml:linkText>Online Version</maml:linkText>
+        <command:uri />
+      </maml:navigationLink>
+      <maml:navigationLink>
+        <maml:linkText>AzPolicyLens Wiki Page</maml:linkText>
+        <command:uri>https://github.com/taoyangcloud/AzPolicyLens/wiki</command:uri>
+      </maml:navigationLink>
+    </command:relatedLinks>
+  </command:command>
+  <command:command>
+    <command:details>
+      <command:name>New-AzplDocumentation</command:name>
+      <maml:description>
+        <maml:para>Generate detailed documentation for the entire environment, a subset of subscriptions, or a child management group sub-tree.
+
+The detailed documentation is intended to be used by the support engineers of the Azure cloud platform.
+
+The basic documentation is intended to be used by the customer of the Azure cloud platform.</maml:para>
+      </maml:description>
+      <command:verb>New</command:verb>
+      <command:noun>AzplDocumentation</command:noun>
+    </command:details>
+    <maml:description>
+      <maml:para>Generate the basic or detailed documentation for the entire environment, a subset of subscriptions, or a sub-tree rooted at a child management group. The basic documentation does not include the following: hidden tags for subscriptions, any metadata that starts with 'hidden-' or 'hidden_' for policy resources, Management group hierarchy mermaid diagram, management group summary, deprecated policy resources, unassigned policy resources, etc..</maml:para>
+    </maml:description>
+    <command:syntax>
+      <command:syntaxItem>
+        <maml:name>New-AzplDocumentation</maml:name>
+        <command:parameter required="true" variableLength="false" globbing="false" pipelineInput="false" position="Named" aliases="none">
+          <maml:name>BaseOutputPath</maml:name>
+          <maml:description>
+            <maml:para>The output base directory.</maml:para>
+          </maml:description>
+          <command:parameterValue required="true" variableLength="true">System.String</command:parameterValue>
+        </command:parameter>
+        <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="false" position="Named" aliases="none">
+          <maml:name>ComplianceWarningPercentageThreshold</maml:name>
+          <maml:description>
+            <maml:para>The warning percentage threshold for policy compliance summary. Accepted range: 1 - 99.</maml:para>
+          </maml:description>
+          <command:parameterValue required="false" variableLength="true">System.Int32</command:parameterValue>
+        </command:parameter>
+        <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="false" position="Named" aliases="none">
+          <maml:name>Confirm</maml:name>
+          <maml:description>
+            <maml:para>Prompts you for confirmation before running the cmdlet.</maml:para>
+          </maml:description>
+          <command:parameterValue required="false" variableLength="true">System.Management.Automation.SwitchParameter</command:parameterValue>
+        </command:parameter>
+        <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="false" position="Named" aliases="none">
+          <maml:name>CustomSecurityControlPath</maml:name>
+          <maml:description>
+            <maml:para>The directory contains custom security control definitions.</maml:para>
+          </maml:description>
+          <command:parameterValue required="false" variableLength="true">System.String</command:parameterValue>
+        </command:parameter>
+        <command:parameter required="true" variableLength="false" globbing="false" pipelineInput="false" position="Named" aliases="none">
+          <maml:name>DiscoveryDataImportFilePath</maml:name>
+          <maml:description>
+            <maml:para>File path for the Environment Data to import. Only `.zip` files produced by `Invoke-AzplEnvironmentDiscovery` are supported.</maml:para>
+          </maml:description>
+          <command:parameterValue required="true" variableLength="true">System.String</command:parameterValue>
+        </command:parameter>
+        <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="false" position="Named" aliases="none">
+          <maml:name>ExemptionExpiresOnWarningDays</maml:name>
+          <maml:description>
+            <maml:para>The warning days for the expiration of the policy exemption. Accepted range: 7 - 90.</maml:para>
+          </maml:description>
+          <command:parameterValue required="false" variableLength="true">System.Int32</command:parameterValue>
+        </command:parameter>
+        <command:parameter required="true" variableLength="false" globbing="false" pipelineInput="false" position="Named" aliases="none">
+          <maml:name>PageStyle</maml:name>
+          <maml:description>
+            <maml:para>The page style (detailed for engineers or basic for customers).</maml:para>
+          </maml:description>
+          <command:parameterValue required="true" variableLength="true">System.String</command:parameterValue>
+        </command:parameter>
+        <command:parameter required="true" variableLength="false" globbing="false" pipelineInput="false" position="Named" aliases="none">
+          <maml:name>Title</maml:name>
+          <maml:description>
+            <maml:para>The title of the wiki.</maml:para>
+          </maml:description>
+          <command:parameterValue required="true" variableLength="true">System.String</command:parameterValue>
+        </command:parameter>
+        <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="false" position="Named" aliases="none">
+          <maml:name>WhatIf</maml:name>
+          <maml:description>
+            <maml:para>Runs the command in a mode that only reports what would happen without performing the actions.</maml:para>
+          </maml:description>
+          <command:parameterValue required="false" variableLength="true">System.Management.Automation.SwitchParameter</command:parameterValue>
+        </command:parameter>
+        <command:parameter required="true" variableLength="false" globbing="false" pipelineInput="false" position="Named" aliases="none">
+          <maml:name>WikiStyle</maml:name>
+          <maml:description>
+            <maml:para>The wiki style. Supported values are "ado" and "github".</maml:para>
+          </maml:description>
+          <command:parameterValue required="true" variableLength="true">System.String</command:parameterValue>
+        </command:parameter>
+      </command:syntaxItem>
+      <command:syntaxItem>
+        <maml:name>New-AzplDocumentation</maml:name>
+        <command:parameter required="true" variableLength="false" globbing="false" pipelineInput="false" position="Named" aliases="none">
+          <maml:name>BaseOutputPath</maml:name>
+          <maml:description>
+            <maml:para>The output base directory.</maml:para>
+          </maml:description>
+          <command:parameterValue required="true" variableLength="true">System.String</command:parameterValue>
+        </command:parameter>
+        <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="false" position="Named" aliases="none">
+          <maml:name>ComplianceWarningPercentageThreshold</maml:name>
+          <maml:description>
+            <maml:para>The warning percentage threshold for policy compliance summary. Accepted range: 1 - 99.</maml:para>
+          </maml:description>
+          <command:parameterValue required="false" variableLength="true">System.Int32</command:parameterValue>
+        </command:parameter>
+        <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="false" position="Named" aliases="none">
+          <maml:name>Confirm</maml:name>
+          <maml:description>
+            <maml:para>Prompts you for confirmation before running the cmdlet.</maml:para>
+          </maml:description>
+          <command:parameterValue required="false" variableLength="true">System.Management.Automation.SwitchParameter</command:parameterValue>
+        </command:parameter>
+        <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="false" position="Named" aliases="none">
+          <maml:name>CustomSecurityControlPath</maml:name>
+          <maml:description>
+            <maml:para>The directory contains custom security control definitions.</maml:para>
+          </maml:description>
+          <command:parameterValue required="false" variableLength="true">System.String</command:parameterValue>
+        </command:parameter>
+        <command:parameter required="true" variableLength="false" globbing="false" pipelineInput="false" position="Named" aliases="none">
+          <maml:name>DiscoveryDataImportFilePath</maml:name>
+          <maml:description>
+            <maml:para>File path for the Environment Data to import. Only `.zip` files produced by `Invoke-AzplEnvironmentDiscovery` are supported.</maml:para>
+          </maml:description>
+          <command:parameterValue required="true" variableLength="true">System.String</command:parameterValue>
+        </command:parameter>
+        <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="false" position="Named" aliases="none">
+          <maml:name>ExemptionExpiresOnWarningDays</maml:name>
+          <maml:description>
+            <maml:para>The warning days for the expiration of the policy exemption. Accepted range: 7 - 90.</maml:para>
+          </maml:description>
+          <command:parameterValue required="false" variableLength="true">System.Int32</command:parameterValue>
+        </command:parameter>
+        <command:parameter required="true" variableLength="false" globbing="false" pipelineInput="false" position="Named" aliases="none">
+          <maml:name>PageStyle</maml:name>
+          <maml:description>
+            <maml:para>The page style (detailed for engineers or basic for customers).</maml:para>
+          </maml:description>
+          <command:parameterValue required="true" variableLength="true">System.String</command:parameterValue>
+        </command:parameter>
+        <command:parameter required="true" variableLength="false" globbing="false" pipelineInput="false" position="Named" aliases="none">
+          <maml:name>SubscriptionIds</maml:name>
+          <maml:description>
+            <maml:para>The subset of subscription Ids (GUID) to generate the documentation for.</maml:para>
+          </maml:description>
+          <command:parameterValue required="true" variableLength="true">System.String[]</command:parameterValue>
+        </command:parameter>
+        <command:parameter required="true" variableLength="false" globbing="false" pipelineInput="false" position="Named" aliases="none">
+          <maml:name>Title</maml:name>
+          <maml:description>
+            <maml:para>The title of the wiki.</maml:para>
+          </maml:description>
+          <command:parameterValue required="true" variableLength="true">System.String</command:parameterValue>
+        </command:parameter>
+        <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="false" position="Named" aliases="none">
+          <maml:name>WhatIf</maml:name>
+          <maml:description>
+            <maml:para>Runs the command in a mode that only reports what would happen without performing the actions.</maml:para>
+          </maml:description>
+          <command:parameterValue required="false" variableLength="true">System.Management.Automation.SwitchParameter</command:parameterValue>
+        </command:parameter>
+        <command:parameter required="true" variableLength="false" globbing="false" pipelineInput="false" position="Named" aliases="none">
+          <maml:name>WikiStyle</maml:name>
+          <maml:description>
+            <maml:para>The wiki style. Supported values are "ado" and "github".</maml:para>
+          </maml:description>
+          <command:parameterValue required="true" variableLength="true">System.String</command:parameterValue>
+        </command:parameter>
+      </command:syntaxItem>
+      <command:syntaxItem>
+        <maml:name>New-AzplDocumentation</maml:name>
+        <command:parameter required="true" variableLength="false" globbing="false" pipelineInput="false" position="Named" aliases="none">
+          <maml:name>BaseOutputPath</maml:name>
+          <maml:description>
+            <maml:para>The output base directory.</maml:para>
+          </maml:description>
+          <command:parameterValue required="true" variableLength="true">System.String</command:parameterValue>
+        </command:parameter>
+        <command:parameter required="true" variableLength="false" globbing="false" pipelineInput="false" position="Named" aliases="none">
+          <maml:name>childManagementGroupId</maml:name>
+          <maml:description>
+            <maml:para>The Id of a child management group to generate the documentation for. The documentation will include the specified management group and all of its descendants.</maml:para>
+          </maml:description>
+          <command:parameterValue required="true" variableLength="true">System.String</command:parameterValue>
+        </command:parameter>
+        <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="false" position="Named" aliases="none">
+          <maml:name>ComplianceWarningPercentageThreshold</maml:name>
+          <maml:description>
+            <maml:para>The warning percentage threshold for policy compliance summary. Accepted range: 1 - 99.</maml:para>
+          </maml:description>
+          <command:parameterValue required="false" variableLength="true">System.Int32</command:parameterValue>
+        </command:parameter>
+        <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="false" position="Named" aliases="none">
+          <maml:name>Confirm</maml:name>
+          <maml:description>
+            <maml:para>Prompts you for confirmation before running the cmdlet.</maml:para>
+          </maml:description>
+          <command:parameterValue required="false" variableLength="true">System.Management.Automation.SwitchParameter</command:parameterValue>
+        </command:parameter>
+        <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="false" position="Named" aliases="none">
+          <maml:name>CustomSecurityControlPath</maml:name>
+          <maml:description>
+            <maml:para>The directory contains custom security control definitions.</maml:para>
+          </maml:description>
+          <command:parameterValue required="false" variableLength="true">System.String</command:parameterValue>
+        </command:parameter>
+        <command:parameter required="true" variableLength="false" globbing="false" pipelineInput="false" position="Named" aliases="none">
+          <maml:name>DiscoveryDataImportFilePath</maml:name>
+          <maml:description>
+            <maml:para>File path for the Environment Data to import. Only `.zip` files produced by `Invoke-AzplEnvironmentDiscovery` are supported.</maml:para>
+          </maml:description>
+          <command:parameterValue required="true" variableLength="true">System.String</command:parameterValue>
+        </command:parameter>
+        <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="false" position="Named" aliases="none">
+          <maml:name>ExemptionExpiresOnWarningDays</maml:name>
+          <maml:description>
+            <maml:para>The warning days for the expiration of the policy exemption. Accepted range: 7 - 90.</maml:para>
+          </maml:description>
+          <command:parameterValue required="false" variableLength="true">System.Int32</command:parameterValue>
+        </command:parameter>
+        <command:parameter required="true" variableLength="false" globbing="false" pipelineInput="false" position="Named" aliases="none">
+          <maml:name>PageStyle</maml:name>
+          <maml:description>
+            <maml:para>The page style (detailed for engineers or basic for customers).</maml:para>
+          </maml:description>
+          <command:parameterValue required="true" variableLength="true">System.String</command:parameterValue>
+        </command:parameter>
+        <command:parameter required="true" variableLength="false" globbing="false" pipelineInput="false" position="Named" aliases="none">
+          <maml:name>Title</maml:name>
+          <maml:description>
+            <maml:para>The title of the wiki.</maml:para>
+          </maml:description>
+          <command:parameterValue required="true" variableLength="true">System.String</command:parameterValue>
+        </command:parameter>
+        <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="false" position="Named" aliases="none">
+          <maml:name>WhatIf</maml:name>
+          <maml:description>
+            <maml:para>Runs the command in a mode that only reports what would happen without performing the actions.</maml:para>
+          </maml:description>
+          <command:parameterValue required="false" variableLength="true">System.Management.Automation.SwitchParameter</command:parameterValue>
+        </command:parameter>
+        <command:parameter required="true" variableLength="false" globbing="false" pipelineInput="false" position="Named" aliases="none">
+          <maml:name>WikiStyle</maml:name>
+          <maml:description>
+            <maml:para>The wiki style. Supported values are "ado" and "github".</maml:para>
+          </maml:description>
+          <command:parameterValue required="true" variableLength="true">System.String</command:parameterValue>
+        </command:parameter>
+      </command:syntaxItem>
+      <command:syntaxItem>
+        <maml:name>New-AzplDocumentation</maml:name>
+        <command:parameter required="true" variableLength="false" globbing="false" pipelineInput="false" position="Named" aliases="none">
+          <maml:name>BaseOutputPath</maml:name>
+          <maml:description>
+            <maml:para>The output base directory.</maml:para>
+          </maml:description>
+          <command:parameterValue required="true" variableLength="true">System.String</command:parameterValue>
+        </command:parameter>
+        <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="false" position="Named" aliases="none">
+          <maml:name>ComplianceWarningPercentageThreshold</maml:name>
+          <maml:description>
+            <maml:para>The warning percentage threshold for policy compliance summary. Accepted range: 1 - 99.</maml:para>
+          </maml:description>
+          <command:parameterValue required="false" variableLength="true">System.Int32</command:parameterValue>
+        </command:parameter>
+        <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="false" position="Named" aliases="none">
+          <maml:name>Confirm</maml:name>
+          <maml:description>
+            <maml:para>Prompts you for confirmation before running the cmdlet.</maml:para>
+          </maml:description>
+          <command:parameterValue required="false" variableLength="true">System.Management.Automation.SwitchParameter</command:parameterValue>
+        </command:parameter>
+        <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="false" position="Named" aliases="none">
+          <maml:name>CustomSecurityControlPath</maml:name>
+          <maml:description>
+            <maml:para>The directory contains custom security control definitions.</maml:para>
+          </maml:description>
+          <command:parameterValue required="false" variableLength="true">System.String</command:parameterValue>
+        </command:parameter>
+        <command:parameter required="true" variableLength="false" globbing="false" pipelineInput="false" position="Named" aliases="none">
+          <maml:name>DiscoveryDataImportFilePath</maml:name>
+          <maml:description>
+            <maml:para>File path for the Environment Data to import. Only `.zip` files produced by `Invoke-AzplEnvironmentDiscovery` are supported.</maml:para>
+          </maml:description>
+          <command:parameterValue required="true" variableLength="true">System.String</command:parameterValue>
+        </command:parameter>
+        <command:parameter required="true" variableLength="false" globbing="false" pipelineInput="false" position="Named" aliases="none">
+          <maml:name>EncryptionKeyFilePath</maml:name>
+          <maml:description>
+            <maml:para>AES Encryption key file path. This key is used to decrypt the existing environment discovery file.</maml:para>
+          </maml:description>
+          <command:parameterValue required="true" variableLength="true">System.String</command:parameterValue>
+        </command:parameter>
+        <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="false" position="Named" aliases="none">
+          <maml:name>ExemptionExpiresOnWarningDays</maml:name>
+          <maml:description>
+            <maml:para>The warning days for the expiration of the policy exemption. Accepted range: 7 - 90.</maml:para>
+          </maml:description>
+          <command:parameterValue required="false" variableLength="true">System.Int32</command:parameterValue>
+        </command:parameter>
+        <command:parameter required="true" variableLength="false" globbing="false" pipelineInput="false" position="Named" aliases="none">
+          <maml:name>PageStyle</maml:name>
+          <maml:description>
+            <maml:para>The page style (detailed for engineers or basic for customers).</maml:para>
+          </maml:description>
+          <command:parameterValue required="true" variableLength="true">System.String</command:parameterValue>
+        </command:parameter>
+        <command:parameter required="true" variableLength="false" globbing="false" pipelineInput="false" position="Named" aliases="none">
+          <maml:name>Title</maml:name>
+          <maml:description>
+            <maml:para>The title of the wiki.</maml:para>
+          </maml:description>
+          <command:parameterValue required="true" variableLength="true">System.String</command:parameterValue>
+        </command:parameter>
+        <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="false" position="Named" aliases="none">
+          <maml:name>WhatIf</maml:name>
+          <maml:description>
+            <maml:para>Runs the command in a mode that only reports what would happen without performing the actions.</maml:para>
+          </maml:description>
+          <command:parameterValue required="false" variableLength="true">System.Management.Automation.SwitchParameter</command:parameterValue>
+        </command:parameter>
+        <command:parameter required="true" variableLength="false" globbing="false" pipelineInput="false" position="Named" aliases="none">
+          <maml:name>WikiStyle</maml:name>
+          <maml:description>
+            <maml:para>The wiki style. Supported values are "ado" and "github".</maml:para>
+          </maml:description>
+          <command:parameterValue required="true" variableLength="true">System.String</command:parameterValue>
+        </command:parameter>
+      </command:syntaxItem>
+      <command:syntaxItem>
+        <maml:name>New-AzplDocumentation</maml:name>
+        <command:parameter required="true" variableLength="false" globbing="false" pipelineInput="false" position="Named" aliases="none">
+          <maml:name>BaseOutputPath</maml:name>
+          <maml:description>
+            <maml:para>The output base directory.</maml:para>
+          </maml:description>
+          <command:parameterValue required="true" variableLength="true">System.String</command:parameterValue>
+        </command:parameter>
+        <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="false" position="Named" aliases="none">
+          <maml:name>ComplianceWarningPercentageThreshold</maml:name>
+          <maml:description>
+            <maml:para>The warning percentage threshold for policy compliance summary. Accepted range: 1 - 99.</maml:para>
+          </maml:description>
+          <command:parameterValue required="false" variableLength="true">System.Int32</command:parameterValue>
+        </command:parameter>
+        <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="false" position="Named" aliases="none">
+          <maml:name>Confirm</maml:name>
+          <maml:description>
+            <maml:para>Prompts you for confirmation before running the cmdlet.</maml:para>
+          </maml:description>
+          <command:parameterValue required="false" variableLength="true">System.Management.Automation.SwitchParameter</command:parameterValue>
+        </command:parameter>
+        <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="false" position="Named" aliases="none">
+          <maml:name>CustomSecurityControlPath</maml:name>
+          <maml:description>
+            <maml:para>The directory contains custom security control definitions.</maml:para>
+          </maml:description>
+          <command:parameterValue required="false" variableLength="true">System.String</command:parameterValue>
+        </command:parameter>
+        <command:parameter required="true" variableLength="false" globbing="false" pipelineInput="false" position="Named" aliases="none">
+          <maml:name>DiscoveryDataImportFilePath</maml:name>
+          <maml:description>
+            <maml:para>File path for the Environment Data to import. Only `.zip` files produced by `Invoke-AzplEnvironmentDiscovery` are supported.</maml:para>
+          </maml:description>
+          <command:parameterValue required="true" variableLength="true">System.String</command:parameterValue>
+        </command:parameter>
+        <command:parameter required="true" variableLength="false" globbing="false" pipelineInput="false" position="Named" aliases="none">
+          <maml:name>EncryptionKeyFilePath</maml:name>
+          <maml:description>
+            <maml:para>AES Encryption key file path. This key is used to decrypt the existing environment discovery file.</maml:para>
+          </maml:description>
+          <command:parameterValue required="true" variableLength="true">System.String</command:parameterValue>
+        </command:parameter>
+        <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="false" position="Named" aliases="none">
+          <maml:name>ExemptionExpiresOnWarningDays</maml:name>
+          <maml:description>
+            <maml:para>The warning days for the expiration of the policy exemption. Accepted range: 7 - 90.</maml:para>
+          </maml:description>
+          <command:parameterValue required="false" variableLength="true">System.Int32</command:parameterValue>
+        </command:parameter>
+        <command:parameter required="true" variableLength="false" globbing="false" pipelineInput="false" position="Named" aliases="none">
+          <maml:name>PageStyle</maml:name>
+          <maml:description>
+            <maml:para>The page style (detailed for engineers or basic for customers).</maml:para>
+          </maml:description>
+          <command:parameterValue required="true" variableLength="true">System.String</command:parameterValue>
+        </command:parameter>
+        <command:parameter required="true" variableLength="false" globbing="false" pipelineInput="false" position="Named" aliases="none">
+          <maml:name>SubscriptionIds</maml:name>
+          <maml:description>
+            <maml:para>The subset of subscription Ids (GUID) to generate the documentation for.</maml:para>
+          </maml:description>
+          <command:parameterValue required="true" variableLength="true">System.String[]</command:parameterValue>
+        </command:parameter>
+        <command:parameter required="true" variableLength="false" globbing="false" pipelineInput="false" position="Named" aliases="none">
+          <maml:name>Title</maml:name>
+          <maml:description>
+            <maml:para>The title of the wiki.</maml:para>
+          </maml:description>
+          <command:parameterValue required="true" variableLength="true">System.String</command:parameterValue>
+        </command:parameter>
+        <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="false" position="Named" aliases="none">
+          <maml:name>WhatIf</maml:name>
+          <maml:description>
+            <maml:para>Runs the command in a mode that only reports what would happen without performing the actions.</maml:para>
+          </maml:description>
+          <command:parameterValue required="false" variableLength="true">System.Management.Automation.SwitchParameter</command:parameterValue>
+        </command:parameter>
+        <command:parameter required="true" variableLength="false" globbing="false" pipelineInput="false" position="Named" aliases="none">
+          <maml:name>WikiStyle</maml:name>
+          <maml:description>
+            <maml:para>The wiki style. Supported values are "ado" and "github".</maml:para>
+          </maml:description>
+          <command:parameterValue required="true" variableLength="true">System.String</command:parameterValue>
+        </command:parameter>
+      </command:syntaxItem>
+      <command:syntaxItem>
+        <maml:name>New-AzplDocumentation</maml:name>
+        <command:parameter required="true" variableLength="false" globbing="false" pipelineInput="false" position="Named" aliases="none">
+          <maml:name>BaseOutputPath</maml:name>
+          <maml:description>
+            <maml:para>The output base directory.</maml:para>
+          </maml:description>
+          <command:parameterValue required="true" variableLength="true">System.String</command:parameterValue>
+        </command:parameter>
+        <command:parameter required="true" variableLength="false" globbing="false" pipelineInput="false" position="Named" aliases="none">
+          <maml:name>childManagementGroupId</maml:name>
+          <maml:description>
+            <maml:para>The Id of a child management group to generate the documentation for. The documentation will include the specified management group and all of its descendants.</maml:para>
+          </maml:description>
+          <command:parameterValue required="true" variableLength="true">System.String</command:parameterValue>
+        </command:parameter>
+        <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="false" position="Named" aliases="none">
+          <maml:name>ComplianceWarningPercentageThreshold</maml:name>
+          <maml:description>
+            <maml:para>The warning percentage threshold for policy compliance summary. Accepted range: 1 - 99.</maml:para>
+          </maml:description>
+          <command:parameterValue required="false" variableLength="true">System.Int32</command:parameterValue>
+        </command:parameter>
+        <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="false" position="Named" aliases="none">
+          <maml:name>Confirm</maml:name>
+          <maml:description>
+            <maml:para>Prompts you for confirmation before running the cmdlet.</maml:para>
+          </maml:description>
+          <command:parameterValue required="false" variableLength="true">System.Management.Automation.SwitchParameter</command:parameterValue>
+        </command:parameter>
+        <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="false" position="Named" aliases="none">
+          <maml:name>CustomSecurityControlPath</maml:name>
+          <maml:description>
+            <maml:para>The directory contains custom security control definitions.</maml:para>
+          </maml:description>
+          <command:parameterValue required="false" variableLength="true">System.String</command:parameterValue>
+        </command:parameter>
+        <command:parameter required="true" variableLength="false" globbing="false" pipelineInput="false" position="Named" aliases="none">
+          <maml:name>DiscoveryDataImportFilePath</maml:name>
+          <maml:description>
+            <maml:para>File path for the Environment Data to import. Only `.zip` files produced by `Invoke-AzplEnvironmentDiscovery` are supported.</maml:para>
+          </maml:description>
+          <command:parameterValue required="true" variableLength="true">System.String</command:parameterValue>
+        </command:parameter>
+        <command:parameter required="true" variableLength="false" globbing="false" pipelineInput="false" position="Named" aliases="none">
+          <maml:name>EncryptionKeyFilePath</maml:name>
+          <maml:description>
+            <maml:para>AES Encryption key file path. This key is used to decrypt the existing environment discovery file.</maml:para>
+          </maml:description>
+          <command:parameterValue required="true" variableLength="true">System.String</command:parameterValue>
+        </command:parameter>
+        <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="false" position="Named" aliases="none">
+          <maml:name>ExemptionExpiresOnWarningDays</maml:name>
+          <maml:description>
+            <maml:para>The warning days for the expiration of the policy exemption. Accepted range: 7 - 90.</maml:para>
+          </maml:description>
+          <command:parameterValue required="false" variableLength="true">System.Int32</command:parameterValue>
+        </command:parameter>
+        <command:parameter required="true" variableLength="false" globbing="false" pipelineInput="false" position="Named" aliases="none">
+          <maml:name>PageStyle</maml:name>
+          <maml:description>
+            <maml:para>The page style (detailed for engineers or basic for customers).</maml:para>
+          </maml:description>
+          <command:parameterValue required="true" variableLength="true">System.String</command:parameterValue>
+        </command:parameter>
+        <command:parameter required="true" variableLength="false" globbing="false" pipelineInput="false" position="Named" aliases="none">
+          <maml:name>Title</maml:name>
+          <maml:description>
+            <maml:para>The title of the wiki.</maml:para>
+          </maml:description>
+          <command:parameterValue required="true" variableLength="true">System.String</command:parameterValue>
+        </command:parameter>
+        <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="false" position="Named" aliases="none">
+          <maml:name>WhatIf</maml:name>
+          <maml:description>
+            <maml:para>Runs the command in a mode that only reports what would happen without performing the actions.</maml:para>
+          </maml:description>
+          <command:parameterValue required="false" variableLength="true">System.Management.Automation.SwitchParameter</command:parameterValue>
+        </command:parameter>
+        <command:parameter required="true" variableLength="false" globbing="false" pipelineInput="false" position="Named" aliases="none">
+          <maml:name>WikiStyle</maml:name>
+          <maml:description>
+            <maml:para>The wiki style. Supported values are "ado" and "github".</maml:para>
+          </maml:description>
+          <command:parameterValue required="true" variableLength="true">System.String</command:parameterValue>
+        </command:parameter>
+      </command:syntaxItem>
+      <command:syntaxItem>
+        <maml:name>New-AzplDocumentation</maml:name>
+        <command:parameter required="true" variableLength="false" globbing="false" pipelineInput="false" position="Named" aliases="none">
+          <maml:name>BaseOutputPath</maml:name>
+          <maml:description>
+            <maml:para>The output base directory.</maml:para>
+          </maml:description>
+          <command:parameterValue required="true" variableLength="true">System.String</command:parameterValue>
+        </command:parameter>
+        <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="false" position="Named" aliases="none">
+          <maml:name>ComplianceWarningPercentageThreshold</maml:name>
+          <maml:description>
+            <maml:para>The warning percentage threshold for policy compliance summary. Accepted range: 1 - 99.</maml:para>
+          </maml:description>
+          <command:parameterValue required="false" variableLength="true">System.Int32</command:parameterValue>
+        </command:parameter>
+        <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="false" position="Named" aliases="none">
+          <maml:name>Confirm</maml:name>
+          <maml:description>
+            <maml:para>Prompts you for confirmation before running the cmdlet.</maml:para>
+          </maml:description>
+          <command:parameterValue required="false" variableLength="true">System.Management.Automation.SwitchParameter</command:parameterValue>
+        </command:parameter>
+        <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="false" position="Named" aliases="none">
+          <maml:name>CustomSecurityControlPath</maml:name>
+          <maml:description>
+            <maml:para>The directory contains custom security control definitions.</maml:para>
+          </maml:description>
+          <command:parameterValue required="false" variableLength="true">System.String</command:parameterValue>
+        </command:parameter>
+        <command:parameter required="true" variableLength="false" globbing="false" pipelineInput="false" position="Named" aliases="none">
+          <maml:name>DiscoveryDataImportFilePath</maml:name>
+          <maml:description>
+            <maml:para>File path for the Environment Data to import. Only `.zip` files produced by `Invoke-AzplEnvironmentDiscovery` are supported.</maml:para>
+          </maml:description>
+          <command:parameterValue required="true" variableLength="true">System.String</command:parameterValue>
+        </command:parameter>
+        <command:parameter required="true" variableLength="false" globbing="false" pipelineInput="false" position="Named" aliases="none">
+          <maml:name>EncryptionIV</maml:name>
+          <maml:description>
+            <maml:para>AES Encryption Initialization Vector (IV) Content.</maml:para>
+          </maml:description>
+          <command:parameterValue required="true" variableLength="true">System.String</command:parameterValue>
+        </command:parameter>
+        <command:parameter required="true" variableLength="false" globbing="false" pipelineInput="false" position="Named" aliases="none">
+          <maml:name>EncryptionKey</maml:name>
+          <maml:description>
+            <maml:para>AES Encryption Key Content.</maml:para>
+          </maml:description>
+          <command:parameterValue required="true" variableLength="true">System.String</command:parameterValue>
+        </command:parameter>
+        <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="false" position="Named" aliases="none">
+          <maml:name>ExemptionExpiresOnWarningDays</maml:name>
+          <maml:description>
+            <maml:para>The warning days for the expiration of the policy exemption. Accepted range: 7 - 90.</maml:para>
+          </maml:description>
+          <command:parameterValue required="false" variableLength="true">System.Int32</command:parameterValue>
+        </command:parameter>
+        <command:parameter required="true" variableLength="false" globbing="false" pipelineInput="false" position="Named" aliases="none">
+          <maml:name>PageStyle</maml:name>
+          <maml:description>
+            <maml:para>The page style (detailed for engineers or basic for customers).</maml:para>
+          </maml:description>
+          <command:parameterValue required="true" variableLength="true">System.String</command:parameterValue>
+        </command:parameter>
+        <command:parameter required="true" variableLength="false" globbing="false" pipelineInput="false" position="Named" aliases="none">
+          <maml:name>Title</maml:name>
+          <maml:description>
+            <maml:para>The title of the wiki.</maml:para>
+          </maml:description>
+          <command:parameterValue required="true" variableLength="true">System.String</command:parameterValue>
+        </command:parameter>
+        <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="false" position="Named" aliases="none">
+          <maml:name>WhatIf</maml:name>
+          <maml:description>
+            <maml:para>Runs the command in a mode that only reports what would happen without performing the actions.</maml:para>
+          </maml:description>
+          <command:parameterValue required="false" variableLength="true">System.Management.Automation.SwitchParameter</command:parameterValue>
+        </command:parameter>
+        <command:parameter required="true" variableLength="false" globbing="false" pipelineInput="false" position="Named" aliases="none">
+          <maml:name>WikiStyle</maml:name>
+          <maml:description>
+            <maml:para>The wiki style. Supported values are "ado" and "github".</maml:para>
+          </maml:description>
+          <command:parameterValue required="true" variableLength="true">System.String</command:parameterValue>
+        </command:parameter>
+      </command:syntaxItem>
+      <command:syntaxItem>
+        <maml:name>New-AzplDocumentation</maml:name>
+        <command:parameter required="true" variableLength="false" globbing="false" pipelineInput="false" position="Named" aliases="none">
+          <maml:name>BaseOutputPath</maml:name>
+          <maml:description>
+            <maml:para>The output base directory.</maml:para>
+          </maml:description>
+          <command:parameterValue required="true" variableLength="true">System.String</command:parameterValue>
+        </command:parameter>
+        <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="false" position="Named" aliases="none">
+          <maml:name>ComplianceWarningPercentageThreshold</maml:name>
+          <maml:description>
+            <maml:para>The warning percentage threshold for policy compliance summary. Accepted range: 1 - 99.</maml:para>
+          </maml:description>
+          <command:parameterValue required="false" variableLength="true">System.Int32</command:parameterValue>
+        </command:parameter>
+        <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="false" position="Named" aliases="none">
+          <maml:name>Confirm</maml:name>
+          <maml:description>
+            <maml:para>Prompts you for confirmation before running the cmdlet.</maml:para>
+          </maml:description>
+          <command:parameterValue required="false" variableLength="true">System.Management.Automation.SwitchParameter</command:parameterValue>
+        </command:parameter>
+        <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="false" position="Named" aliases="none">
+          <maml:name>CustomSecurityControlPath</maml:name>
+          <maml:description>
+            <maml:para>The directory contains custom security control definitions.</maml:para>
+          </maml:description>
+          <command:parameterValue required="false" variableLength="true">System.String</command:parameterValue>
+        </command:parameter>
+        <command:parameter required="true" variableLength="false" globbing="false" pipelineInput="false" position="Named" aliases="none">
+          <maml:name>DiscoveryDataImportFilePath</maml:name>
+          <maml:description>
+            <maml:para>File path for the Environment Data to import. Only `.zip` files produced by `Invoke-AzplEnvironmentDiscovery` are supported.</maml:para>
+          </maml:description>
+          <command:parameterValue required="true" variableLength="true">System.String</command:parameterValue>
+        </command:parameter>
+        <command:parameter required="true" variableLength="false" globbing="false" pipelineInput="false" position="Named" aliases="none">
+          <maml:name>EncryptionIV</maml:name>
+          <maml:description>
+            <maml:para>AES Encryption Initialization Vector (IV) Content.</maml:para>
+          </maml:description>
+          <command:parameterValue required="true" variableLength="true">System.String</command:parameterValue>
+        </command:parameter>
+        <command:parameter required="true" variableLength="false" globbing="false" pipelineInput="false" position="Named" aliases="none">
+          <maml:name>EncryptionKey</maml:name>
+          <maml:description>
+            <maml:para>AES Encryption Key Content.</maml:para>
+          </maml:description>
+          <command:parameterValue required="true" variableLength="true">System.String</command:parameterValue>
+        </command:parameter>
+        <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="false" position="Named" aliases="none">
+          <maml:name>ExemptionExpiresOnWarningDays</maml:name>
+          <maml:description>
+            <maml:para>The warning days for the expiration of the policy exemption. Accepted range: 7 - 90.</maml:para>
+          </maml:description>
+          <command:parameterValue required="false" variableLength="true">System.Int32</command:parameterValue>
+        </command:parameter>
+        <command:parameter required="true" variableLength="false" globbing="false" pipelineInput="false" position="Named" aliases="none">
+          <maml:name>PageStyle</maml:name>
+          <maml:description>
+            <maml:para>The page style (detailed for engineers or basic for customers).</maml:para>
+          </maml:description>
+          <command:parameterValue required="true" variableLength="true">System.String</command:parameterValue>
+        </command:parameter>
+        <command:parameter required="true" variableLength="false" globbing="false" pipelineInput="false" position="Named" aliases="none">
+          <maml:name>SubscriptionIds</maml:name>
+          <maml:description>
+            <maml:para>The subset of subscription Ids (GUID) to generate the documentation for.</maml:para>
+          </maml:description>
+          <command:parameterValue required="true" variableLength="true">System.String[]</command:parameterValue>
+        </command:parameter>
+        <command:parameter required="true" variableLength="false" globbing="false" pipelineInput="false" position="Named" aliases="none">
+          <maml:name>Title</maml:name>
+          <maml:description>
+            <maml:para>The title of the wiki.</maml:para>
+          </maml:description>
+          <command:parameterValue required="true" variableLength="true">System.String</command:parameterValue>
+        </command:parameter>
+        <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="false" position="Named" aliases="none">
+          <maml:name>WhatIf</maml:name>
+          <maml:description>
+            <maml:para>Runs the command in a mode that only reports what would happen without performing the actions.</maml:para>
+          </maml:description>
+          <command:parameterValue required="false" variableLength="true">System.Management.Automation.SwitchParameter</command:parameterValue>
+        </command:parameter>
+        <command:parameter required="true" variableLength="false" globbing="false" pipelineInput="false" position="Named" aliases="none">
+          <maml:name>WikiStyle</maml:name>
+          <maml:description>
+            <maml:para>The wiki style. Supported values are "ado" and "github".</maml:para>
+          </maml:description>
+          <command:parameterValue required="true" variableLength="true">System.String</command:parameterValue>
+        </command:parameter>
+      </command:syntaxItem>
+      <command:syntaxItem>
+        <maml:name>New-AzplDocumentation</maml:name>
+        <command:parameter required="true" variableLength="false" globbing="false" pipelineInput="false" position="Named" aliases="none">
+          <maml:name>BaseOutputPath</maml:name>
+          <maml:description>
+            <maml:para>The output base directory.</maml:para>
+          </maml:description>
+          <command:parameterValue required="true" variableLength="true">System.String</command:parameterValue>
+        </command:parameter>
+        <command:parameter required="true" variableLength="false" globbing="false" pipelineInput="false" position="Named" aliases="none">
+          <maml:name>childManagementGroupId</maml:name>
+          <maml:description>
+            <maml:para>The Id of a child management group to generate the documentation for. The documentation will include the specified management group and all of its descendants.</maml:para>
+          </maml:description>
+          <command:parameterValue required="true" variableLength="true">System.String</command:parameterValue>
+        </command:parameter>
+        <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="false" position="Named" aliases="none">
+          <maml:name>ComplianceWarningPercentageThreshold</maml:name>
+          <maml:description>
+            <maml:para>The warning percentage threshold for policy compliance summary. Accepted range: 1 - 99.</maml:para>
+          </maml:description>
+          <command:parameterValue required="false" variableLength="true">System.Int32</command:parameterValue>
+        </command:parameter>
+        <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="false" position="Named" aliases="none">
+          <maml:name>Confirm</maml:name>
+          <maml:description>
+            <maml:para>Prompts you for confirmation before running the cmdlet.</maml:para>
+          </maml:description>
+          <command:parameterValue required="false" variableLength="true">System.Management.Automation.SwitchParameter</command:parameterValue>
+        </command:parameter>
+        <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="false" position="Named" aliases="none">
+          <maml:name>CustomSecurityControlPath</maml:name>
+          <maml:description>
+            <maml:para>The directory contains custom security control definitions.</maml:para>
+          </maml:description>
+          <command:parameterValue required="false" variableLength="true">System.String</command:parameterValue>
+        </command:parameter>
+        <command:parameter required="true" variableLength="false" globbing="false" pipelineInput="false" position="Named" aliases="none">
+          <maml:name>DiscoveryDataImportFilePath</maml:name>
+          <maml:description>
+            <maml:para>File path for the Environment Data to import. Only `.zip` files produced by `Invoke-AzplEnvironmentDiscovery` are supported.</maml:para>
+          </maml:description>
+          <command:parameterValue required="true" variableLength="true">System.String</command:parameterValue>
+        </command:parameter>
+        <command:parameter required="true" variableLength="false" globbing="false" pipelineInput="false" position="Named" aliases="none">
+          <maml:name>EncryptionIV</maml:name>
+          <maml:description>
+            <maml:para>AES Encryption Initialization Vector (IV) Content.</maml:para>
+          </maml:description>
+          <command:parameterValue required="true" variableLength="true">System.String</command:parameterValue>
+        </command:parameter>
+        <command:parameter required="true" variableLength="false" globbing="false" pipelineInput="false" position="Named" aliases="none">
+          <maml:name>EncryptionKey</maml:name>
+          <maml:description>
+            <maml:para>AES Encryption Key Content.</maml:para>
+          </maml:description>
+          <command:parameterValue required="true" variableLength="true">System.String</command:parameterValue>
+        </command:parameter>
+        <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="false" position="Named" aliases="none">
+          <maml:name>ExemptionExpiresOnWarningDays</maml:name>
+          <maml:description>
+            <maml:para>The warning days for the expiration of the policy exemption. Accepted range: 7 - 90.</maml:para>
+          </maml:description>
+          <command:parameterValue required="false" variableLength="true">System.Int32</command:parameterValue>
+        </command:parameter>
+        <command:parameter required="true" variableLength="false" globbing="false" pipelineInput="false" position="Named" aliases="none">
+          <maml:name>PageStyle</maml:name>
+          <maml:description>
+            <maml:para>The page style (detailed for engineers or basic for customers).</maml:para>
+          </maml:description>
+          <command:parameterValue required="true" variableLength="true">System.String</command:parameterValue>
+        </command:parameter>
+        <command:parameter required="true" variableLength="false" globbing="false" pipelineInput="false" position="Named" aliases="none">
+          <maml:name>Title</maml:name>
+          <maml:description>
+            <maml:para>The title of the wiki.</maml:para>
+          </maml:description>
+          <command:parameterValue required="true" variableLength="true">System.String</command:parameterValue>
+        </command:parameter>
+        <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="false" position="Named" aliases="none">
+          <maml:name>WhatIf</maml:name>
+          <maml:description>
+            <maml:para>Runs the command in a mode that only reports what would happen without performing the actions.</maml:para>
+          </maml:description>
+          <command:parameterValue required="false" variableLength="true">System.Management.Automation.SwitchParameter</command:parameterValue>
+        </command:parameter>
+        <command:parameter required="true" variableLength="false" globbing="false" pipelineInput="false" position="Named" aliases="none">
+          <maml:name>WikiStyle</maml:name>
+          <maml:description>
+            <maml:para>The wiki style. Supported values are "ado" and "github".</maml:para>
+          </maml:description>
+          <command:parameterValue required="true" variableLength="true">System.String</command:parameterValue>
+        </command:parameter>
+      </command:syntaxItem>
+    </command:syntax>
+    <command:parameters>
+      <command:parameter required="true" variableLength="false" globbing="false" pipelineInput="false" position="Named" aliases="none">
+        <maml:name>BaseOutputPath</maml:name>
+        <maml:description>
+          <maml:para>The output base directory.</maml:para>
+        </maml:description>
+        <command:parameterValue required="true" variableLength="true">System.String</command:parameterValue>
+      </command:parameter>
+      <command:parameter required="true" variableLength="false" globbing="false" pipelineInput="false" position="Named" aliases="none">
+        <maml:name>childManagementGroupId</maml:name>
+        <maml:description>
+          <maml:para>The Id of a child management group to generate the documentation for. The documentation will include the specified management group and all of its descendants.</maml:para>
+        </maml:description>
+        <command:parameterValue required="true" variableLength="true">System.String</command:parameterValue>
+      </command:parameter>
+      <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="false" position="Named" aliases="none">
+        <maml:name>ComplianceWarningPercentageThreshold</maml:name>
+        <maml:description>
+          <maml:para>The warning percentage threshold for policy compliance summary. Accepted range: 1 - 99.</maml:para>
+        </maml:description>
+        <command:parameterValue required="false" variableLength="true">System.Int32</command:parameterValue>
+      </command:parameter>
+      <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="false" position="Named" aliases="none">
+        <maml:name>Confirm</maml:name>
+        <maml:description>
+          <maml:para>Prompts you for confirmation before running the cmdlet.</maml:para>
+        </maml:description>
+        <command:parameterValue required="false" variableLength="true">System.Management.Automation.SwitchParameter</command:parameterValue>
+      </command:parameter>
+      <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="false" position="Named" aliases="none">
+        <maml:name>CustomSecurityControlPath</maml:name>
+        <maml:description>
+          <maml:para>The directory contains custom security control definitions.</maml:para>
+        </maml:description>
+        <command:parameterValue required="false" variableLength="true">System.String</command:parameterValue>
+      </command:parameter>
+      <command:parameter required="true" variableLength="false" globbing="false" pipelineInput="false" position="Named" aliases="none">
+        <maml:name>DiscoveryDataImportFilePath</maml:name>
+        <maml:description>
+          <maml:para>File path for the Environment Data to import. Only `.zip` files produced by `Invoke-AzplEnvironmentDiscovery` are supported.</maml:para>
+        </maml:description>
+        <command:parameterValue required="true" variableLength="true">System.String</command:parameterValue>
+      </command:parameter>
+      <command:parameter required="true" variableLength="false" globbing="false" pipelineInput="false" position="Named" aliases="none">
+        <maml:name>EncryptionIV</maml:name>
+        <maml:description>
+          <maml:para>AES Encryption Initialization Vector (IV) Content.</maml:para>
+        </maml:description>
+        <command:parameterValue required="true" variableLength="true">System.String</command:parameterValue>
+      </command:parameter>
+      <command:parameter required="true" variableLength="false" globbing="false" pipelineInput="false" position="Named" aliases="none">
+        <maml:name>EncryptionKey</maml:name>
+        <maml:description>
+          <maml:para>AES Encryption Key Content.</maml:para>
+        </maml:description>
+        <command:parameterValue required="true" variableLength="true">System.String</command:parameterValue>
+      </command:parameter>
+      <command:parameter required="true" variableLength="false" globbing="false" pipelineInput="false" position="Named" aliases="none">
+        <maml:name>EncryptionKeyFilePath</maml:name>
+        <maml:description>
+          <maml:para>AES Encryption key file path. This key is used to decrypt the existing environment discovery file.</maml:para>
+        </maml:description>
+        <command:parameterValue required="true" variableLength="true">System.String</command:parameterValue>
+      </command:parameter>
+      <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="false" position="Named" aliases="none">
+        <maml:name>ExemptionExpiresOnWarningDays</maml:name>
+        <maml:description>
+          <maml:para>The warning days for the expiration of the policy exemption. Accepted range: 7 - 90.</maml:para>
+        </maml:description>
+        <command:parameterValue required="false" variableLength="true">System.Int32</command:parameterValue>
+      </command:parameter>
+      <command:parameter required="true" variableLength="false" globbing="false" pipelineInput="false" position="Named" aliases="none">
+        <maml:name>PageStyle</maml:name>
+        <maml:description>
+          <maml:para>The page style (detailed for engineers or basic for customers).</maml:para>
+        </maml:description>
+        <command:parameterValue required="true" variableLength="true">System.String</command:parameterValue>
+      </command:parameter>
+      <command:parameter required="true" variableLength="false" globbing="false" pipelineInput="false" position="Named" aliases="none">
+        <maml:name>SubscriptionIds</maml:name>
+        <maml:description>
+          <maml:para>The subset of subscription Ids (GUID) to generate the documentation for.</maml:para>
+        </maml:description>
+        <command:parameterValue required="true" variableLength="true">System.String[]</command:parameterValue>
+      </command:parameter>
+      <command:parameter required="true" variableLength="false" globbing="false" pipelineInput="false" position="Named" aliases="none">
+        <maml:name>Title</maml:name>
+        <maml:description>
+          <maml:para>The title of the wiki.</maml:para>
+        </maml:description>
+        <command:parameterValue required="true" variableLength="true">System.String</command:parameterValue>
+      </command:parameter>
+      <command:parameter required="false" variableLength="false" globbing="false" pipelineInput="false" position="Named" aliases="none">
+        <maml:name>WhatIf</maml:name>
+        <maml:description>
+          <maml:para>Runs the command in a mode that only reports what would happen without performing the actions.</maml:para>
+        </maml:description>
+        <command:parameterValue required="false" variableLength="true">System.Management.Automation.SwitchParameter</command:parameterValue>
+      </command:parameter>
+      <command:parameter required="true" variableLength="false" globbing="false" pipelineInput="false" position="Named" aliases="none">
+        <maml:name>WikiStyle</maml:name>
+        <maml:description>
+          <maml:para>The wiki style. Supported values are "ado" and "github".</maml:para>
+        </maml:description>
+        <command:parameterValue required="true" variableLength="true">System.String</command:parameterValue>
+      </command:parameter>
+    </command:parameters>
+    <command:inputTypes />
+    <command:returnValues>
+      <command:returnValue>
+        <dev:type>
+          <dev:name>System.Array</dev:name>
+        </dev:type>
+        <maml:description>
+          <maml:para>File paths for the list of files generated by the cmdlet.</maml:para>
+        </maml:description>
+      </command:returnValue>
+      <command:returnValue>
+        <dev:type>
+          <dev:name>System.String</dev:name>
+        </dev:type>
+        <maml:description>
+          <maml:para>Paths of the generated documentation files.</maml:para>
+        </maml:description>
+      </command:returnValue>
+    </command:returnValues>
+    <maml:alertSet>
+      <maml:alert>
+        <maml:para />
+      </maml:alert>
+    </maml:alertSet>
+    <command:examples>
+      <command:example>
+        <maml:title>--------- Example 1 ---------</maml:title>
+        <maml:introduction>
+          <maml:para>PS C:\&gt; New-AzplDocumentation -PageStyle 'detailed' -BaseOutputPath 'C:\AzPolicyLens\Wiki' -Title 'My Azure Policy Detailed Documentation' -WikiStyle 'github' -DiscoveryDataImportFilePath 'C:\AzPolicyLens\Wiki\Discovery.zip'</maml:para>
+          <maml:para>&#x80;</maml:para>
+          <maml:para>Generates the detailed GitHub Wiki documentation for the entire environment using the discovery data that was not encrypted.</maml:para>
+        </maml:introduction>
+        <dev:code />
+        <dev:remarks />
+      </command:example>
+      <command:example>
+        <maml:title>--------- Example 2 ---------</maml:title>
+        <maml:introduction>
+          <maml:para>PS C:\&gt; $subscriptionIds = @('00000000-0000-0000-0000-000000000001', '00000000-0000-0000-0000-000000000002')
+PS C:\&gt; New-AzplDocumentation -PageStyle 'basic' -SubscriptionIds $subscriptionIds -BaseOutputPath 'C:\AzPolicyLens\Wiki' -Title 'My Azure Policy Basic Documentation' -WikiStyle 'github' -DiscoveryDataImportFilePath 'C:\AzPolicyLens\Wiki\Discovery.zip' -EncryptionKeyFilePath 'C:\AzPolicyLens\Wiki\EncryptionKey.json' -ComplianceWarningPercentageThreshold 90 -ExemptionExpiresOnWarningDays 15</maml:para>
+          <maml:para>&#x80;</maml:para>
+          <maml:para>Generates the basic GitHub Wiki documentation for the 2 subscriptions using the encryption key file and non-default thresholds for compliance warning and exemption expiration warning, saving the output files in the specified base output path.</maml:para>
+        </maml:introduction>
+        <dev:code />
+        <dev:remarks />
+      </command:example>
+      <command:example>
+        <maml:title>--------- Example 3 ---------</maml:title>
+        <maml:introduction>
+          <maml:para>PS C:\&gt; New-AzplDocumentation -PageStyle 'basic' -BaseOutputPath 'C:\AzPolicyLens\Wiki' -Title 'My Azure Policy Basic Documentation' -WikiStyle 'github' -DiscoveryDataImportFilePath 'C:\AzPolicyLens\Wiki\Discovery.zip' -EncryptionKey 'MyEncryptionKey' -EncryptionIV 'MyEncryptionIV'</maml:para>
+          <maml:para>&#x80;</maml:para>
+          <maml:para>Generates the basic GitHub Wiki documentation for the entire environment using the existing encrypted discovery data, saving the output files in the specified base output path.
+The discovery data is decrypted using the provided AES encryption key and IV.</maml:para>
+        </maml:introduction>
+        <dev:code />
+        <dev:remarks />
+      </command:example>
+      <command:example>
+        <maml:title>--------- Example 4 ---------</maml:title>
+        <maml:introduction>
+          <maml:para>PS C:\&gt; New-AzplDocumentation -PageStyle 'detailed' -BaseOutputPath 'C:\AzPolicyLens\Wiki' -Title 'Platform MG Documentation' -WikiStyle 'ado' -DiscoveryDataImportFilePath 'C:\AzPolicyLens\Wiki\Discovery.zip' -childManagementGroupId 'mg-platform'</maml:para>
+          <maml:para>&#x80;</maml:para>
+          <maml:para>Generates the detailed Azure DevOps Wiki documentation scoped to the child management group `mg-platform` and all of its descendants, using unencrypted discovery data.</maml:para>
+        </maml:introduction>
+        <dev:code />
+        <dev:remarks />
+      </command:example>
+    </command:examples>
+    <command:relatedLinks>
+      <maml:navigationLink>
+        <maml:linkText>Online Version</maml:linkText>
+        <command:uri />
+      </maml:navigationLink>
+      <maml:navigationLink>
+        <maml:linkText>AzPolicyLens Wiki Page</maml:linkText>
+        <command:uri>https://github.com/taoyangcloud/AzPolicyLens/wiki</command:uri>
+      </maml:navigationLink>
+    </command:relatedLinks>
+  </command:command>
+</helpItems>

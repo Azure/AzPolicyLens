@@ -1,0 +1,13 @@
+{
+  "$schema": "../security-control.schema.json",
+  "ControlID": "ISO27001-2022_A.8.29",
+  "Category": "Technological Controls",
+  "Name": "Security testing in development and acceptance",
+  "Description": "Security testing processes shall be defined and implemented in the development life cycle.",
+  "Publisher": "ISO/IEC",
+  "Framework": "ISO 27001:2022",
+  "AdditionalInfo": {
+    "Edition": "3",
+    "PublishDate": "2022-10"
+  }
+}

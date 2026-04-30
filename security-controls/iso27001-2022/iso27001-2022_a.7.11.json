@@ -1,0 +1,13 @@
+{
+  "$schema": "../security-control.schema.json",
+  "ControlID": "ISO27001-2022_A.7.11",
+  "Category": "Physical Controls",
+  "Name": "Supporting utilities",
+  "Description": "Information processing facilities shall be protected from power failures and other disruptions caused by failures in supporting utilities.",
+  "Publisher": "ISO/IEC",
+  "Framework": "ISO 27001:2022",
+  "AdditionalInfo": {
+    "Edition": "3",
+    "PublishDate": "2022-10"
+  }
+}

@@ -1,0 +1,61 @@
+name: 'Policy Documentation Discovery'
+description: 'Perform environment data discovery for the policy documentation wiki'
+
+inputs:
+  preferredAzurePowerShellVersion:
+    description: 'Preferred version of the Azure PowerShell module to use. Defaults
+      to latest if not specified.'
+    required: false
+  topLevelManagementGroupName:
+    description: 'The name of the top-level management group to start the discovery from.'
+    required: true
+  buildArtifactName:
+    description: 'Pipeline build artifact name for the environment discovery output'
+    required: true
+  environment:
+    description: 'The environment name for the discovery.'
+    required: true
+
+runs:
+  using: 'composite'
+  steps:
+    - name: Checkout source
+      uses: actions/checkout@v6
+      with:
+        fetch-depth: 0
+    - name: 'Install PowerShell-Yaml Module'
+      shell: pwsh
+      run: |
+        if (-not (Get-Module -ListAvailable -Name powershell-yaml)) {
+          Write-Output "Installing powershell-yaml module..."
+          Install-Module -Name powershell-yaml -Force -Scope CurrentUser
+        }
+
+    - name: Import Variables
+      shell: pwsh # PowerShell Core
+      env:
+        variablesPath: 'settings.yml'
+      run: |
+        ./scripts/github-set-variables.ps1 -configFilePath ${{ env.variablesPath }}
+
+    - name: Login to Azure
+      uses: Azure/login@v3
+      with:
+        creds: ${{ env.AZURE_CREDENTIALS }}
+        enable-AzPSSession: true
+    - name: 'Discover Environment Data'
+      uses: azure/powershell@v3
+      with:
+        inlineScript: ./scripts/environment-discovery.ps1 -TopLevelManagementGroupName
+          '${{ inputs.topLevelManagementGroupName }}'
+          -AdditionalBuiltInPolicyMetadataConfigFilePath '${{
+          env.policyDocAdditionalBuiltInPolicyMetadataConfigFilePath }}'
+          -OutputFilePath '${{ runner.temp }}/${{ inputs.buildArtifactName
+          }}/${{ env.environmentDiscoveryFileName }}'
+        azPSVersion: ${{ inputs.preferredAzurePowerShellVersion || 'latest' }}
+    - name: 'Publish Artifact'
+      uses: actions/upload-artifact@v7
+      with:
+        name: ${{ inputs.buildArtifactName }}
+        path: '${{ runner.temp }}/${{ inputs.buildArtifactName }}/${{
+          env.environmentDiscoveryFileName }}'

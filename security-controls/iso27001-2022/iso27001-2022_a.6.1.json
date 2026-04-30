@@ -1,0 +1,13 @@
+{
+  "$schema": "../security-control.schema.json",
+  "ControlID": "ISO27001-2022_A.6.1",
+  "Category": "People Controls",
+  "Name": "Screening",
+  "Description": "Background verification checks on all candidates to become personnel shall be carried out prior to joining the organization and on an ongoing basis taking into consideration applicable laws, regulations and ethics and be proportional to the business requirements, the classification of the information to be accessed and the perceived risks.",
+  "Publisher": "ISO/IEC",
+  "Framework": "ISO 27001:2022",
+  "AdditionalInfo": {
+    "Edition": "3",
+    "PublishDate": "2022-10"
+  }
+}

@@ -1,0 +1,13 @@
+{
+  "$schema": "../security-control.schema.json",
+  "ControlID": "ISO27001-2022_A.5.21",
+  "Category": "Organizational Controls",
+  "Name": "Managing information security in the information and communication technology (ICT) supply chain",
+  "Description": "Processes and procedures shall be defined and implemented to manage the information security risks associated with the ICT products and services supply chain.",
+  "Publisher": "ISO/IEC",
+  "Framework": "ISO 27001:2022",
+  "AdditionalInfo": {
+    "Edition": "3",
+    "PublishDate": "2022-10"
+  }
+}

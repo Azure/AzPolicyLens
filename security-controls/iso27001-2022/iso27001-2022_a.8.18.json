@@ -1,0 +1,13 @@
+{
+  "$schema": "../security-control.schema.json",
+  "ControlID": "ISO27001-2022_A.8.18",
+  "Category": "Technological Controls",
+  "Name": "Use of privileged utility programs",
+  "Description": "The use of utility programs that can be capable of overriding system and application controls shall be restricted and tightly controlled.",
+  "Publisher": "ISO/IEC",
+  "Framework": "ISO 27001:2022",
+  "AdditionalInfo": {
+    "Edition": "3",
+    "PublishDate": "2022-10"
+  }
+}

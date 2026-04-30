@@ -1,0 +1,13 @@
+{
+  "$schema": "../security-control.schema.json",
+  "ControlID": "ISO27001-2022_A.8.17",
+  "Category": "Technological Controls",
+  "Name": "Clock synchronization",
+  "Description": "The clocks of information processing systems used by the organization shall be synchronized to approved time sources.",
+  "Publisher": "ISO/IEC",
+  "Framework": "ISO 27001:2022",
+  "AdditionalInfo": {
+    "Edition": "3",
+    "PublishDate": "2022-10"
+  }
+}

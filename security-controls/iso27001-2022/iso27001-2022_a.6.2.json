@@ -1,0 +1,13 @@
+{
+  "$schema": "../security-control.schema.json",
+  "ControlID": "ISO27001-2022_A.6.2",
+  "Category": "People Controls",
+  "Name": "Terms and conditions of employment",
+  "Description": "The employment contractual agreements shall state the personnel's and the organization's responsibilities for information security.",
+  "Publisher": "ISO/IEC",
+  "Framework": "ISO 27001:2022",
+  "AdditionalInfo": {
+    "Edition": "3",
+    "PublishDate": "2022-10"
+  }
+}

@@ -1,0 +1,48 @@
+parameters:
+- name: powershellCore
+  displayName: "Run on Powershell Core"
+  type: boolean
+  default: true
+
+- name: poolName
+  displayName: "Self Hosted Agent Pool Name"
+  type: string
+  default: ""
+
+- name: vmImage
+  displayName: "MS Hosted Agent VM Image Name"
+  type: string
+  default: ""
+
+stages:
+- stage: Initiation
+  pool:
+    ${{ if ne(parameters.vmImage, '') }}:
+      vmImage: ${{ parameters.vmImage }}
+    ${{ if ne(parameters.poolName, '') }}:
+      name: ${{ parameters.poolName }}
+  jobs:
+  - job: ListEnvVars
+    displayName: List Environment Variables
+    workspace:
+      clean: all
+    steps:
+    - checkout: self
+      fetchDepth: 0
+    - task: PowerShell@2
+      displayName: "List Environment Variables"
+      inputs:
+        targetType: "inline"
+        pwsh: ${{parameters.powershellCore}}
+        script: |
+          . $(System.DefaultWorkingDirectory)/scripts/helper/helper-functions.ps1
+          Write-Output "Current Date Time: $([DateTime]::UtcNow.ToString('u')) UTC"
+          Write-Output "Pipeline Type: $(getPipelineType)"
+          Write-Output "Environment Variables:"
+          Write-Output "----------------------------------------"
+          get-childitem env:
+          Write-Output "----------------------------------------"
+          Write-Output "Git Local Configuration:"
+          Write-Output "----------------------------------------"
+          git config --list
+          Write-Output "----------------------------------------"

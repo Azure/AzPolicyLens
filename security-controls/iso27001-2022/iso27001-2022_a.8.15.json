@@ -1,0 +1,13 @@
+{
+  "$schema": "../security-control.schema.json",
+  "ControlID": "ISO27001-2022_A.8.15",
+  "Category": "Technological Controls",
+  "Name": "Logging",
+  "Description": "Logs that record activities, exceptions, faults and other relevant events shall be produced, stored, protected and analysed.",
+  "Publisher": "ISO/IEC",
+  "Framework": "ISO 27001:2022",
+  "AdditionalInfo": {
+    "Edition": "3",
+    "PublishDate": "2022-10"
+  }
+}

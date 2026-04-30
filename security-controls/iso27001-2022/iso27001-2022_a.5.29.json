@@ -1,0 +1,13 @@
+{
+  "$schema": "../security-control.schema.json",
+  "ControlID": "ISO27001-2022_A.5.29",
+  "Category": "Organizational Controls",
+  "Name": "Information security during disruption",
+  "Description": "The organization shall plan how to maintain information security at an appropriate level during disruption.",
+  "Publisher": "ISO/IEC",
+  "Framework": "ISO 27001:2022",
+  "AdditionalInfo": {
+    "Edition": "3",
+    "PublishDate": "2022-10"
+  }
+}

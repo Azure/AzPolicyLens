@@ -1,0 +1,189 @@
+name: policy-documentation
+
+on:
+  schedule:
+    - cron: '30 5,21 * * *' # everyday at 05:30 & 21:30 UTC (AEST offset handled by users)
+  workflow_dispatch:
+    # allows a manual run from the UI
+    inputs:
+      debug:
+        description: "Enable debug logging"
+        type: boolean
+        default: false
+env:
+  ACTIONS_STEP_DEBUG: ${{ inputs.debug }}
+  variablesPath: 'settings.yml'
+  generateWikiScriptPath: 'scripts/pipelines/policy-documentation/generate-wiki-pages.ps1'
+  environmentDiscoveryFileName: 'EnvironmentDiscovery.zip'
+jobs:
+  job_call_initiation:
+    name: Initiation
+    runs-on: ubuntu-latest
+    steps:
+      - name: 'Checkout'
+        uses: actions/checkout@v6
+        with:
+          fetch-depth: 0
+      - name: 'Initiation'
+        uses: ./.github/actions/templates/initiation
+        with:
+          variablesPath: '${{ env.variablesPath }}'
+  job_discovery_dev:
+    name: Environment Discovery - Dev
+    runs-on: ubuntu-latest
+    needs:
+      - job_call_initiation
+    env:
+      EncryptionKey: ${{ secrets.ENCRYPTIONKEY }}
+      EncryptionIV: ${{ secrets.ENCRYPTIONIV }}
+      AZURE_CREDENTIALS: ${{ secrets.MG_DEV_READER }}
+    steps:
+      - name: 'Checkout'
+        uses: actions/checkout@v6
+        with:
+          fetch-depth: 0
+      - name: Discovery
+        uses: ./.github/actions/templates/policyDocDiscovery
+        with:
+          topLevelManagementGroupName: 'contoso-dev'
+          environment: 'dev'
+          buildArtifactName: 'policy_doc_dev'
+
+  job_discovery_prod:
+    name: Environment Discovery - Prod
+    if: github.ref == 'refs/heads/main'
+    runs-on: ubuntu-latest
+    needs:
+      - job_call_initiation
+    env:
+      EncryptionKey: ${{ secrets.ENCRYPTIONKEY }}
+      EncryptionIV: ${{ secrets.ENCRYPTIONIV }}
+      AZURE_CREDENTIALS: ${{ secrets.MG_PROD_READER }}
+    steps:
+      - name: 'Checkout'
+        uses: actions/checkout@v6
+        with:
+          fetch-depth: 0
+      - name: Discovery
+        uses: ./.github/actions/templates/policyDocDiscovery
+        with:
+          topLevelManagementGroupName: 'contoso'
+          environment: 'prod'
+          buildArtifactName: 'policy_doc_prod'
+
+  job_parse_config_dev:
+    name: Parse Config - Dev
+    runs-on: ubuntu-latest
+    outputs:
+      wikiCount: ${{ steps.parse-config.outputs.wikiCount }}
+      wikis: ${{ steps.parse-config.outputs.wikis }}
+    needs:
+      - job_call_initiation
+      - job_discovery_dev
+    steps:
+      - id: checkout
+        uses: actions/checkout@v6
+        with:
+          fetch-depth: 0
+      - id: parse-config
+        uses: ./.github/actions/templates/policyDocParseConfig
+        with:
+          environment: 'dev'
+  job_parse_config_prod:
+    name: Parse Config - Prod
+    if: github.ref == 'refs/heads/main'
+    runs-on: ubuntu-latest
+    outputs:
+      wikiCount: ${{ steps.parse-config.outputs.wikiCount }}
+      wikis: ${{ steps.parse-config.outputs.wikis }}
+    needs:
+      - job_call_initiation
+      - job_discovery_prod
+    steps:
+      - id: checkout
+        uses: actions/checkout@v6
+        with:
+          fetch-depth: 0
+      - id: parse-config
+        uses: ./.github/actions/templates/policyDocParseConfig
+        with:
+          environment: 'prod'
+
+  job_generate_wiki_dev:
+    name: 'Generate Wiki - Dev [${{ matrix.wiki.wikiAlias }}]'
+    runs-on: ubuntu-latest
+    needs:
+      - job_call_initiation
+      - job_discovery_dev
+      - job_parse_config_dev
+    strategy:
+      matrix:
+        wiki: ${{ fromJSON(needs.job_parse_config_dev.outputs.wikis) }}
+    env:
+      EncryptionKey: ${{ secrets.ENCRYPTIONKEY }}
+      EncryptionIV: ${{ secrets.ENCRYPTIONIV }}
+      GithubUserId: ${{ secrets.GITHUBUSERID_DEV }}
+      GithubToken: ${{ secrets.GITHUBTOKEN_DEV }}
+    steps:
+      - name: 'Checkout'
+        uses: actions/checkout@v6
+        with:
+          fetch-depth: 0
+      - name: Generate Wiki
+        uses: ./.github/actions/templates/policyDocGenerateWiki
+        with:
+          title: ${{ matrix.wiki.title }}
+          wikiAlias: ${{ matrix.wiki.wikiAlias }}
+          pageStyle: ${{ matrix.wiki.pageStyle }}
+          gitBranch: ${{ matrix.wiki.gitBranch }}
+          gitRepository: ${{ matrix.wiki.gitRepository }}
+          gitUserName: ${{ matrix.wiki.gitUserName }}
+          gitUserEmail: ${{ matrix.wiki.gitUserEmail }}
+          gitCommitMessage: 'Policy Documentation from commit ${{ github.sha }}'
+          subscriptionIds: ${{ matrix.wiki.subscriptionIds }}
+          childManagementGroupId: ${{ matrix.wiki.childManagementGroupId }}
+          buildArtifactName: 'policy_doc_dev'
+          aesEncryptionKey: ${{ secrets.ENCRYPTIONKEY }}
+          aesEncryptionIV: ${{ secrets.ENCRYPTIONIV }}
+          githubUserId: ${{ env.GithubUserId }}
+          githubToken: ${{ env.GithubToken }}
+
+  job_generate_wiki_prod:
+    name: 'Generate Wiki - Prod [${{ matrix.wiki.wikiAlias }}]'
+    if: github.ref == 'refs/heads/main'
+    runs-on: ubuntu-latest
+    needs:
+      - job_call_initiation
+      - job_discovery_prod
+      - job_parse_config_prod
+    strategy:
+      matrix:
+        wiki: ${{ fromJSON(needs.job_parse_config_prod.outputs.wikis) }}
+    env:
+      EncryptionKey: ${{ secrets.ENCRYPTIONKEY }}
+      EncryptionIV: ${{ secrets.ENCRYPTIONIV }}
+      GithubUserId: ${{ secrets.GITHUBUSERID_PROD }}
+      GithubToken: ${{ secrets.GITHUBTOKEN_PROD }}
+    steps:
+      - name: 'Checkout'
+        uses: actions/checkout@v6
+        with:
+          fetch-depth: 0
+      - name: Generate Wiki
+        uses: ./.github/actions/templates/policyDocGenerateWiki
+        with:
+          title: ${{ matrix.wiki.title }}
+          wikiAlias: ${{ matrix.wiki.wikiAlias }}
+          pageStyle: ${{ matrix.wiki.pageStyle }}
+          gitBranch: ${{ matrix.wiki.gitBranch }}
+          gitRepository: ${{ matrix.wiki.gitRepository }}
+          gitUserName: ${{ matrix.wiki.gitUserName }}
+          gitUserEmail: ${{ matrix.wiki.gitUserEmail }}
+          gitCommitMessage: 'Policy Documentation from commit ${{ github.sha }}'
+          subscriptionIds: ${{ matrix.wiki.subscriptionIds }}
+          childManagementGroupId: ${{ matrix.wiki.childManagementGroupId }}
+          buildArtifactName: 'policy_doc_prod'
+          aesEncryptionKey: ${{ secrets.ENCRYPTIONKEY }}
+          aesEncryptionIV: ${{ secrets.ENCRYPTIONIV }}
+          githubUserId: ${{ env.GithubUserId }}
+          githubToken: ${{ env.GithubToken }}

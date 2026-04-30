@@ -1,0 +1,95 @@
+name: $(BuildDefinitionName)_$(SourceBranchName)_$(Date:yyyyMMdd)$(Rev:.r)
+
+schedules:
+- cron: '30 1,5,21 * * *' #everyday at 1:30AM UTC (11:30AM in AEST), 5:30AM UTC (3:30PM in AEST), and 9:30PM UTC (7:30AM in AEST)
+  displayName: Daily runs
+  branches:
+    include:
+    - main
+  always: true
+
+trigger: none
+
+variables:
+  - group: 'policy-documentation'
+  - template: ../../settings.yml
+  - name: prodReaderServiceConnection
+    value: "mg-prod-reader"
+  - name: devReaderServiceConnection
+    value: "mg-dev-reader"
+  - name: prodManagementGroup
+    value: "CONTOSO"
+  - name: devManagementGroup
+    value: "CONTOSO-DEV"
+  - name: prodEnv
+    value: prod
+  - name: devEnv
+    value: dev
+  - name: defaultAgentPoolName
+    value: "ubuntu-latest"
+
+stages:
+  - template: ../templates/template-stage-initiation.yml
+    parameters:
+      vmImage: "${{ variables['defaultAgentPoolName'] }}"
+
+# dev discovery stage
+  - template: ../templates/template-stage-policy-doc-environment-discovery.yml
+    parameters:
+      stageName: "discovery_${{ variables['devEnv'] }}"
+      dependsOn: [initiation]
+      vmImage: "${{ variables['defaultAgentPoolName'] }}"
+      azureServiceConnection: "${{ variables['devReaderServiceConnection'] }}"
+      environmentName: "${{ variables['devEnv'] }}"
+      topLevelManagementGroupName: "${{ variables['devManagementGroup'] }}"
+      additionalBuiltInPolicyMetadataConfigFilePath: "${{ variables['policyDocAdditionalBuiltInPolicyMetadataConfigFilePath'] }}"
+      buildArtifactName: "policy_doc_${{ variables['devEnv'] }}"
+      aesEncryptionKey: '$(EncryptionKey)'
+      aesEncryptionIV: '$(EncryptionIV)'
+
+# prod discovery stage
+  - template: ../templates/template-stage-policy-doc-environment-discovery.yml
+    parameters:
+      stageName: "discovery_${{ variables['prodEnv'] }}"
+      condition: "and(succeeded(), eq(variables['Build.SourceBranch'], 'refs/heads/main'))"
+      dependsOn: [initiation]
+      vmImage: "${{ variables['defaultAgentPoolName'] }}"
+      azureServiceConnection: "${{ variables['prodReaderServiceConnection'] }}"
+      environmentName: "${{ variables['prodEnv'] }}"
+      topLevelManagementGroupName: "${{ variables['prodManagementGroup'] }}"
+      additionalBuiltInPolicyMetadataConfigFilePath: "${{ variables['policyDocAdditionalBuiltInPolicyMetadataConfigFilePath'] }}"
+      buildArtifactName: "policy_doc_${{ variables['prodEnv'] }}"
+      aesEncryptionKey: '$(EncryptionKey)'
+      aesEncryptionIV: '$(EncryptionIV)'
+
+# dev wiki generation stage
+  - template: ../templates/template-stage-policy-doc-generate-wiki.yml
+    parameters:
+      stageName: "generate_wiki_${{ variables['devEnv'] }}"
+      condition: and(succeeded(), eq(dependencies.discovery_${{ variables['devEnv'] }}.result, 'Succeeded'))
+      dependsOn: ["discovery_${{ variables['devEnv'] }}"]
+      vmImage: "${{ variables['defaultAgentPoolName'] }}"
+      environmentName: "${{ variables['devEnv'] }}"
+      exemptionExpiresOnWarningDays: "${{ variables['policyDocExemptionExpiresOnWarningDays'] }}"
+      complianceWarningPercentageThreshold: "${{ variables['policyDocComplianceWarningPercentageThreshold'] }}"
+      gitCommitMessage: "Policy Documentation from Build Source Version $(Build.SourceVersion)"
+      buildArtifactName: "policy_doc_${{ variables['devEnv'] }}"
+      aesEncryptionKey: '$(EncryptionKey)'
+      aesEncryptionIV: '$(EncryptionIV)'
+      customSecurityControlPath: "${{ variables['policyDocCustomSecurityControlPath'] }}"
+
+# prod wiki generation stage
+  - template: ../templates/template-stage-policy-doc-generate-wiki.yml
+    parameters:
+      stageName: "generate_wiki_${{ variables['prodEnv'] }}"
+      condition: and(succeeded(), eq(dependencies.discovery_${{ variables['prodEnv'] }}.result, 'Succeeded'))
+      dependsOn: ["discovery_${{ variables['prodEnv'] }}"]
+      vmImage: "${{ variables['defaultAgentPoolName'] }}"
+      environmentName: "${{ variables['prodEnv'] }}"
+      exemptionExpiresOnWarningDays: "${{ variables['policyDocExemptionExpiresOnWarningDays'] }}"
+      complianceWarningPercentageThreshold: "${{ variables['policyDocComplianceWarningPercentageThreshold'] }}"
+      gitCommitMessage: "Policy Documentation from Build Source Version $(Build.SourceVersion)"
+      buildArtifactName: "policy_doc_${{ variables['prodEnv'] }}"
+      aesEncryptionKey: '$(EncryptionKey)'
+      aesEncryptionIV: '$(EncryptionIV)'
+      customSecurityControlPath: "${{ variables['policyDocCustomSecurityControlPath'] }}"

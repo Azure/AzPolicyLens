@@ -1,0 +1,13 @@
+{
+  "$schema": "../security-control.schema.json",
+  "ControlID": "ISO27001-2022_A.5.37",
+  "Category": "Organizational Controls",
+  "Name": "Documented operating procedures",
+  "Description": "Operating procedures for information processing facilities shall be documented and made available to personnel who need them.",
+  "Publisher": "ISO/IEC",
+  "Framework": "ISO 27001:2022",
+  "AdditionalInfo": {
+    "Edition": "3",
+    "PublishDate": "2022-10"
+  }
+}

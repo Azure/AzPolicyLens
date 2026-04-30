@@ -1,0 +1,13 @@
+{
+  "$schema": "../security-control.schema.json",
+  "ControlID": "ISO27001-2022_A.7.13",
+  "Category": "Physical Controls",
+  "Name": "Equipment maintenance",
+  "Description": "Equipment shall be maintained correctly to ensure availability, integrity and confidentiality of information.",
+  "Publisher": "ISO/IEC",
+  "Framework": "ISO 27001:2022",
+  "AdditionalInfo": {
+    "Edition": "3",
+    "PublishDate": "2022-10"
+  }
+}

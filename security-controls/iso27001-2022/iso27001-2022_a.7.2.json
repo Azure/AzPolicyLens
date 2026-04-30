@@ -1,0 +1,13 @@
+{
+  "$schema": "../security-control.schema.json",
+  "ControlID": "ISO27001-2022_A.7.2",
+  "Category": "Physical Controls",
+  "Name": "Physical entry",
+  "Description": "Secure areas shall be protected by appropriate entry controls and access points.",
+  "Publisher": "ISO/IEC",
+  "Framework": "ISO 27001:2022",
+  "AdditionalInfo": {
+    "Edition": "3",
+    "PublishDate": "2022-10"
+  }
+}

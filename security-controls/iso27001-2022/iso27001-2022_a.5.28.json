@@ -1,0 +1,13 @@
+{
+  "$schema": "../security-control.schema.json",
+  "ControlID": "ISO27001-2022_A.5.28",
+  "Category": "Organizational Controls",
+  "Name": "Collection of evidence",
+  "Description": "The organization shall establish and implement procedures for the identification, collection, acquisition and preservation of evidence related to information security events.",
+  "Publisher": "ISO/IEC",
+  "Framework": "ISO 27001:2022",
+  "AdditionalInfo": {
+    "Edition": "3",
+    "PublishDate": "2022-10"
+  }
+}

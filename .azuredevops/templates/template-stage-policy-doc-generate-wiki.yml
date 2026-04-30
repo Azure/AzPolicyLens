@@ -1,0 +1,165 @@
+parameters:
+- name: poolName
+  displayName: "Self Hosted Agent Pool Name"
+  type: string
+  default: ""
+
+- name: vmImage
+  displayName: "MS Hosted Agent VM Image Name"
+  type: string
+  default: ""
+
+- name: stageName
+  displayName: "Stage Name"
+  type: string
+
+- name: condition
+  displayName: "Custom Stage Conditions"
+  type: string
+  default: "succeeded()"
+
+- name: dependsOn
+  displayName: "Depends On"
+  type: object
+  default: []
+
+- name: environmentName
+  displayName: "Environment Name"
+  type: string
+
+- name: exemptionExpiresOnWarningDays
+  displayName: "Exemption Expires On Warning Days"
+  type: number
+
+- name: complianceWarningPercentageThreshold
+  displayName: "Compliance Warning Percentage Threshold"
+  type: number
+
+- name: gitCommitMessage
+  displayName: "Git commit message"
+  type: string
+  default: ""
+
+- name: buildArtifactName
+  displayName: "Pipeline build artifact name to get the environment discovery data from"
+  type: string
+
+- name: customSecurityControlPath
+  displayName: "Path for the custom security control definition files"
+  type: string
+  default: ""
+
+- name: aesEncryptionKey
+  displayName: "AES Encryption Key"
+  type: string
+
+- name: aesEncryptionIV
+  displayName: "AES Encryption Initialization Vector"
+  type: string
+
+stages:
+  - stage: "${{ parameters.stageName }}"
+    displayName: "${{ parameters.environmentName }} Generate Wiki"
+    dependsOn: ${{ parameters.dependsOn }}
+    variables:
+      - template: ../../settings.yml
+      - name: parseConfigScriptPath
+        value: "scripts/ado-policy-doc-parse-config-file.ps1"
+      - name: generateWikiScriptPath
+        value: "scripts/generate-wiki-pages.ps1"
+      - name: configFilePath
+        value: "configurations/ado-config.jsonc"
+      - name: configSchemaFilePath
+        value: "configurations/ado-config.schema.json"
+    condition: ${{ parameters.condition }}
+    jobs:
+    - job: parse_config_file
+      displayName: "Parse Configuration File"
+      workspace:
+        clean: all
+      pool:
+        ${{ if ne(parameters.vmImage, '') }}:
+          vmImage: ${{ parameters.vmImage }}
+        ${{ if ne(parameters.poolName, '') }}:
+          name: ${{ parameters.poolName }}
+      steps:
+        - checkout: self
+        - task: PowerShell@2
+          name: getConfig
+          displayName: "Get Configuration"
+          inputs:
+            targetType: "filePath"
+            pwsh: true
+            filePath: $(parseConfigScriptPath)
+            arguments:
+              -configFilePath "$(configFilePath)" `
+              -configSchemaFilePath "$(configSchemaFilePath)" `
+              -environment "${{parameters.environmentName}}"
+    - job: generate_wiki
+      displayName: "Generate Wiki"
+      dependsOn: parse_config_file
+      condition: succeeded()
+      strategy:
+        matrix: $[ dependencies.parse_config_file.outputs['getConfig.wiki']]
+      pool:
+        ${{ if ne(parameters.vmImage, '') }}:
+          vmImage: ${{ parameters.vmImage }}
+        ${{ if ne(parameters.poolName, '') }}:
+          name: ${{ parameters.poolName }}
+      steps:
+        - checkout: self
+        - task: DownloadBuildArtifacts@0
+          displayName: "Download Environment Discovery Artifact"
+          inputs:
+            artifactName: "${{parameters.buildArtifactName}}"
+        - task : PowerShell@2
+          displayName: "Configure Git"
+          env:
+            SYSTEM_ACCESSTOKEN: $(System.AccessToken)
+          inputs:
+            targetType: "inline"
+            pwsh: true
+            script: |
+              Write-Output "Adding token to http.extraheader global config."
+              git config --global http.extraheader "AUTHORIZATION: bearer $env:SYSTEM_ACCESSTOKEN"
+        - task: PowerShell@2
+          displayName: "Generate Wiki"
+          env:
+            SYSTEM_ACCESSTOKEN: $(System.AccessToken)
+            #passing the encryption key and IV to the script as environment variables instead of parameters
+            #because this is enabled in ADO project: https://learn.microsoft.com/en-us/azure/devops/pipelines/security/inputs?view=azure-devops#enable-shell-tasks-arguments-parameter-validation
+            EncryptionKey: ${{parameters.aesEncryptionKey}}
+            EncryptionIV: ${{parameters.aesEncryptionIV}}
+            gitRepository: $(matrixGitRepository)
+            gitUserName: $(matrixGitUserName)
+            gitUserEmail: $(matrixGitUserEmail)
+          inputs:
+            targetType: "FilePath"
+            filePath: $(generateWikiScriptPath)
+            arguments:
+              -DiscoveryFilePath '$(System.ArtifactsDirectory)/${{parameters.buildArtifactName}}/$(policyDocDiscoveryFileName)' `
+              -BaseOutputPath '$(Build.StagingDirectory)' `
+              -wikiAlias '$(matrixWikiAlias)' `
+              -pageStyle '$(matrixPageStyle)' `
+              -gitPlatform 'ado' `
+              -gitBranch '$(matrixGitBranch)' `
+              -gitRepoPath '$(matrixGitRepoPath)' `
+              -gitCommitMessage '${{ parameters.gitCommitMessage }}' `
+              -SubscriptionIds '$(matrixSubscriptionIds)' `
+              -childManagementGroupId '$(matrixChildManagementGroupId)' `
+              -ExemptionExpiresOnWarningDays ${{ parameters.exemptionExpiresOnWarningDays }} `
+              -ComplianceWarningPercentageThreshold ${{ parameters.complianceWarningPercentageThreshold }} `
+              -customSecurityControlPath '${{ parameters.customSecurityControlPath }}' `
+              -Title '$(matrixTitle)'
+            failOnStderr: false #must be false because git writes output to stderr on Linux
+        - task : PowerShell@2
+          displayName: "Remove Git Global Config"
+          condition: always()
+          inputs:
+            targetType: "inline"
+            pwsh: true
+            script: |
+              Write-Output "Removing all global git config."
+              git config --global --unset user.name
+              git config --global --unset user.email
+              git config --global --unset-all http.extraheader

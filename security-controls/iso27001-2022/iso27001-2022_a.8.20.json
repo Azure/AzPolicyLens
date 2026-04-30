@@ -1,0 +1,13 @@
+{
+  "$schema": "../security-control.schema.json",
+  "ControlID": "ISO27001-2022_A.8.20",
+  "Category": "Technological Controls",
+  "Name": "Networks security",
+  "Description": "Networks and network devices shall be secured, managed and controlled to protect information in systems and applications.",
+  "Publisher": "ISO/IEC",
+  "Framework": "ISO 27001:2022",
+  "AdditionalInfo": {
+    "Edition": "3",
+    "PublishDate": "2022-10"
+  }
+}

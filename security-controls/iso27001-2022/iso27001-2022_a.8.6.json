@@ -1,0 +1,13 @@
+{
+  "$schema": "../security-control.schema.json",
+  "ControlID": "ISO27001-2022_A.8.6",
+  "Category": "Technological Controls",
+  "Name": "Capacity management",
+  "Description": "The use of resources shall be monitored and adjusted in line with current and expected capacity requirements.",
+  "Publisher": "ISO/IEC",
+  "Framework": "ISO 27001:2022",
+  "AdditionalInfo": {
+    "Edition": "3",
+    "PublishDate": "2022-10"
+  }
+}

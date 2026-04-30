@@ -1,0 +1,13 @@
+{
+  "$schema": "../security-control.schema.json",
+  "ControlID": "ISO27001-2022_A.6.7",
+  "Category": "People Controls",
+  "Name": "Remote working",
+  "Description": "Security measures shall be implemented when personnel are working remotely to protect information accessed, processed or stored outside the organization's premises.",
+  "Publisher": "ISO/IEC",
+  "Framework": "ISO 27001:2022",
+  "AdditionalInfo": {
+    "Edition": "3",
+    "PublishDate": "2022-10"
+  }
+}

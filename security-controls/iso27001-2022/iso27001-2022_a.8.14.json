@@ -1,0 +1,13 @@
+{
+  "$schema": "../security-control.schema.json",
+  "ControlID": "ISO27001-2022_A.8.14",
+  "Category": "Technological Controls",
+  "Name": "Redundancy of information processing facilities",
+  "Description": "Information processing facilities shall be implemented with redundancy sufficient to meet availability requirements.",
+  "Publisher": "ISO/IEC",
+  "Framework": "ISO 27001:2022",
+  "AdditionalInfo": {
+    "Edition": "3",
+    "PublishDate": "2022-10"
+  }
+}

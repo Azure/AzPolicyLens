@@ -1,0 +1,55 @@
+{
+  "files.exclude": {
+    ".vs/": true,
+    "reports/": false,
+    "out/": true
+  },
+  "files.associations": {
+    "**/.azuredevops/pipelines/*.yml": "azure-pipelines",
+    "**/.azuredevops/templates/*.yml": "azure-pipelines",
+    "**/.github/actions/**/*.yml": "github-actions-workflow",
+    "**/.github/workflows/**/*.yml": "github-actions-workflow"
+  },
+  "files.insertFinalNewline": true,
+  "editor.tabSize": 2,
+  "editor.formatOnSave": true,
+  "editor.insertSpaces": true,
+  "editor.detectIndentation": false,
+  "yaml.format.singleQuote": true,
+  "yaml.format.enable": true,
+  "yaml.format.bracketSpacing": true,
+  "[bicep]": {
+    "editor.defaultFormatter": "ms-azuretools.vscode-bicep"
+  },
+  "[powershell]": {
+    "editor.formatOnSave": true,
+    "editor.tabSize": 2
+  },
+  "git.branchProtection": [
+    "main"
+  ],
+  "powershell.codeFormatting.preset": "OTBS",
+  "powershell.scriptAnalysis.settingsPath": ".vscode/PSScriptAnalyzerSettings.psd1",
+  "powershell.scriptAnalysis.enable": true,
+  "git.branchProtectionPrompt": "alwaysCommitToNewBranch",
+  "git.branchValidationRegex": "^develop/[a-z][a-z0-9]{3,}[a-z0-9]/[a-z][a-z0-9-]{3,}[a-z0-9]$",
+  "cSpell.language": "en",
+  "cSpell.words": [
+    "Contoso",
+    "Decryptor",
+    "dedup",
+    "ENCRYPTIONIV",
+    "ENCRYPTIONKEY",
+    "GITHUBTOKEN",
+    "GITHUBUSERID",
+    "hashtables",
+    "managementgroups",
+    "PKCS",
+    "policyassignments",
+    "policydefinitions",
+    "policyexemptions",
+    "policyinsights",
+    "policysetdefinitions",
+    "psobject"
+  ]
+}
