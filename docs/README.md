@@ -1,5 +1,7 @@
 # Documentation and Instructions
 
+![logo](../images/logo.png)
+
 ## Supported Platforms
 
 The following DevOps / CICD platforms are supported:
@@ -74,6 +76,11 @@ The table below summarizes the key features of each wiki type:
   <tr>
     <td>Policy Assignments that affects specific subscription(s) used by the application team</td>
     <td style="text-align: center"></td>
+    <td style="text-align: center">✅</td>
+  </tr>
+  <tr>
+    <td>Policy resources that affects a specific child management group</td>
+    <td style="text-align: center">✅</td>
     <td style="text-align: center">✅</td>
   </tr>
   <tr>
