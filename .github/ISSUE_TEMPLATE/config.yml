@@ -1,0 +1,14 @@
+blank_issues_enabled: false
+contact_links:
+  - name: Documentation
+    url: https://github.com/Azure/AzPolicyLens/tree/main/docs
+    about: Check the documentation before opening an issue.
+  - name: FAQ
+    url: https://github.com/Azure/AzPolicyLens/blob/main/docs/faq.md
+    about: Review frequently asked questions.
+  - name: GitHub Discussions
+    url: https://github.com/Azure/AzPolicyLens/discussions
+    about: Ask questions and share ideas with the community.
+  - name: Security
+    url: https://github.com/Azure/AzPolicyLens/security/policy
+    about: Report security vulnerabilities privately (do NOT open a public issue).

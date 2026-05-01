@@ -1,0 +1,45 @@
+name: Question
+description: Ask a question about using AzPolicyLens
+title: "[Question]: "
+labels: ["question"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Before asking a question, please check the [documentation](https://github.com/Azure/AzPolicyLens/tree/main/docs), the [FAQ](https://github.com/Azure/AzPolicyLens/blob/main/docs/faq.md), and the [GitHub Discussions](https://github.com/Azure/AzPolicyLens/discussions) to see if your question has already been answered.
+
+  - type: dropdown
+    id: area
+    attributes:
+      label: Topic Area
+      description: What area does your question relate to?
+      options:
+        - Setup / Getting Started
+        - Environment Discovery
+        - Wiki / Documentation Generation
+        - Content of Generated Wiki
+        - Configuration Files (github-config / ado-config / metadata)
+        - Security Control Catalog / Mapping
+        - Encryption Key Handling
+        - Azure DevOps Pipeline Integration
+        - GitHub Actions Workflow Integration
+        - Architecture / Best Practices
+        - Other
+    validations:
+      required: true
+
+  - type: textarea
+    id: question
+    attributes:
+      label: Question
+      description: Describe your question in detail.
+    validations:
+      required: true
+
+  - type: textarea
+    id: context
+    attributes:
+      label: Context
+      description: Provide any relevant context, such as your environment setup, what you've already tried, or error messages encountered. Redact any tenant IDs, subscription IDs, secrets, or tokens.
+    validations:
+      required: false
