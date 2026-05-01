@@ -2474,11 +2474,17 @@ function buildPolicySyntaxTestResultMarkdown {
     return $markdown
   }
 
+  # Filter out tests that were not executed (e.g. excluded via Pester tags).
+  $executedTests = @($TestResult.Tests | Where-Object { $_.Result -ine 'NotRun' })
+  if ($executedTests.Count -eq 0) {
+    $markdown += ":bookmark: No syntax tests were executed.`n`n"
+    return $markdown
+  }
+
   # Overall summary
-  $totalCount = $TestResult.Tests.Count
-  $passedCount = @($TestResult.Tests | Where-Object { $_.Result -ieq 'Passed' }).Count
-  $failedCount = @($TestResult.Tests | Where-Object { $_.Result -ieq 'Failed' }).Count
-  $skippedCount = @($TestResult.Tests | Where-Object { $_.Result -ieq 'Skipped' }).Count
+  $totalCount = $executedTests.Count
+  $passedCount = @($executedTests | Where-Object { $_.Result -ieq 'Passed' }).Count
+  $failedCount = @($executedTests | Where-Object { $_.Result -ieq 'Failed' }).Count
   if ($failedCount -gt 0) {
     $overallStatus = ':x: Failed'
   } elseif ($passedCount -eq $totalCount) {
@@ -2487,17 +2493,16 @@ function buildPolicySyntaxTestResultMarkdown {
     $overallStatus = ':warning: Partial'
   }
   $summaryTable = [ordered]@{
-    Status  = $overallStatus
-    Total   = $totalCount
-    Passed  = $passedCount
-    Failed  = $failedCount
-    Skipped = $skippedCount
+    Status = $overallStatus
+    Total  = $totalCount
+    Passed = $passedCount
+    Failed = $failedCount
   }
   $markdown += $(newMarkdownTable -data $summaryTable -Orientation 'vertical')
   $markdown += "`n`n"
 
   # Group tests by their immediate context (Block.Name). Preserve original order.
-  $grouped = $TestResult.Tests | Group-Object -Property { $_.Block.Name }
+  $grouped = $executedTests | Group-Object -Property { $_.Block.Name }
   foreach ($group in $grouped) {
     $contextName = if ([string]::IsNullOrWhiteSpace($group.Name)) { 'Tests' } else { $group.Name }
     $markdown += $(newMarkdownHeader -title $contextName -level 3 -caseStyle 'TitleCase')
@@ -2508,7 +2513,6 @@ function buildPolicySyntaxTestResultMarkdown {
       switch ($test.Result) {
         'Passed' { $resultText = ':white_check_mark: Passed' }
         'Failed' { $resultText = ':x: Failed' }
-        'Skipped' { $resultText = ':warning: Skipped' }
         default { $resultText = $test.Result }
       }
       $testTitle = if ($test.ExpandedName) { $test.ExpandedName } else { $test.Name }
