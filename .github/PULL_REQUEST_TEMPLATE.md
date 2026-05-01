@@ -30,14 +30,6 @@ Example:
 -
 -
 
-## Pipeline Reference URL
-
-<!-- please create and attach the status badge or URL of your successful run. -->
-
-| Pipeline |
-| -------- |
-|          |
-
 ## Checklist
 
 <!-- Use the check-boxes [x] on the options that are relevant. -->

@@ -1,0 +1,49 @@
+name: Documentation Improvement
+description: Report missing, incorrect, or unclear documentation
+title: "[Docs]: "
+labels: ["documentation"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Help us improve the AzPolicyLens documentation.
+
+  - type: dropdown
+    id: doc-type
+    attributes:
+      label: Documentation Type
+      description: What type of documentation change is needed?
+      options:
+        - Fix incorrect / outdated information
+        - Add missing documentation
+        - Improve clarity of existing documentation
+        - Add example or sample
+        - Broken link or reference
+        - Other
+    validations:
+      required: true
+
+  - type: input
+    id: doc-location
+    attributes:
+      label: Document Location
+      description: Which document or section is affected? Provide a file path, anchor, or URL if possible.
+      placeholder: "e.g., docs/faq.md, docs/how-to/ado-wiki-setup.md#prerequisites"
+    validations:
+      required: false
+
+  - type: textarea
+    id: description
+    attributes:
+      label: Description
+      description: Describe the documentation issue or improvement needed.
+    validations:
+      required: true
+
+  - type: textarea
+    id: suggestion
+    attributes:
+      label: Suggested Change
+      description: If you have a specific suggestion for the documentation content, include it here.
+    validations:
+      required: false

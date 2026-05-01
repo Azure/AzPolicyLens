@@ -1,0 +1,75 @@
+name: Feature Request
+description: Suggest a new feature or enhancement for AzPolicyLens
+title: "[Feature]: "
+labels: ["enhancement"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thank you for suggesting a feature! Please describe your idea so we can evaluate it.
+
+  - type: dropdown
+    id: area
+    attributes:
+      label: Feature Area
+      description: Which area of the project does this feature relate to?
+      options:
+        - AzPolicyLens PowerShell Modules
+        - Environment Discovery
+        - Wiki / Documentation Generation
+        - Generated Wiki Content / Layout
+        - Configuration Schema (github-config / ado-config / metadata)
+        - Security Control Catalog (built-in or custom)
+        - Security Control Mapping
+        - Azure DevOps Pipeline Integration
+        - GitHub Actions Workflow Integration
+        - Helper Scripts / Tooling
+        - Documentation
+        - Other
+    validations:
+      required: true
+
+  - type: textarea
+    id: problem
+    attributes:
+      label: Problem Statement
+      description: Is your feature request related to a problem? Describe the pain point.
+      placeholder: "I'm always frustrated when..."
+    validations:
+      required: true
+
+  - type: textarea
+    id: solution
+    attributes:
+      label: Proposed Solution
+      description: Describe the solution you'd like to see.
+    validations:
+      required: true
+
+  - type: textarea
+    id: alternatives
+    attributes:
+      label: Alternatives Considered
+      description: Describe any alternative solutions or workarounds you've considered.
+    validations:
+      required: false
+
+  - type: dropdown
+    id: breaking-change
+    attributes:
+      label: Breaking Change
+      description: Would this feature introduce a breaking change to existing configurations or pipelines?
+      options:
+        - "Yes"
+        - "No"
+        - Not sure
+    validations:
+      required: true
+
+  - type: textarea
+    id: additional
+    attributes:
+      label: Additional Context
+      description: Any other context, mockups, or examples that help explain the feature.
+    validations:
+      required: false

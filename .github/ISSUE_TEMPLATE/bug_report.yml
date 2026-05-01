@@ -1,0 +1,171 @@
+name: Bug Report
+description: Report a bug with AzPolicyLens
+title: "[Bug]: "
+labels: ["bug", "triage"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thank you for taking the time to report a bug in AzPolicyLens. Please fill in the details below to help us investigate and resolve the issue.
+
+        Before submitting, please:
+        - Search [existing issues](https://github.com/Azure/AzPolicyLens/issues) to avoid duplicates.
+        - Review the [documentation](https://github.com/Azure/AzPolicyLens/tree/main/docs) and [FAQ](https://github.com/Azure/AzPolicyLens/blob/main/docs/faq.md).
+
+  - type: dropdown
+    id: area
+    attributes:
+      label: Affected Area
+      description: Which area of AzPolicyLens is affected?
+      options:
+        - "PowerShell Module: AzPolicyLens.Discovery"
+        - "PowerShell Module: AzPolicyLens.Wiki"
+        - "Environment Discovery (Invoke-AzplEnvironmentDiscovery)"
+        - "Wiki / Documentation Generation (New-AzplDocumentation)"
+        - "Azure DevOps Pipeline Integration"
+        - "GitHub Actions Workflow Integration"
+        - "Helper Scripts (scripts/*)"
+        - "Documentation (docs/*)"
+        - "Other"
+    validations:
+      required: true
+
+  - type: textarea
+    id: description
+    attributes:
+      label: Description
+      description: A clear and concise description of the bug.
+      placeholder: Describe the bug...
+    validations:
+      required: true
+
+  - type: textarea
+    id: steps
+    attributes:
+      label: Steps to Reproduce
+      description: Steps to reproduce the behavior. Include the cmdlet/script invoked, parameters used (redact secrets), and any relevant configuration file snippets.
+      placeholder: |
+        1. Configure '...' (e.g., github-config.jsonc) with '...'
+        2. Run cmdlet/script '...' (e.g., Invoke-AzplEnvironmentDiscovery -...)
+        3. Generate wiki via '...' (e.g., New-AzplDocumentation -...)
+        4. Observe error '...'
+    validations:
+      required: true
+
+  - type: textarea
+    id: expected
+    attributes:
+      label: Expected Behavior
+      description: What did you expect to happen?
+    validations:
+      required: true
+
+  - type: textarea
+    id: actual
+    attributes:
+      label: Actual Behavior
+      description: What actually happened? Include full error messages, stack traces, or screenshots of the generated wiki where applicable.
+      render: shell
+    validations:
+      required: true
+
+  - type: input
+    id: azpolicylens-version
+    attributes:
+      label: AzPolicyLens Module Version(s)
+      description: "Output of `Get-Module AzPolicyLens.Discovery, AzPolicyLens.Wiki -ListAvailable | Select-Object Name, Version`. Or commit SHA if running from source."
+      placeholder: "e.g., AzPolicyLens.Discovery 1.0.x / AzPolicyLens.Wiki 1.0.x, or commit abc1234"
+    validations:
+      required: true
+
+  - type: input
+    id: powershell-version
+    attributes:
+      label: PowerShell Version
+      description: "Output of `$PSVersionTable.PSVersion`"
+      placeholder: "e.g., 7.4.x"
+    validations:
+      required: true
+
+  - type: dropdown
+    id: os
+    attributes:
+      label: Operating System
+      options:
+        - Windows
+        - Linux
+        - macOS
+        - Container (Microsoft-hosted ADO agent / GitHub-hosted runner)
+        - Self-hosted agent / runner
+    validations:
+      required: true
+
+  - type: input
+    id: az-modules
+    attributes:
+      label: Az PowerShell Module Version(s)
+      description: "Relevant Az.* module versions (e.g., `Get-Module Az.Accounts, Az.Resources, Az.ResourceGraph -ListAvailable | Select-Object Name, Version`)."
+      placeholder: "e.g., Az.Accounts 3.x, Az.Resources 7.x, Az.ResourceGraph 1.x"
+    validations:
+      required: false
+
+  - type: dropdown
+    id: cicd-platform
+    attributes:
+      label: Execution Context
+      description: Where are you running AzPolicyLens?
+      options:
+        - Local workstation (interactive)
+        - Azure DevOps Pipeline
+        - GitHub Actions Workflow
+        - Other automation
+    validations:
+      required: true
+
+  - type: dropdown
+    id: wiki-target
+    attributes:
+      label: Target Wiki Platform
+      options:
+        - Azure DevOps Wiki
+        - GitHub Wiki
+        - N/A
+        - Both
+    validations:
+      required: false
+
+  - type: input
+    id: scope
+    attributes:
+      label: Discovery Scope
+      description: "Scope used for the environment discovery (do NOT include tenant/subscription IDs or any sensitive identifiers)."
+      placeholder: "e.g., Management Group / Subscription / Multiple subscriptions"
+    validations:
+      required: false
+
+  - type: textarea
+    id: config
+    attributes:
+      label: Relevant Configuration Snippet
+      description: "Paste the relevant portion of your configuration file (github-config.jsonc, ado-config.jsonc, additional-policy-metadata-config.jsonc, or custom security control). REDACT all tenant IDs, subscription IDs, secrets, tokens, and PII."
+      render: jsonc
+    validations:
+      required: false
+
+  - type: textarea
+    id: additional
+    attributes:
+      label: Additional Context
+      description: Any other context, screenshots of the generated wiki, log output, or notes that may help diagnose the issue.
+    validations:
+      required: false
+
+  - type: checkboxes
+    id: confirmation
+    attributes:
+      label: Confirmation
+      options:
+        - label: I have searched existing issues and confirmed this is not a duplicate.
+          required: true
+        - label: I have removed all secrets, tokens, tenant IDs, and subscription IDs from logs and configuration snippets.
+          required: true
