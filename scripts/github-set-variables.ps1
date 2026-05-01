@@ -21,6 +21,13 @@ if (-not (Get-Module -ListAvailable -Name powershell-yaml)) {
 }
 Import-Module powershell-yaml
 
+# Import AzPolicyTest module for YAML parsing
+if (-not (Get-Module -ListAvailable -Name AzPolicyTest)) {
+  Write-Verbose "Installing AzPolicyTest module..."
+  Install-Module -Name AzPolicyTest -RequiredVersion 3.0.0 -Force -Scope CurrentUser
+}
+Import-Module AzPolicyTest
+
 # Read and parse YAML file
 Write-Output "Reading configuration from: $configFilePath"
 $yamlContent = Get-Content -Path $configFilePath -Raw

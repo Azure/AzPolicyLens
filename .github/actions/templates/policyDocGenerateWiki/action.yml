@@ -63,7 +63,7 @@ runs:
       with:
         fetch-depth: 0
 
-    - name: 'Install PowerShell-Yaml Module'
+    - name: 'Install PowerShell Modules'
       shell: pwsh
       run: |
         if (-not (Get-Module -ListAvailable -Name powershell-yaml)) {
@@ -96,10 +96,7 @@ runs:
         git config --global user.name "${inputs.gitUserName}"
         git config --global user.email "${inputs.gitUserEmail}"
         #git config --global http.extraheader "AUTHORIZATION: basic $token"
-    - name: Install AzPolicyTest module
-      shell: pwsh
-      run: |
-        Install-Module -Name AzPolicyTest -RequiredVersion 3.0.0 -Force -Scope CurrentUser
+
     - name: Generate Wiki
       id: generate_wiki
       continue-on-error: true
