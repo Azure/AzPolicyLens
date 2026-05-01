@@ -70,7 +70,10 @@ runs:
           Write-Output "Installing powershell-yaml module..."
           Install-Module -Name powershell-yaml -Force -Scope CurrentUser
         }
-
+        if (-not (Get-Module -ListAvailable -Name AzPolicyTest)) {
+          Write-Output "Installing AzPolicyTest module..."
+          Install-Module -Name AzPolicyTest -RequiredVersion 3.0.0 -Force -Scope CurrentUser
+        }
     - name: Import Variables
       shell: pwsh # PowerShell Core
       env:
