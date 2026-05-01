@@ -2580,11 +2580,8 @@ function buildPolicyDefinitionDetailedPageContent {
     }
     id         = $definition.id
   }
+
   $definitionJson = buildPolicyDefinitionJson -PolicyDefinition $definitionData
-  if ($PageStyle -ieq 'detailed') {
-    #Use AzPolicyTest to test definition syntax when the page style is detailed.
-    $syntaxTestResult = Test-AzPolicyDefinition -content $definitionJson
-  }
   $policyEffectConfig = getPolicyEffect -policyObject $definition
   $wrappedEffects = $policyEffectConfig.effects | ForEach-Object { "``$($_)``" }
   $effects = $($wrappedEffects -join ', ')
@@ -2611,6 +2608,13 @@ function buildPolicyDefinitionDetailedPageContent {
     Effects       = $effects
     DefaultEffect = "``$defaultEffect``"
     InUse         = '``{0}``' -f ($(if ($definition.isInUse) { $definition.isInUse } else { 'false' })).ToString().ToUpper()
+  }
+
+  if ($PageStyle -ieq 'detailed') {
+    #Use AzPolicyTest to test definition syntax when the page style is detailed.
+    $syntaxTestResult = Test-AzPolicyDefinition -content $definitionJson
+    $coloredSyntaxTestResult = FormatTestResult -result $syntaxTestResult.Results -WikiStyle $WikiStyle -Format 'Markdown'
+    $definitionOverviewTableData.Add('TestResult', $coloredSyntaxTestResult)
   }
   $parameterMarkdownContent = buildPolicyDefinitionParametersMarkdown -definition $(ConvertToOrderedHashtable -InputObject $definition) -caseStyle 'original' -level 3
 
@@ -2787,10 +2791,6 @@ function buildPolicyInitiativeDetailedPageContent {
     id         = $initiative.id
   }
   $definitionJson = buildPolicyDefinitionJson -PolicyDefinition $definitionData
-  if ($PageStyle -ieq 'detailed') {
-    #Use AzPolicyTest to test definition syntax when the page style is detailed.
-    $syntaxTestResult = Test-AzPolicySetDefinition -content $definitionJson
-  }
   $definitionOverviewTableData = [ordered]@{
     displayName = "**$($initiative.properties.displayName)**"
     name        = $initiative.name
@@ -2799,6 +2799,12 @@ function buildPolicyInitiativeDetailedPageContent {
     description = $($initiative.properties.description ? $($initiative.properties.description) : $null)
     version     = $initiative.properties.version ?? $metadata.version ?? $null
     InUse       = '``{0}``' -f $initiative.isInUse.ToUpper()
+  }
+  if ($PageStyle -ieq 'detailed') {
+    #Use AzPolicyTest to test definition syntax when the page style is detailed.
+    $syntaxTestResult = Test-AzPolicySetDefinition -content $definitionJson
+    $coloredSyntaxTestResult = FormatTestResult -result $syntaxTestResult.Results -WikiStyle $WikiStyle -Format 'Markdown'
+    $definitionOverviewTableData.Add('TestResult', $coloredSyntaxTestResult)
   }
   $policyDefinitionGroupTableData = @()
 
@@ -4804,4 +4810,48 @@ function getComplianceRatingSummaryForFramework {
   }
   $Markdown = buildComplianceSummaryMarkdown @complianceSummaryParams
   $Markdown
+}
+
+#48 function to format the test result based on the result (Passed, Failed)
+function FormatTestResult {
+  [CmdletBinding()]
+  [OutputType([string])]
+  param (
+    [Parameter(Mandatory = $true)]
+    [ValidateNotNullOrEmpty()]
+    [ValidateSet('Passed', 'Failed')]
+    [string]$result,
+
+    [parameter(Mandatory = $true, HelpMessage = 'The wiki style. Supported values are "ado" and "github".')]
+    [ValidateSet('ado', 'github')]
+    [string]$WikiStyle
+  )
+  $green = '#008000'
+  $red = '#FF0000'
+  if ($WikiStyle -ieq 'ado') {
+    try {
+      if ($result -ieq 'Passed') {
+        $spanOpenBracket = "<span style=`"color:{0}`">" -f $green
+      } else {
+        $spanOpenBracket = "<span style=`"color:{0}`">" -f $red
+      }
+      $return = "{0}{1}</span>" -f $spanOpenBracket, $result
+    } catch {
+      Write-Warning "[$(getCurrentUTCString)]: Invalid result '$result'. Returning as is."
+      $return = $result
+    }
+  } else {
+    try {
+      if ($result -ieq 'Passed') {
+        $colorCodedRate = "`$\color{$green}{\textsf " + $result + '}$'
+      } else {
+        $colorCodedRate = "`$\color{$red}{\textsf " + $result + '}$'
+      }
+      $return = $colorCodedRate
+    } catch {
+      Write-Warning "[$(getCurrentUTCString)]: Invalid result '$result'. Returning as is."
+      $return = $result
+    }
+  }
+  $return
 }

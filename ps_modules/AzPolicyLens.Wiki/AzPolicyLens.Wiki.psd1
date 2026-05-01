@@ -44,7 +44,7 @@
 
   # Modules that must be imported into the global environment prior to importing this module
   RequiredModules   = @(
-    @{ ModuleName = 'AzPolicyTest'; ModuleVersion = '3.0.0'; GUID = '600b36cd-1af5-4add-bd9d-010112095911' }
+    @{ ModuleName = 'AzPolicyTest'; ModuleVersion = '3.1.0'; GUID = '600b36cd-1af5-4add-bd9d-010112095911' }
   )
 
   # Assemblies that must be loaded prior to importing this module
@@ -132,8 +132,8 @@
       # IconUri = ''
 
       # ReleaseNotes of this module
-      ReleaseNotes = '2.1.2 - February 2026
-Version 2.1.2 Release
+      ReleaseNotes = '3.1.0 - May 2026
+Version 3.1.0 Release
 '
 
       # Prerelease string of this module
