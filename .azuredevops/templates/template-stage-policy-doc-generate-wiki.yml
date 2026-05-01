@@ -123,6 +123,13 @@ stages:
               Write-Output "Adding token to http.extraheader global config."
               git config --global http.extraheader "AUTHORIZATION: bearer $env:SYSTEM_ACCESSTOKEN"
         - task: PowerShell@2
+          displayName: "Install AzPolicyTest module"
+          inputs:
+            targetType: "inline"
+            pwsh: true
+            script: |
+              Install-Module -Name AzPolicyTest -RequiredVersion 3.0.0 -Force -Scope CurrentUser
+        - task: PowerShell@2
           displayName: "Generate Wiki"
           env:
             SYSTEM_ACCESSTOKEN: $(System.AccessToken)

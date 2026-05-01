@@ -43,7 +43,9 @@
   # ProcessorArchitecture = ''
 
   # Modules that must be imported into the global environment prior to importing this module
-  # RequiredModules   = @()
+  RequiredModules   = @(
+    @{ ModuleName = 'AzPolicyTest'; ModuleVersion = '3.0.0'; GUID = '600b36cd-1af5-4add-bd9d-010112095911' }
+  )
 
   # Assemblies that must be loaded prior to importing this module
   # RequiredAssemblies = @()

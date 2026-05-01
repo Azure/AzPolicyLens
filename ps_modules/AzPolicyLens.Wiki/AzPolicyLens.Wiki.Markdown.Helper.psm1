@@ -2460,6 +2460,69 @@ function buildPolicyDefinitionInitiativeMarkdownTable {
   $Markdown
 }
 
+# 24a. Function to format Pester syntax test result (from Test-AzPolicyDefinition / Test-AzPolicyInitiativeDefinition) into markdown
+function buildPolicySyntaxTestResultMarkdown {
+  [CmdletBinding()]
+  [OutputType([string])]
+  param (
+    [Parameter(Mandatory = $true, HelpMessage = 'Pester run result object containing a Tests collection.')]
+    [System.Object]$TestResult
+  )
+  $markdown = ''
+  if (-not $TestResult -or -not $TestResult.Tests -or $TestResult.Tests.Count -eq 0) {
+    $markdown += ":bookmark: No syntax tests were executed.`n`n"
+    return $markdown
+  }
+
+  # Overall summary
+  $totalCount = $TestResult.Tests.Count
+  $passedCount = @($TestResult.Tests | Where-Object { $_.Result -ieq 'Passed' }).Count
+  $failedCount = @($TestResult.Tests | Where-Object { $_.Result -ieq 'Failed' }).Count
+  $skippedCount = @($TestResult.Tests | Where-Object { $_.Result -ieq 'Skipped' }).Count
+  if ($failedCount -gt 0) {
+    $overallStatus = ':x: Failed'
+  } elseif ($passedCount -eq $totalCount) {
+    $overallStatus = ':white_check_mark: Passed'
+  } else {
+    $overallStatus = ':warning: Partial'
+  }
+  $summaryTable = [ordered]@{
+    Status  = $overallStatus
+    Total   = $totalCount
+    Passed  = $passedCount
+    Failed  = $failedCount
+    Skipped = $skippedCount
+  }
+  $markdown += $(newMarkdownTable -data $summaryTable -Orientation 'vertical')
+  $markdown += "`n`n"
+
+  # Group tests by their immediate context (Block.Name). Preserve original order.
+  $grouped = $TestResult.Tests | Group-Object -Property { $_.Block.Name }
+  foreach ($group in $grouped) {
+    $contextName = if ([string]::IsNullOrWhiteSpace($group.Name)) { 'Tests' } else { $group.Name }
+    $markdown += $(newMarkdownHeader -title $contextName -level 3 -caseStyle 'TitleCase')
+    $markdown += "`n`n"
+
+    $tableData = @()
+    foreach ($test in $group.Group) {
+      switch ($test.Result) {
+        'Passed' { $resultText = ':white_check_mark: Passed' }
+        'Failed' { $resultText = ':x: Failed' }
+        'Skipped' { $resultText = ':warning: Skipped' }
+        default { $resultText = $test.Result }
+      }
+      $testTitle = if ($test.ExpandedName) { $test.ExpandedName } else { $test.Name }
+      $tableData += [ordered]@{
+        Test   = $testTitle
+        Result = $resultText
+      }
+    }
+    $markdown += $(newMarkdownTableFromArray -data $tableData -FormatTableHeader $false)
+    $markdown += "`n`n"
+  }
+  $markdown
+}
+
 # 25. Function to build detailed page content for a policy definition
 function buildPolicyDefinitionDetailedPageContent {
   [CmdletBinding()]
@@ -2518,7 +2581,10 @@ function buildPolicyDefinitionDetailedPageContent {
     id         = $definition.id
   }
   $definitionJson = buildPolicyDefinitionJson -PolicyDefinition $definitionData
-
+  if ($PageStyle -ieq 'detailed') {
+    #Use AzPolicyTest to test definition syntax when the page style is detailed.
+    $syntaxTestResult = Test-AzPolicyDefinition -content $definitionJson
+  }
   $policyEffectConfig = getPolicyEffect -policyObject $definition
   $wrappedEffects = $policyEffectConfig.effects | ForEach-Object { "``$($_)``" }
   $effects = $($wrappedEffects -join ', ')
@@ -2625,6 +2691,23 @@ function buildPolicyDefinitionDetailedPageContent {
   $PageContent += "`n`n"
   $PageContent += "</details>"
   $PageContent += "`n`n"
+  if ($PageStyle -ieq 'detailed' -and $syntaxTestResult) {
+    $PageContent += $(newMarkdownHeader -title "definition syntax test result" -level 2 -caseStyle 'UpperCase')
+    $PageContent += "`n`n"
+    $notes = @()
+    $notes += "Definition syntax validation is performed using ``AzPolicyTest``, an open-source Pester-based test framework for Azure Policy."
+    $notes += "It performs static analysis of the Policy definition against schema requirements and a curated set of best-practice assertions."
+    $PageContent += buildQuotedAlert -type tip -messages $notes -contentStyle list -WikiStyle $WikiFileMapping.WikiStyle
+    $PageContent += "`n`n"
+    $PageContent += "<details>"
+    $PageContent += "`n`n"
+    $PageContent += "<summary>Click to expand</summary>"
+    $PageContent += "`n`n"
+    $PageContent += $(buildPolicySyntaxTestResultMarkdown -TestResult $syntaxTestResult)
+    $PageContent += "`n`n"
+    $PageContent += "</details>"
+    $PageContent += "`n`n"
+  }
   $PageContent += $(newMarkdownHeader -title "raw policy definition" -level 2 -caseStyle 'UpperCase')
   $PageContent += "`n`n"
   $PageContent += "<details>`n`n"
@@ -2704,7 +2787,10 @@ function buildPolicyInitiativeDetailedPageContent {
     id         = $initiative.id
   }
   $definitionJson = buildPolicyDefinitionJson -PolicyDefinition $definitionData
-
+  if ($PageStyle -ieq 'detailed') {
+    #Use AzPolicyTest to test definition syntax when the page style is detailed.
+    $syntaxTestResult = Test-AzPolicySetDefinition -content $definitionJson
+  }
   $definitionOverviewTableData = [ordered]@{
     displayName = "**$($initiative.properties.displayName)**"
     name        = $initiative.name
@@ -2876,6 +2962,23 @@ function buildPolicyInitiativeDetailedPageContent {
   $PageContent += "`n`n"
   $PageContent += $(newMarkdownTableFromArray -data $memberPolicyTableData -KeyFormatting @{'ReferenceId' = 'code'; 'DefaultEffect' = 'code' })
   $PageContent += "`n`n"
+  if ($PageStyle -ieq 'detailed' -and $syntaxTestResult) {
+    $PageContent += $(newMarkdownHeader -title "initiative syntax test result" -level 2 -caseStyle 'UpperCase')
+    $PageContent += "`n`n"
+    $notes = @()
+    $notes += "Initiative syntax validation is performed using ``AzPolicyTest``, an open-source Pester-based test framework for Azure Policy."
+    $notes += "It performs static analysis of the policy initiative against schema requirements and a curated set of best-practice assertions."
+    $PageContent += buildQuotedAlert -type tip -messages $notes -contentStyle list -WikiStyle $WikiFileMapping.WikiStyle
+    $PageContent += "`n`n"
+    $PageContent += "<details>"
+    $PageContent += "`n`n"
+    $PageContent += "<summary>Click to expand</summary>"
+    $PageContent += "`n`n"
+    $PageContent += $(buildPolicySyntaxTestResultMarkdown -TestResult $syntaxTestResult)
+    $PageContent += "`n`n"
+    $PageContent += "</details>"
+    $PageContent += "`n`n"
+  }
   $PageContent += $(newMarkdownHeader -title "raw initiative definition" -level 2 -caseStyle 'UpperCase')
   $PageContent += "`n`n"
   $PageContent += "<details>"
