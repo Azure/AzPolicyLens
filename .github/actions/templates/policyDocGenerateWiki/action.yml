@@ -72,7 +72,7 @@ runs:
         }
         if (-not (Get-Module -ListAvailable -Name AzPolicyTest)) {
           Write-Output "Installing AzPolicyTest module..."
-          Install-Module -Name AzPolicyTest -RequiredVersion 3.0.0 -Force -Scope CurrentUser
+          Install-Module -Name AzPolicyTest -RequiredVersion 3.1.0 -Force -Scope CurrentUser
         }
     - name: Import Variables
       shell: pwsh # PowerShell Core

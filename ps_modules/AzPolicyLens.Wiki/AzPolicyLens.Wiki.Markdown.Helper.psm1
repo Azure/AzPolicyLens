@@ -2612,7 +2612,7 @@ function buildPolicyDefinitionDetailedPageContent {
 
   if ($PageStyle -ieq 'detailed') {
     #Use AzPolicyTest to test definition syntax when the page style is detailed.
-    $syntaxTestResult = Test-AzPolicyDefinition -content $definitionJson
+    $syntaxTestResult = Test-AzPolicyDefinition -content $definitionJson -PesterVerbosity 'None'
     $coloredSyntaxTestResult = FormatTestResult -result $syntaxTestResult.Result -WikiStyle $WikiStyle
     $definitionOverviewTableData.Add('TestResult', $coloredSyntaxTestResult)
   }
@@ -2759,7 +2759,11 @@ function buildPolicyInitiativeDetailedPageContent {
 
     [parameter(Mandatory = $true, HelpMessage = 'The page style (detailed for engineers or basic for customers).')]
     [ValidateSet('detailed', 'basic')]
-    [string]$PageStyle
+    [string]$PageStyle,
+
+    [parameter(Mandatory = $true, HelpMessage = 'The wiki style. Supported values are "ado" and "github".')]
+    [ValidateSet('ado', 'github')]
+    [string]$WikiStyle
   )
   $markdownCodeBlock = '```'
   #build initiative definition json
@@ -2802,7 +2806,7 @@ function buildPolicyInitiativeDetailedPageContent {
   }
   if ($PageStyle -ieq 'detailed') {
     #Use AzPolicyTest to test definition syntax when the page style is detailed.
-    $syntaxTestResult = Test-AzPolicySetDefinition -content $definitionJson
+    $syntaxTestResult = Test-AzPolicySetDefinition -content $definitionJson -PesterVerbosity 'None'
     $coloredSyntaxTestResult = FormatTestResult -result $syntaxTestResult.Result -WikiStyle $WikiStyle
     $definitionOverviewTableData.Add('TestResult', $coloredSyntaxTestResult)
   }

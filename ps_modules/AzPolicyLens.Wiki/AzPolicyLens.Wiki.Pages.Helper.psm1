@@ -1705,6 +1705,7 @@ function newPolicyInitiativePage {
       definitions     = $allDefinitions
       assignments     = $EnvironmentDiscoveryData.assignments
       PageStyle       = $PageStyle
+      WikiStyle       = $WikiStyle
     }
     if ($PSBoundParameters.ContainsKey('CustomSecurityControlFileConfig')) {
       $buildInitiativePageParams.add('CustomSecurityControlFileConfig', $CustomSecurityControlFileConfig)
