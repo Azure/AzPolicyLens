@@ -2613,7 +2613,7 @@ function buildPolicyDefinitionDetailedPageContent {
   if ($PageStyle -ieq 'detailed') {
     #Use AzPolicyTest to test definition syntax when the page style is detailed.
     $syntaxTestResult = Test-AzPolicyDefinition -content $definitionJson
-    $coloredSyntaxTestResult = FormatTestResult -result $syntaxTestResult.Result -WikiStyle $WikiStyle -Format 'Markdown'
+    $coloredSyntaxTestResult = FormatTestResult -result $syntaxTestResult.Result -WikiStyle $WikiStyle
     $definitionOverviewTableData.Add('TestResult', $coloredSyntaxTestResult)
   }
   $parameterMarkdownContent = buildPolicyDefinitionParametersMarkdown -definition $(ConvertToOrderedHashtable -InputObject $definition) -caseStyle 'original' -level 3
@@ -2803,7 +2803,7 @@ function buildPolicyInitiativeDetailedPageContent {
   if ($PageStyle -ieq 'detailed') {
     #Use AzPolicyTest to test definition syntax when the page style is detailed.
     $syntaxTestResult = Test-AzPolicySetDefinition -content $definitionJson
-    $coloredSyntaxTestResult = FormatTestResult -result $syntaxTestResult.Result -WikiStyle $WikiStyle -Format 'Markdown'
+    $coloredSyntaxTestResult = FormatTestResult -result $syntaxTestResult.Result -WikiStyle $WikiStyle
     $definitionOverviewTableData.Add('TestResult', $coloredSyntaxTestResult)
   }
   $policyDefinitionGroupTableData = @()
