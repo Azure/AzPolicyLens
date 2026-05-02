@@ -2758,7 +2758,7 @@ function buildPolicyDefinitionDetailedPageContent {
     $notes += "It performs static analysis of the Policy definition against schema requirements and a curated set of best-practice assertions."
     $PageContent += buildQuotedAlert -type tip -messages $notes -contentStyle list -WikiStyle $WikiFileMapping.WikiStyle
     $PageContent += "`n`n"
-    $PageContent += $(buildPolicySyntaxTestResultMarkdown -TestResult $syntaxTestResult -ResourceType 'definition' -ResourceName $definition.properties.displayName -ResourceId $definition.id)
+    $PageContent += $(buildPolicySyntaxTestResultMarkdown -TestResult $syntaxTestResult -ResourceType 'definition' -Resource $definition)
     $PageContent += "`n`n"
   }
   $PageContent += $(newMarkdownHeader -title "raw policy definition" -level 2 -caseStyle 'UpperCase')
@@ -3060,7 +3060,7 @@ function buildPolicyInitiativeDetailedPageContent {
     $notes += "It performs static analysis of the policy initiative against schema requirements and a curated set of best-practice assertions."
     $PageContent += buildQuotedAlert -type tip -messages $notes -contentStyle list -WikiStyle $WikiFileMapping.WikiStyle
     $PageContent += "`n`n"
-    $PageContent += $(buildPolicySyntaxTestResultMarkdown -TestResult $syntaxTestResult -ResourceType 'initiative' -ResourceName $initiative.properties.displayName -ResourceId $initiative.id)
+    $PageContent += $(buildPolicySyntaxTestResultMarkdown -TestResult $syntaxTestResult -ResourceType 'initiative' -Resource $initiative)
     $PageContent += "`n`n"
   }
   $PageContent += $(newMarkdownHeader -title "raw initiative definition" -level 2 -caseStyle 'UpperCase')
