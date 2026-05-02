@@ -2504,6 +2504,7 @@ function buildPolicySyntaxTestResultMarkdown {
   $markdown += "<details>"
   $markdown += "`n`n"
   $markdown += "<summary>Click to expand</summary>"
+  $markdown += "`n`n"
 
   # Group tests by their immediate context (Block.Name). Preserve original order.
   $grouped = $executedTests | Group-Object -Property { $_.Block.Name }
@@ -2527,9 +2528,10 @@ function buildPolicySyntaxTestResultMarkdown {
     }
     $markdown += $(newMarkdownTableFromArray -data $tableData -FormatTableHeader $false)
     $markdown += "`n`n"
-    $markdown += "</details>"
-    $markdown += "`n`n"
   }
+
+  $markdown += "</details>"
+  $markdown += "`n`n"
   $markdown
 }
 
