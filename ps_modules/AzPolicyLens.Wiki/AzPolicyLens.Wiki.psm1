@@ -244,6 +244,9 @@ Function New-AzplDocumentation {
     Throw "[$(getCurrentUTCString)]: No environment discovery data found."
     Exit 1
   }
+  #create script scoped variables for Policy Definition and initiative syntax validation failures
+  $global:failedSyntaxValidationDefinitions = @()
+  $global:failedSyntaxValidationInitiatives = @()
 
   if ($subscriptionIds.count -gt 0) {
     Write-Verbose "[$(getCurrentUTCString)]: subscription Ids are provided. Filtering documentation for the specified subscriptions only." -Verbose
@@ -379,6 +382,7 @@ Function New-AzplDocumentation {
   $subscriptionSummaryPage = newSubscriptionSummaryPage @summaryPagesCommonParams -ComplianceWarningPercentageThreshold $ComplianceWarningPercentageThreshold
 
   #Generate analysis Markdown page
+  #This page must be generated after the policy definition and initiative detailed pages because it needs the summary data for definition and initiative syntax validation results.
   Write-Verbose "[$(getCurrentUTCString)]: Start Generating Policy Analysis summary Markdown file." -Verbose
   if ($PSBoundParameters.ContainsKey('CustomSecurityControlPath')) {
     $analysisSummaryPage = newAnalysisSummaryPage @summaryPagesCommonParams -ComplianceWarningPercentageThreshold $ComplianceWarningPercentageThreshold -CustomSecurityControlFileConfig $CustomSecurityControlFileConfig
@@ -411,6 +415,10 @@ Function New-AzplDocumentation {
   } else {
     Write-Verbose "[$(getCurrentUTCString)]: Skipping GitHub wiki sidebar generation as WikiStyle is not 'github'." -Verbose
   }
+
+  #Tidy up - Remove global variables
+  Remove-Variable -Name failedSyntaxValidationDefinitions -Scope Global -ErrorAction SilentlyContinue
+  Remove-Variable -Name failedSyntaxValidationInitiatives -Scope Global -ErrorAction SilentlyContinue
 
   Write-Output "[$(getCurrentUTCString)]: The following Markdown files for main summary page are generated."
   foreach ($p in $mainSummaryPage) {

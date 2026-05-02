@@ -63,14 +63,17 @@ runs:
       with:
         fetch-depth: 0
 
-    - name: 'Install PowerShell-Yaml Module'
+    - name: 'Install PowerShell Modules'
       shell: pwsh
       run: |
         if (-not (Get-Module -ListAvailable -Name powershell-yaml)) {
           Write-Output "Installing powershell-yaml module..."
           Install-Module -Name powershell-yaml -Force -Scope CurrentUser
         }
-
+        if (-not (Get-Module -ListAvailable -Name AzPolicyTest)) {
+          Write-Output "Installing AzPolicyTest module..."
+          Install-Module -Name AzPolicyTest -RequiredVersion 3.1.1 -Force -Scope CurrentUser
+        }
     - name: Import Variables
       shell: pwsh # PowerShell Core
       env:
@@ -96,6 +99,7 @@ runs:
         git config --global user.name "${inputs.gitUserName}"
         git config --global user.email "${inputs.gitUserEmail}"
         #git config --global http.extraheader "AUTHORIZATION: basic $token"
+
     - name: Generate Wiki
       id: generate_wiki
       continue-on-error: true

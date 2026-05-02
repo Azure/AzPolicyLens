@@ -605,6 +605,20 @@ function newDefinitionSummaryPage {
   $filePaths = @()
 
   $builtInDefinitions = $EnvironmentDiscoveryData.definitions | Where-Object { $_.properties.policyType -ieq 'builtin' }
+  $unassignedBuiltInDefinitions = @()
+  #List unassigned built-in definitions (referenced in unassigned custom initiatives) in detailed page as well since they are also part of the environment.
+  if ($PageStyle -ieq 'detailed') {
+    $existingBuiltInDefinitionIds = [System.Collections.Generic.HashSet[string]]::new([System.StringComparer]::OrdinalIgnoreCase)
+    foreach ($d in $builtInDefinitions) {
+      if ($d.id) { [void]$existingBuiltInDefinitionIds.Add($d.id) }
+    }
+    foreach ($item in $EnvironmentDiscoveryData.builtInDefinitionInUnAssignedCustomInitiative) {
+      if ($item.id -and -not $existingBuiltInDefinitionIds.Contains($item.id)) {
+        $unassignedBuiltInDefinitions += $item
+        [void]$existingBuiltInDefinitionIds.Add($item.id)
+      }
+    }
+  }
 
   #policy definition summary page
   Write-Verbose "[$(getCurrentUTCString)]: Generating the policy definition summary Markdown file in '$FilePath'." -verbose
@@ -647,7 +661,7 @@ function newDefinitionSummaryPage {
 
   #Built-in definition section
   $definitionPageContent += "`n`n"
-  $definitionPageContent += $(newMarkdownHeader -title "Built-in Policy Definitions" -level 3 -caseStyle 'UpperCase')
+  $definitionPageContent += $(newMarkdownHeader -title "Assigned Built-in Policy Definitions" -level 3 -caseStyle 'UpperCase')
   $definitionPageContent += "`n`n"
   if ($builtInDefinitions.Count -gt 0) {
     Write-Verbose "[$(getCurrentUTCString)]: Found $($builtInDefinitions.Count) built-in policy definitions." -Verbose
@@ -660,6 +674,20 @@ function newDefinitionSummaryPage {
     $definitionPageContent += "`n`n"
   }
 
+  if ($PageStyle -ieq 'detailed') {
+    $definitionPageContent += $(newMarkdownHeader -title "Unassigned Built-in Policy Definitions" -level 3 -caseStyle 'UpperCase')
+    $definitionPageContent += "`n`n"
+    if ($unassignedBuiltInDefinitions.Count -gt 0) {
+      Write-Verbose "[$(getCurrentUTCString)]: Found $($unassignedBuiltInDefinitions.Count) unassigned built-in policy definitions." -Verbose
+      $definitionPageContent += ":bookmark: **$($unassignedBuiltInDefinitions.Count)** built-in policy definitions are referenced in unassigned custom initiatives."
+      $definitionPageContent += "`n`n"
+      $definitionPageContent += buildPolicyDefinitionInitiativeMarkdownTable -policyResources $unassignedBuiltInDefinitions -WikiFileMapping $WikiFileMapping -policyResourceType 'definition'
+      $definitionPageContent += "`n`n"
+    } else {
+      $definitionPageContent += ":bookmark: No built-in policy definitions found in unassigned custom initiatives that are not already assigned."
+      $definitionPageContent += "`n`n"
+    }
+  }
   if ($WikiStyle -ieq 'ado') {
     $definitionPageContent += buildAdoFooter -WikiFileMapping $WikiFileMapping -CurrentPageParentDirectory $FileParentDirectory -TimeStamp $EnvironmentDiscoveryData.TimeStamp
   }
@@ -1705,6 +1733,7 @@ function newPolicyInitiativePage {
       definitions     = $allDefinitions
       assignments     = $EnvironmentDiscoveryData.assignments
       PageStyle       = $PageStyle
+      WikiStyle       = $WikiStyle
     }
     if ($PSBoundParameters.ContainsKey('CustomSecurityControlFileConfig')) {
       $buildInitiativePageParams.add('CustomSecurityControlFileConfig', $CustomSecurityControlFileConfig)

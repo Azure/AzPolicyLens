@@ -2460,6 +2460,94 @@ function buildPolicyDefinitionInitiativeMarkdownTable {
   $Markdown
 }
 
+# 24a. Function to format Pester syntax test result (from Test-AzPolicyDefinition / Test-AzPolicyInitiativeDefinition) into markdown
+function buildPolicySyntaxTestResultMarkdown {
+  [CmdletBinding()]
+  [OutputType([string])]
+  param (
+    [Parameter(Mandatory = $true, HelpMessage = 'Resource type (definition or initiative).')]
+    [ValidateSet('definition', 'initiative')]
+    [string]$ResourceType,
+
+    [Parameter(Mandatory = $true, HelpMessage = 'Policy resource.')]
+    [object]$Resource,
+
+    [Parameter(Mandatory = $true, HelpMessage = 'Pester run result object containing a Tests collection.')]
+    [System.Object]$TestResult
+  )
+  $markdown = ''
+  if (-not $TestResult -or -not $TestResult.Tests -or $TestResult.Tests.Count -eq 0) {
+    $markdown += ":bookmark: No syntax tests were executed.`n`n"
+    return $markdown
+  }
+
+  # Filter out tests that were not executed (e.g. excluded via Pester tags).
+  $executedTests = @($TestResult.Tests | Where-Object { $_.Result -ine 'NotRun' })
+  if ($executedTests.Count -eq 0) {
+    $markdown += ":bookmark: No syntax tests were executed.`n`n"
+    return $markdown
+  }
+
+  # Overall summary
+  $totalCount = $executedTests.Count
+  $passedCount = @($executedTests | Where-Object { $_.Result -ieq 'Passed' }).Count
+  $failedCount = @($executedTests | Where-Object { $_.Result -ieq 'Failed' }).Count
+  if ($failedCount -gt 0) {
+    $overallStatus = ':x: Failed'
+    # Add to script scoped variables for summary of Policy Definition and initiative syntax validation failures
+    if ($ResourceType -ieq 'definition') {
+      $global:failedSyntaxValidationDefinitions += $Resource
+    } elseif ($ResourceType -ieq 'initiative') {
+      $global:failedSyntaxValidationInitiatives += $Resource
+    }
+  } elseif ($passedCount -eq $totalCount) {
+    $overallStatus = ':white_check_mark: Passed'
+  } else {
+    $overallStatus = ':warning: Partial'
+  }
+  $summaryTable = [ordered]@{
+    Status = $overallStatus
+    Total  = $totalCount
+    Passed = $passedCount
+    Failed = $failedCount
+  }
+  $markdown += $(newMarkdownTable -data $summaryTable -Orientation 'vertical')
+  $markdown += "`n`n"
+  $markdown += "`n`n"
+  $markdown += "<details>"
+  $markdown += "`n`n"
+  $markdown += "<summary>Click to expand</summary>"
+  $markdown += "`n`n"
+
+  # Group tests by their immediate context (Block.Name). Preserve original order.
+  $grouped = $executedTests | Group-Object -Property { $_.Block.Name }
+  foreach ($group in $grouped) {
+    $contextName = if ([string]::IsNullOrWhiteSpace($group.Name)) { 'Tests' } else { $group.Name }
+    $markdown += $(newMarkdownHeader -title $contextName -level 3 -caseStyle 'TitleCase')
+    $markdown += "`n`n"
+
+    $tableData = @()
+    foreach ($test in $group.Group) {
+      switch ($test.Result) {
+        'Passed' { $resultText = ':white_check_mark: Passed' }
+        'Failed' { $resultText = ':x: Failed' }
+        default { $resultText = $test.Result }
+      }
+      $testTitle = if ($test.ExpandedName) { $test.ExpandedName } else { $test.Name }
+      $tableData += [ordered]@{
+        Test   = $testTitle
+        Result = $resultText
+      }
+    }
+    $markdown += $(newMarkdownTableFromArray -data $tableData -FormatTableHeader $false)
+    $markdown += "`n`n"
+  }
+
+  $markdown += "</details>"
+  $markdown += "`n`n"
+  $markdown
+}
+
 # 25. Function to build detailed page content for a policy definition
 function buildPolicyDefinitionDetailedPageContent {
   [CmdletBinding()]
@@ -2501,24 +2589,54 @@ function buildPolicyDefinitionDetailedPageContent {
       $metadata.Remove($hiddenMetadataName)
     }
   }
+
+  #remove system populated metadata that is not relevant to customers
+  if ($definition.properties.policyType -ieq 'builtin') {
+    #remove lastSyncedToArgOn metadata from built-in policies
+    $lastSyncedToArgOnKey = $metadata.Keys | Where-Object { $_ -match '^lastSyncedToArgOn$' }
+    foreach ($key in $lastSyncedToArgOnKey) {
+      $metadata.Remove($key)
+    }
+  } else {
+    #remove 'createdBy', 'createdOn', 'updatedBy', 'updatedOn' metadata from custom policies since they are system-populated.
+    $systemPopulatedMetadataKeys = $metadata.Keys | Where-Object { $_ -match '^(createdBy|createdOn|updatedBy|updatedOn)$' }
+    foreach ($key in $systemPopulatedMetadataKeys) {
+      $metadata.Remove($key)
+    }
+  }
+
   #build policy definition json
+  #determine the version
+  if ($definition.properties.policyType -ieq 'builtin') {
+    #for built-in policy definitions, use the version property.
+    $version = $definition.properties.version
+  } elseif ($metadata.version.length -gt 0) {
+    # for custom definitions, use the version from metadata if it exists since custom policies don't support the native versioning yet.
+    $version = $metadata.version
+  } else {
+    #if the metadata does not contain version, use the original version property  which is always 1.0.0.
+    $version = $definition.properties.version
+  }
   $definitionData = [ordered]@{
     name       = $definition.name
     properties = [ordered]@{
       displayName = $definition.properties.displayName
       description = $definition.properties.description
+      policyType  = $definition.properties.policyType
       metadata    = $metadata
+      version     = $definition.properties.policyType -ieq 'builtin' ? $definition.properties.version : $null
       mode        = $definition.properties.mode
       parameters  = $definition.properties.parameters
       policyRule  = [ordered]@{
         if   = $definition.properties.policyRule.if
         then = $definition.properties.policyRule.then
       }
+      versions    = $definition.properties.policyType -ieq 'builtin' ? $definition.properties.versions : $null
     }
     id         = $definition.id
   }
-  $definitionJson = buildPolicyDefinitionJson -PolicyDefinition $definitionData
 
+  $definitionJson = buildPolicyDefinitionJson -PolicyDefinition $definitionData
   $policyEffectConfig = getPolicyEffect -policyObject $definition
   $wrappedEffects = $policyEffectConfig.effects | ForEach-Object { "``$($_)``" }
   $effects = $($wrappedEffects -join ', ')
@@ -2541,10 +2659,18 @@ function buildPolicyDefinitionDetailedPageContent {
     Id            = $definition.id
     Type          = $definition.properties.policyType
     Description   = $($definition.properties.description ? $($definition.properties.description) : $null)
-    Version       = $definition.properties.version ?? $metadata.version ?? $null
+    Version       = $version
+    Mode          = $definition.properties.mode
     Effects       = $effects
     DefaultEffect = "``$defaultEffect``"
     InUse         = '``{0}``' -f ($(if ($definition.isInUse) { $definition.isInUse } else { 'false' })).ToString().ToUpper()
+  }
+
+  if ($PageStyle -ieq 'detailed') {
+    #Use AzPolicyTest to test definition syntax when the page style is detailed, exclude 2 tests for the DINE policies since many built-in policies violate these rules and they are not critical.
+    $syntaxTestResult = Test-AzPolicyDefinition -content $definitionJson -PesterVerbosity 'None' -ExcludeTags 'DINETemplateVariables', 'DINETemplateOutputs'
+    $coloredSyntaxTestResult = FormatTestResult -result $syntaxTestResult.Result -WikiStyle $WikiStyle
+    $definitionOverviewTableData.Add('TestResult', $coloredSyntaxTestResult)
   }
   $parameterMarkdownContent = buildPolicyDefinitionParametersMarkdown -definition $(ConvertToOrderedHashtable -InputObject $definition) -caseStyle 'original' -level 3
 
@@ -2625,6 +2751,17 @@ function buildPolicyDefinitionDetailedPageContent {
   $PageContent += "`n`n"
   $PageContent += "</details>"
   $PageContent += "`n`n"
+  if ($PageStyle -ieq 'detailed' -and $syntaxTestResult) {
+    $PageContent += $(newMarkdownHeader -title "definition syntax test result" -level 2 -caseStyle 'UpperCase')
+    $PageContent += "`n`n"
+    $notes = @()
+    $notes += "Definition syntax validation is performed using ``AzPolicyTest``, an open-source Pester-based test framework for Azure Policy."
+    $notes += "It performs static analysis of the Policy definition against schema requirements and a curated set of best-practice assertions."
+    $PageContent += buildQuotedAlert -type tip -messages $notes -contentStyle list -WikiStyle $WikiFileMapping.WikiStyle
+    $PageContent += "`n`n"
+    $PageContent += $(buildPolicySyntaxTestResultMarkdown -TestResult $syntaxTestResult -ResourceType 'definition' -Resource $definition)
+    $PageContent += "`n`n"
+  }
   $PageContent += $(newMarkdownHeader -title "raw policy definition" -level 2 -caseStyle 'UpperCase')
   $PageContent += "`n`n"
   $PageContent += "<details>`n`n"
@@ -2672,7 +2809,11 @@ function buildPolicyInitiativeDetailedPageContent {
 
     [parameter(Mandatory = $true, HelpMessage = 'The page style (detailed for engineers or basic for customers).')]
     [ValidateSet('detailed', 'basic')]
-    [string]$PageStyle
+    [string]$PageStyle,
+
+    [parameter(Mandatory = $true, HelpMessage = 'The wiki style. Supported values are "ado" and "github".')]
+    [ValidateSet('ado', 'github')]
+    [string]$WikiStyle
   )
   $markdownCodeBlock = '```'
   #build initiative definition json
@@ -2684,6 +2825,22 @@ function buildPolicyInitiativeDetailedPageContent {
       $metadata.Remove($hiddenMetadataName)
     }
   }
+
+  #remove system populated metadata that is not relevant to customers
+  if ($initiative.properties.policyType -ieq 'builtin') {
+    #remove lastSyncedToArgOn metadata from built-in policies
+    $lastSyncedToArgOnKey = $metadata.Keys | Where-Object { $_ -match '^lastSyncedToArgOn$' }
+    foreach ($key in $lastSyncedToArgOnKey) {
+      $metadata.Remove($key)
+    }
+  } else {
+    #remove 'createdBy', 'createdOn', 'updatedBy', 'updatedOn' metadata from custom policies since they are system-populated.
+    $systemPopulatedMetadataKeys = $metadata.Keys | Where-Object { $_ -match '^(createdBy|createdOn|updatedBy|updatedOn)$' }
+    foreach ($key in $systemPopulatedMetadataKeys) {
+      $metadata.Remove($key)
+    }
+  }
+
   $SecurityControlSummaryFileNameMapping = getWikiPageFileName -summaryPageType security_control -wikiFileMapping $WikiFileMapping
   $SecurityControlSummaryFileBaseName = $SecurityControlSummaryFileNameMapping.FileBaseName
   $SecurityControlSummaryFolderPath = $SecurityControlSummaryFileNameMapping.FileParentDirectory
@@ -2691,28 +2848,48 @@ function buildPolicyInitiativeDetailedPageContent {
   #Get the assignments that are directly assigning this policy definition
   $relatedAssignments = $assignments | Where-Object { $_.properties.policyDefinitionId -ieq $initiative.id }
 
+  #determine the version
+  if ($initiative.properties.policyType -ieq 'builtin') {
+    #for built-in policy initiatives, use the version property.
+    $version = $initiative.properties.version
+  } elseif ($metadata.version.length -gt 0) {
+    # for custom initiatives, use the version from metadata if it exists since custom policies don't support the native versioning yet.
+    $version = $metadata.version
+  } else {
+    #if the metadata does not contain version, use the original version property  which is always 1.0.0.
+    $version = $initiative.properties.version
+  }
+
   $definitionData = [ordered]@{
     name       = $initiative.name
     properties = [ordered]@{
       displayName            = $initiative.properties.displayName
       description            = $($initiative.properties.description ? $($initiative.properties.description) : $null)
+      policyType             = $initiative.properties.policyType
       metadata               = $metadata
+      version                = $initiative.properties.policyType -ieq 'builtin' ? $initiative.properties.version : $null
       parameters             = $initiative.properties.parameters
       policyDefinitionGroups = $initiative.properties.policyDefinitionGroups
-      policyDefinitions      = $initiative.properties.policyDefinitions | select-Object -Property 'policyDefinitionReferenceId', 'policyDefinitionId', 'parameters', 'groupNames'
+      policyDefinitions      = $initiative.properties.policyDefinitions | select-Object -Property 'policyDefinitionReferenceId', 'policyDefinitionId', 'definitionVersion', 'parameters', 'groupNames'
+      versions               = $initiative.properties.policyType -ieq 'builtin' ? $initiative.properties.versions : $null
     }
     id         = $initiative.id
   }
   $definitionJson = buildPolicyDefinitionJson -PolicyDefinition $definitionData
-
   $definitionOverviewTableData = [ordered]@{
     displayName = "**$($initiative.properties.displayName)**"
     name        = $initiative.name
     id          = $initiative.id
     type        = $initiative.properties.policyType
     description = $($initiative.properties.description ? $($initiative.properties.description) : $null)
-    version     = $initiative.properties.version ?? $metadata.version ?? $null
+    Version     = $version
     InUse       = '``{0}``' -f $initiative.isInUse.ToUpper()
+  }
+  if ($PageStyle -ieq 'detailed') {
+    #Use AzPolicyTest to test definition syntax when the page style is detailed.
+    $syntaxTestResult = Test-AzPolicySetDefinition -content $definitionJson -PesterVerbosity 'None'
+    $coloredSyntaxTestResult = FormatTestResult -result $syntaxTestResult.Result -WikiStyle $WikiStyle
+    $definitionOverviewTableData.Add('TestResult', $coloredSyntaxTestResult)
   }
   $policyDefinitionGroupTableData = @()
 
@@ -2876,6 +3053,17 @@ function buildPolicyInitiativeDetailedPageContent {
   $PageContent += "`n`n"
   $PageContent += $(newMarkdownTableFromArray -data $memberPolicyTableData -KeyFormatting @{'ReferenceId' = 'code'; 'DefaultEffect' = 'code' })
   $PageContent += "`n`n"
+  if ($PageStyle -ieq 'detailed' -and $syntaxTestResult) {
+    $PageContent += $(newMarkdownHeader -title "initiative syntax test result" -level 2 -caseStyle 'UpperCase')
+    $PageContent += "`n`n"
+    $notes = @()
+    $notes += "Initiative syntax validation is performed using ``AzPolicyTest``, an open-source Pester-based test framework for Azure Policy."
+    $notes += "It performs static analysis of the policy initiative against schema requirements and a curated set of best-practice assertions."
+    $PageContent += buildQuotedAlert -type tip -messages $notes -contentStyle list -WikiStyle $WikiFileMapping.WikiStyle
+    $PageContent += "`n`n"
+    $PageContent += $(buildPolicySyntaxTestResultMarkdown -TestResult $syntaxTestResult -ResourceType 'initiative' -Resource $initiative)
+    $PageContent += "`n`n"
+  }
   $PageContent += $(newMarkdownHeader -title "raw initiative definition" -level 2 -caseStyle 'UpperCase')
   $PageContent += "`n`n"
   $PageContent += "<details>"
@@ -3407,8 +3595,6 @@ function buildRecommendationMarkdown {
       }
     }
   }
-  #Custom initiatives that do not have the category metadata defined
-  $customInitiativesWithoutCategory = $customInitiatives | Where-Object { -not $_.properties.metadata.category }
 
   #Get undefined security controls
   $undefinedSecurityControls = @()
@@ -3512,6 +3698,17 @@ function buildRecommendationMarkdown {
   #initiative recommendations
   $pageContent += $(newMarkdownHeader -title "Policy Initiative Recommendations" -level 3 -caseStyle 'TitleCase')
   $pageContent += "`n`n"
+  if ($global:failedSyntaxValidationInitiatives.count -gt 0) {
+    $initiativeCheckPassed = $false
+    Write-Verbose "[$(getCurrentUTCString)]: Generating Policy Initiative Recommendations for syntax validation failures." -Verbose:($PSCmdlet.MyInvocation.BoundParameters["Verbose"].IsPresent -eq $true)
+    $pageContent += "**Policy Initiatives with Syntax Validation Failures**`n`n"
+    $pageContent += ":exclamation: **$($global:failedSyntaxValidationInitiatives.Count) policy initiatives have syntax validation failures.**`n`n"
+    $pageContent += "Please review and fix the syntax errors and recommendations in these policy initiatives to ensure they are working as expected and align with best practices.`n`n"
+    $pageContent += "If a built-in initiative is affected, please consider replacing it with a custom initiative and apply the fixes accordingly.`n`n"
+    $pageContent += "`n`n"
+    $pageContent += buildPolicyDefinitionInitiativeMarkdownTable -policyResources $global:failedSyntaxValidationInitiatives -WikiFileMapping $WikiFileMapping -policyResourceType 'initiative'
+    $pageContent += "`n`n"
+  }
   if ($deprecatedInitiatives.Count -gt 0) {
     $initiativeCheckPassed = $false
     Write-Verbose "[$(getCurrentUTCString)]: Generating Policy Initiative Recommendations for deprecated initiatives." -Verbose:($PSCmdlet.MyInvocation.BoundParameters["Verbose"].IsPresent -eq $true)
@@ -3606,37 +3803,6 @@ function buildRecommendationMarkdown {
     $pageContent += "`n`n"
   }
 
-  if ($customInitiativesWithoutCategory.count -gt 0) {
-    $initiativeCheckPassed = $false
-    Write-Verbose "[$(getCurrentUTCString)]: Generating Policy Initiative Recommendations for initiatives without category defined in metadata." -Verbose:($PSCmdlet.MyInvocation.BoundParameters["Verbose"].IsPresent -eq $true)
-    $pageContent += "**Custom Policy Initiatives without Category Metadata**`n`n"
-    $pageContent += ":exclamation: **$($customInitiativesWithoutCategory.count) Custom Policy Initiatives do not have the ``category`` metadata defined.**`n`n"
-    $pageContent += "The ``category`` is a common metadata field used to classify policy initiatives. This wiki uses this field in various places.`n`n"
-    $pageContent += "Please review and update them to ensure they have the appropriate category defined in the metadata."
-    $pageContent += "`n`n"
-    $customInitiativesWithoutCategoryTableData = @()
-    foreach ($initiative in $customInitiativesWithoutCategory) {
-      $initiativeId = $initiative.id
-      $initiativeName = $initiative.name
-      $initiativeFileNameMapping = getWikiPageFileName -ResourceId $initiativeId -wikiFileMapping $WikiFileMapping
-      $initiativeFileBaseName = $initiativeFileNameMapping.FileBaseName
-      $initiativeFolderPath = $initiativeFileNameMapping.FileParentDirectory
-      $initiativeLink = getRelativePath -FromPath $FileParentDirectory -ToPath $(Join-Path $initiativeFolderPath $initiativeFileBaseName) -UseUnixPath $true
-      $customInitiativesWithoutCategoryTableData += [ordered]@{
-        Initiative  = "[$($initiativeName)]($($initiativeLink))"
-        displayName = $initiative.properties.displayName
-      }
-    }
-    $pageContent += "<details>"
-    $pageContent += "`n`n"
-    $pageContent += "<summary>Click to expand</summary>"
-    $pageContent += "`n`n"
-    $pageContent += $(newMarkdownTableFromArray -Data $customInitiativesWithoutCategoryTableData -FormatTableHeader $true)
-    $pageContent += "`n`n"
-    $pageContent += "</details>"
-    $pageContent += "`n`n"
-  }
-
   if ($initiativeCheckPassed -eq $true) {
     Write-Verbose "[$(getCurrentUTCString)]: No Policy Initiative recommendations found." -Verbose:($PSCmdlet.MyInvocation.BoundParameters["Verbose"].IsPresent -eq $true)
     $pageContent += "`n`n"
@@ -3648,6 +3814,18 @@ function buildRecommendationMarkdown {
   $pageContent += $(newMarkdownHeader -title "Policy Definition Recommendations" -level 3 -caseStyle 'TitleCase')
   $pageContent += "`n`n"
 
+  if ($global:failedSyntaxValidationDefinitions.count -gt 0) {
+    $definitionCheckPassed = $false
+    Write-Verbose "[$(getCurrentUTCString)]: Generating Policy Definition Recommendations for syntax validation failures." -Verbose:($PSCmdlet.MyInvocation.BoundParameters["Verbose"].IsPresent -eq $true)
+    $pageContent += "**Policy Definitions with Syntax Validation Failures**`n`n"
+    $pageContent += ":exclamation: **$($global:failedSyntaxValidationDefinitions.Count) policy definitions have syntax validation failures.**`n`n"
+    $pageContent += "Please review and fix the syntax errors and recommendations in these policy definitions to ensure they are working as expected and align with best practices.`n`n"
+    $pageContent += "If a built-in definition is affected, please consider replacing it with a custom definition and apply the fixes accordingly.`n`n"
+    $pageContent += "`n`n"
+    $pageContent += buildPolicyDefinitionInitiativeMarkdownTable -policyResources $global:failedSyntaxValidationDefinitions -WikiFileMapping $WikiFileMapping -policyResourceType 'definition'
+    $pageContent += "`n`n"
+
+  }
   if ($deprecatedDefinitions.Count -gt 0) {
     $definitionCheckPassed = $false
     Write-Verbose "[$(getCurrentUTCString)]: Generating Policy Definition Recommendations for deprecated definitions." -Verbose:($PSCmdlet.MyInvocation.BoundParameters["Verbose"].IsPresent -eq $true)
@@ -4701,4 +4879,48 @@ function getComplianceRatingSummaryForFramework {
   }
   $Markdown = buildComplianceSummaryMarkdown @complianceSummaryParams
   $Markdown
+}
+
+#48 function to format the test result based on the result (Passed, Failed)
+function FormatTestResult {
+  [CmdletBinding()]
+  [OutputType([string])]
+  param (
+    [Parameter(Mandatory = $true)]
+    [ValidateNotNullOrEmpty()]
+    [ValidateSet('Passed', 'Failed')]
+    [string]$result,
+
+    [parameter(Mandatory = $true, HelpMessage = 'The wiki style. Supported values are "ado" and "github".')]
+    [ValidateSet('ado', 'github')]
+    [string]$WikiStyle
+  )
+  $green = '#008000'
+  $red = '#FF0000'
+  if ($WikiStyle -ieq 'ado') {
+    try {
+      if ($result -ieq 'Passed') {
+        $spanOpenBracket = "<span style=`"color:{0}`">" -f $green
+      } else {
+        $spanOpenBracket = "<span style=`"color:{0}`">" -f $red
+      }
+      $return = "{0}{1}</span>" -f $spanOpenBracket, $result
+    } catch {
+      Write-Warning "[$(getCurrentUTCString)]: Invalid result '$result'. Returning as is."
+      $return = $result
+    }
+  } else {
+    try {
+      if ($result -ieq 'Passed') {
+        $colorCodedRate = "`$\color{$green}{\textsf " + $result + '}$'
+      } else {
+        $colorCodedRate = "`$\color{$red}{\textsf " + $result + '}$'
+      }
+      $return = $colorCodedRate
+    } catch {
+      Write-Warning "[$(getCurrentUTCString)]: Invalid result '$result'. Returning as is."
+      $return = $result
+    }
+  }
+  $return
 }
