@@ -24,7 +24,7 @@ Import-Module powershell-yaml
 # Import AzPolicyTest module for YAML parsing
 if (-not (Get-Module -ListAvailable -Name AzPolicyTest)) {
   Write-Verbose "Installing AzPolicyTest module..."
-  Install-Module -Name AzPolicyTest -RequiredVersion 3.1.0 -Force -Scope CurrentUser
+  Install-Module -Name AzPolicyTest -RequiredVersion 3.1.1 -Force -Scope CurrentUser
 }
 Import-Module AzPolicyTest
 

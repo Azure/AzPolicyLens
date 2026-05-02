@@ -2660,6 +2660,7 @@ function buildPolicyDefinitionDetailedPageContent {
     Type          = $definition.properties.policyType
     Description   = $($definition.properties.description ? $($definition.properties.description) : $null)
     Version       = $version
+    Mode          = $definition.properties.mode
     Effects       = $effects
     DefaultEffect = "``$defaultEffect``"
     InUse         = '``{0}``' -f ($(if ($definition.isInUse) { $definition.isInUse } else { 'false' })).ToString().ToUpper()
@@ -3594,8 +3595,6 @@ function buildRecommendationMarkdown {
       }
     }
   }
-  #Custom initiatives that do not have the category metadata defined
-  $customInitiativesWithoutCategory = $customInitiatives | Where-Object { -not $_.properties.metadata.category }
 
   #Get undefined security controls
   $undefinedSecurityControls = @()
@@ -3705,13 +3704,9 @@ function buildRecommendationMarkdown {
     $pageContent += "**Policy Initiatives with Syntax Validation Failures**`n`n"
     $pageContent += ":exclamation: **$($global:failedSyntaxValidationInitiatives.Count) policy initiatives have syntax validation failures.**`n`n"
     $pageContent += "Please review and fix the syntax errors and recommendations in these policy initiatives to ensure they are working as expected and align with best practices.`n`n"
-    $pageContent += "<details>"
-    $pageContent += "`n`n"
-    $pageContent += "<summary>Click to expand</summary>"
+    $pageContent += "If a built-in initiative is affected, please consider replacing it with a custom initiative and apply the fixes accordingly.`n`n"
     $pageContent += "`n`n"
     $pageContent += buildPolicyDefinitionInitiativeMarkdownTable -policyResources $global:failedSyntaxValidationInitiatives -WikiFileMapping $WikiFileMapping -policyResourceType 'initiative'
-    $pageContent += "`n`n"
-    $pageContent += "</details>"
     $pageContent += "`n`n"
   }
   if ($deprecatedInitiatives.Count -gt 0) {
@@ -3808,37 +3803,6 @@ function buildRecommendationMarkdown {
     $pageContent += "`n`n"
   }
 
-  if ($customInitiativesWithoutCategory.count -gt 0) {
-    $initiativeCheckPassed = $false
-    Write-Verbose "[$(getCurrentUTCString)]: Generating Policy Initiative Recommendations for initiatives without category defined in metadata." -Verbose:($PSCmdlet.MyInvocation.BoundParameters["Verbose"].IsPresent -eq $true)
-    $pageContent += "**Custom Policy Initiatives without Category Metadata**`n`n"
-    $pageContent += ":exclamation: **$($customInitiativesWithoutCategory.count) Custom Policy Initiatives do not have the ``category`` metadata defined.**`n`n"
-    $pageContent += "The ``category`` is a common metadata field used to classify policy initiatives. This wiki uses this field in various places.`n`n"
-    $pageContent += "Please review and update them to ensure they have the appropriate category defined in the metadata."
-    $pageContent += "`n`n"
-    $customInitiativesWithoutCategoryTableData = @()
-    foreach ($initiative in $customInitiativesWithoutCategory) {
-      $initiativeId = $initiative.id
-      $initiativeName = $initiative.name
-      $initiativeFileNameMapping = getWikiPageFileName -ResourceId $initiativeId -wikiFileMapping $WikiFileMapping
-      $initiativeFileBaseName = $initiativeFileNameMapping.FileBaseName
-      $initiativeFolderPath = $initiativeFileNameMapping.FileParentDirectory
-      $initiativeLink = getRelativePath -FromPath $FileParentDirectory -ToPath $(Join-Path $initiativeFolderPath $initiativeFileBaseName) -UseUnixPath $true
-      $customInitiativesWithoutCategoryTableData += [ordered]@{
-        Initiative  = "[$($initiativeName)]($($initiativeLink))"
-        displayName = $initiative.properties.displayName
-      }
-    }
-    $pageContent += "<details>"
-    $pageContent += "`n`n"
-    $pageContent += "<summary>Click to expand</summary>"
-    $pageContent += "`n`n"
-    $pageContent += $(newMarkdownTableFromArray -Data $customInitiativesWithoutCategoryTableData -FormatTableHeader $true)
-    $pageContent += "`n`n"
-    $pageContent += "</details>"
-    $pageContent += "`n`n"
-  }
-
   if ($initiativeCheckPassed -eq $true) {
     Write-Verbose "[$(getCurrentUTCString)]: No Policy Initiative recommendations found." -Verbose:($PSCmdlet.MyInvocation.BoundParameters["Verbose"].IsPresent -eq $true)
     $pageContent += "`n`n"
@@ -3856,14 +3820,11 @@ function buildRecommendationMarkdown {
     $pageContent += "**Policy Definitions with Syntax Validation Failures**`n`n"
     $pageContent += ":exclamation: **$($global:failedSyntaxValidationDefinitions.Count) policy definitions have syntax validation failures.**`n`n"
     $pageContent += "Please review and fix the syntax errors and recommendations in these policy definitions to ensure they are working as expected and align with best practices.`n`n"
-    $pageContent += "<details>"
-    $pageContent += "`n`n"
-    $pageContent += "<summary>Click to expand</summary>"
+    $pageContent += "If a built-in definition is affected, please consider replacing it with a custom definition and apply the fixes accordingly.`n`n"
     $pageContent += "`n`n"
     $pageContent += buildPolicyDefinitionInitiativeMarkdownTable -policyResources $global:failedSyntaxValidationDefinitions -WikiFileMapping $WikiFileMapping -policyResourceType 'definition'
     $pageContent += "`n`n"
-    $pageContent += "</details>"
-    $pageContent += "`n`n"
+
   }
   if ($deprecatedDefinitions.Count -gt 0) {
     $definitionCheckPassed = $false
