@@ -2496,9 +2496,9 @@ function buildPolicySyntaxTestResultMarkdown {
     $overallStatus = ':x: Failed'
     # Add to script scoped variables for summary of Policy Definition and initiative syntax validation failures
     if ($ResourceType -ieq 'definition') {
-      $script:failedSyntaxValidationDefinitions += $Resource
+      $global:failedSyntaxValidationDefinitions += $Resource
     } elseif ($ResourceType -ieq 'initiative') {
-      $script:failedSyntaxValidationInitiatives += $Resource
+      $global:failedSyntaxValidationInitiatives += $Resource
     }
   } elseif ($passedCount -eq $totalCount) {
     $overallStatus = ':white_check_mark: Passed'
@@ -3699,17 +3699,17 @@ function buildRecommendationMarkdown {
   #initiative recommendations
   $pageContent += $(newMarkdownHeader -title "Policy Initiative Recommendations" -level 3 -caseStyle 'TitleCase')
   $pageContent += "`n`n"
-  if ($script:failedSyntaxValidationInitiatives.count -gt 0) {
+  if ($global:failedSyntaxValidationInitiatives.count -gt 0) {
     $initiativeCheckPassed = $false
     Write-Verbose "[$(getCurrentUTCString)]: Generating Policy Initiative Recommendations for syntax validation failures." -Verbose:($PSCmdlet.MyInvocation.BoundParameters["Verbose"].IsPresent -eq $true)
     $pageContent += "**Policy Initiatives with Syntax Validation Failures**`n`n"
-    $pageContent += ":exclamation: **$($script:failedSyntaxValidationInitiatives.Count) policy initiatives have syntax validation failures.**`n`n"
+    $pageContent += ":exclamation: **$($global:failedSyntaxValidationInitiatives.Count) policy initiatives have syntax validation failures.**`n`n"
     $pageContent += "Please review and fix the syntax errors and recommendations in these policy initiatives to ensure they are working as expected and align with best practices.`n`n"
     $pageContent += "<details>"
     $pageContent += "`n`n"
     $pageContent += "<summary>Click to expand</summary>"
     $pageContent += "`n`n"
-    $pageContent += buildPolicyDefinitionInitiativeMarkdownTable -policyResources $script:failedSyntaxValidationInitiatives -WikiFileMapping $WikiFileMapping -policyResourceType 'initiative'
+    $pageContent += buildPolicyDefinitionInitiativeMarkdownTable -policyResources $global:failedSyntaxValidationInitiatives -WikiFileMapping $WikiFileMapping -policyResourceType 'initiative'
     $pageContent += "`n`n"
     $pageContent += "</details>"
     $pageContent += "`n`n"
@@ -3850,17 +3850,17 @@ function buildRecommendationMarkdown {
   $pageContent += $(newMarkdownHeader -title "Policy Definition Recommendations" -level 3 -caseStyle 'TitleCase')
   $pageContent += "`n`n"
 
-  if ($script:failedSyntaxValidationDefinitions.count -gt 0) {
+  if ($global:failedSyntaxValidationDefinitions.count -gt 0) {
     $definitionCheckPassed = $false
     Write-Verbose "[$(getCurrentUTCString)]: Generating Policy Definition Recommendations for syntax validation failures." -Verbose:($PSCmdlet.MyInvocation.BoundParameters["Verbose"].IsPresent -eq $true)
     $pageContent += "**Policy Definitions with Syntax Validation Failures**`n`n"
-    $pageContent += ":exclamation: **$($script:failedSyntaxValidationDefinitions.Count) policy definitions have syntax validation failures.**`n`n"
+    $pageContent += ":exclamation: **$($global:failedSyntaxValidationDefinitions.Count) policy definitions have syntax validation failures.**`n`n"
     $pageContent += "Please review and fix the syntax errors and recommendations in these policy definitions to ensure they are working as expected and align with best practices.`n`n"
     $pageContent += "<details>"
     $pageContent += "`n`n"
     $pageContent += "<summary>Click to expand</summary>"
     $pageContent += "`n`n"
-    $pageContent += buildPolicyDefinitionInitiativeMarkdownTable -policyResources $script:failedSyntaxValidationDefinitions -WikiFileMapping $WikiFileMapping -policyResourceType 'definition'
+    $pageContent += buildPolicyDefinitionInitiativeMarkdownTable -policyResources $global:failedSyntaxValidationDefinitions -WikiFileMapping $WikiFileMapping -policyResourceType 'definition'
     $pageContent += "`n`n"
     $pageContent += "</details>"
     $pageContent += "`n`n"

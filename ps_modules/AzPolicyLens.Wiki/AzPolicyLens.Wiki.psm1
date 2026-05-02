@@ -245,8 +245,8 @@ Function New-AzplDocumentation {
     Exit 1
   }
   #create script scoped variables for Policy Definition and initiative syntax validation failures
-  $script:failedSyntaxValidationDefinitions = @()
-  $script:failedSyntaxValidationInitiatives = @()
+  $global:failedSyntaxValidationDefinitions = @()
+  $global:failedSyntaxValidationInitiatives = @()
 
   if ($subscriptionIds.count -gt 0) {
     Write-Verbose "[$(getCurrentUTCString)]: subscription Ids are provided. Filtering documentation for the specified subscriptions only." -Verbose
@@ -415,6 +415,10 @@ Function New-AzplDocumentation {
   } else {
     Write-Verbose "[$(getCurrentUTCString)]: Skipping GitHub wiki sidebar generation as WikiStyle is not 'github'." -Verbose
   }
+
+  #Tidy up - Remove global variables
+  Remove-Variable -Name failedSyntaxValidationDefinitions -Scope Global -ErrorAction SilentlyContinue
+  Remove-Variable -Name failedSyntaxValidationInitiatives -Scope Global -ErrorAction SilentlyContinue
 
   Write-Output "[$(getCurrentUTCString)]: The following Markdown files for main summary page are generated."
   foreach ($p in $mainSummaryPage) {
