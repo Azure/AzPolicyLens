@@ -2465,6 +2465,13 @@ function buildPolicySyntaxTestResultMarkdown {
   [CmdletBinding()]
   [OutputType([string])]
   param (
+    [Parameter(Mandatory = $true, HelpMessage = 'Resource type (definition or initiative).')]
+    [ValidateSet('definition', 'initiative')]
+    [string]$ResourceType,
+
+    [Parameter(Mandatory = $true, HelpMessage = 'Policy resource.')]
+    [object]$Resource,
+
     [Parameter(Mandatory = $true, HelpMessage = 'Pester run result object containing a Tests collection.')]
     [System.Object]$TestResult
   )
@@ -2487,6 +2494,12 @@ function buildPolicySyntaxTestResultMarkdown {
   $failedCount = @($executedTests | Where-Object { $_.Result -ieq 'Failed' }).Count
   if ($failedCount -gt 0) {
     $overallStatus = ':x: Failed'
+    # Add to script scoped variables for summary of Policy Definition and initiative syntax validation failures
+    if ($ResourceType -ieq 'definition') {
+      $script:failedSyntaxValidationDefinitions += $Resource
+    } elseif ($ResourceType -ieq 'initiative') {
+      $script:failedSyntaxValidationInitiatives += $Resource
+    }
   } elseif ($passedCount -eq $totalCount) {
     $overallStatus = ':white_check_mark: Passed'
   } else {
@@ -2745,7 +2758,7 @@ function buildPolicyDefinitionDetailedPageContent {
     $notes += "It performs static analysis of the Policy definition against schema requirements and a curated set of best-practice assertions."
     $PageContent += buildQuotedAlert -type tip -messages $notes -contentStyle list -WikiStyle $WikiFileMapping.WikiStyle
     $PageContent += "`n`n"
-    $PageContent += $(buildPolicySyntaxTestResultMarkdown -TestResult $syntaxTestResult)
+    $PageContent += $(buildPolicySyntaxTestResultMarkdown -TestResult $syntaxTestResult -ResourceType 'definition' -ResourceName $definition.properties.displayName -ResourceId $definition.id)
     $PageContent += "`n`n"
   }
   $PageContent += $(newMarkdownHeader -title "raw policy definition" -level 2 -caseStyle 'UpperCase')
@@ -3047,7 +3060,7 @@ function buildPolicyInitiativeDetailedPageContent {
     $notes += "It performs static analysis of the policy initiative against schema requirements and a curated set of best-practice assertions."
     $PageContent += buildQuotedAlert -type tip -messages $notes -contentStyle list -WikiStyle $WikiFileMapping.WikiStyle
     $PageContent += "`n`n"
-    $PageContent += $(buildPolicySyntaxTestResultMarkdown -TestResult $syntaxTestResult)
+    $PageContent += $(buildPolicySyntaxTestResultMarkdown -TestResult $syntaxTestResult -ResourceType 'initiative' -ResourceName $initiative.properties.displayName -ResourceId $initiative.id)
     $PageContent += "`n`n"
   }
   $PageContent += $(newMarkdownHeader -title "raw initiative definition" -level 2 -caseStyle 'UpperCase')
@@ -3686,6 +3699,21 @@ function buildRecommendationMarkdown {
   #initiative recommendations
   $pageContent += $(newMarkdownHeader -title "Policy Initiative Recommendations" -level 3 -caseStyle 'TitleCase')
   $pageContent += "`n`n"
+  if ($script:failedSyntaxValidationInitiatives.count -gt 0) {
+    $initiativeCheckPassed = $false
+    Write-Verbose "[$(getCurrentUTCString)]: Generating Policy Initiative Recommendations for syntax validation failures." -Verbose:($PSCmdlet.MyInvocation.BoundParameters["Verbose"].IsPresent -eq $true)
+    $pageContent += "**Policy Initiatives with Syntax Validation Failures**`n`n"
+    $pageContent += ":exclamation: **$($script:failedSyntaxValidationInitiatives.Count) policy initiatives have syntax validation failures.**`n`n"
+    $pageContent += "Please review and fix the syntax errors and recommendations in these policy initiatives to ensure they are working as expected and align with best practices.`n`n"
+    $pageContent += "<details>"
+    $pageContent += "`n`n"
+    $pageContent += "<summary>Click to expand</summary>"
+    $pageContent += "`n`n"
+    $pageContent += buildPolicyDefinitionInitiativeMarkdownTable -policyResources $script:failedSyntaxValidationInitiatives -WikiFileMapping $WikiFileMapping -policyResourceType 'initiative'
+    $pageContent += "`n`n"
+    $pageContent += "</details>"
+    $pageContent += "`n`n"
+  }
   if ($deprecatedInitiatives.Count -gt 0) {
     $initiativeCheckPassed = $false
     Write-Verbose "[$(getCurrentUTCString)]: Generating Policy Initiative Recommendations for deprecated initiatives." -Verbose:($PSCmdlet.MyInvocation.BoundParameters["Verbose"].IsPresent -eq $true)
@@ -3822,6 +3850,21 @@ function buildRecommendationMarkdown {
   $pageContent += $(newMarkdownHeader -title "Policy Definition Recommendations" -level 3 -caseStyle 'TitleCase')
   $pageContent += "`n`n"
 
+  if ($script:failedSyntaxValidationDefinitions.count -gt 0) {
+    $definitionCheckPassed = $false
+    Write-Verbose "[$(getCurrentUTCString)]: Generating Policy Definition Recommendations for syntax validation failures." -Verbose:($PSCmdlet.MyInvocation.BoundParameters["Verbose"].IsPresent -eq $true)
+    $pageContent += "**Policy Definitions with Syntax Validation Failures**`n`n"
+    $pageContent += ":exclamation: **$($script:failedSyntaxValidationDefinitions.Count) policy definitions have syntax validation failures.**`n`n"
+    $pageContent += "Please review and fix the syntax errors and recommendations in these policy definitions to ensure they are working as expected and align with best practices.`n`n"
+    $pageContent += "<details>"
+    $pageContent += "`n`n"
+    $pageContent += "<summary>Click to expand</summary>"
+    $pageContent += "`n`n"
+    $pageContent += buildPolicyDefinitionInitiativeMarkdownTable -policyResources $script:failedSyntaxValidationDefinitions -WikiFileMapping $WikiFileMapping -policyResourceType 'definition'
+    $pageContent += "`n`n"
+    $pageContent += "</details>"
+    $pageContent += "`n`n"
+  }
   if ($deprecatedDefinitions.Count -gt 0) {
     $definitionCheckPassed = $false
     Write-Verbose "[$(getCurrentUTCString)]: Generating Policy Definition Recommendations for deprecated definitions." -Verbose:($PSCmdlet.MyInvocation.BoundParameters["Verbose"].IsPresent -eq $true)
