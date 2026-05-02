@@ -2580,6 +2580,7 @@ function buildPolicyDefinitionDetailedPageContent {
     properties = [ordered]@{
       displayName = $definition.properties.displayName
       description = $definition.properties.description
+      policyType  = $definition.properties.policyType
       metadata    = $metadata
       version     = $definition.properties.version
       mode        = $definition.properties.mode
@@ -2588,7 +2589,7 @@ function buildPolicyDefinitionDetailedPageContent {
         if   = $definition.properties.policyRule.if
         then = $definition.properties.policyRule.then
       }
-      versions    = $definition.properties.versions
+      versions    = $definition.properties.policyType -ieq 'builtin' ? $definition.properties.versions : $null
     }
     id         = $definition.id
   }
@@ -2793,10 +2794,13 @@ function buildPolicyInitiativeDetailedPageContent {
     properties = [ordered]@{
       displayName            = $initiative.properties.displayName
       description            = $($initiative.properties.description ? $($initiative.properties.description) : $null)
+      policyType             = $initiative.properties.policyType
       metadata               = $metadata
+      version                = $initiative.properties.version
       parameters             = $initiative.properties.parameters
       policyDefinitionGroups = $initiative.properties.policyDefinitionGroups
-      policyDefinitions      = $initiative.properties.policyDefinitions | select-Object -Property 'policyDefinitionReferenceId', 'policyDefinitionId', 'parameters', 'groupNames'
+      policyDefinitions      = $initiative.properties.policyDefinitions | select-Object -Property 'policyDefinitionReferenceId', 'policyDefinitionId', 'definitionVersion', 'parameters', 'groupNames'
+      versions               = $initiative.properties.policyType -ieq 'builtin' ? $initiative.properties.versions : $null
     }
     id         = $initiative.id
   }
