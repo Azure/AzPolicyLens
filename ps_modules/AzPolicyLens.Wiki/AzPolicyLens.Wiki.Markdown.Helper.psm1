@@ -2577,10 +2577,17 @@ function buildPolicyDefinitionDetailedPageContent {
     }
   }
 
-  #remove lastSyncedToArgOn metadata from built-in policies
+  #remove system populated metadata that is not relevant to customers
   if ($definition.properties.policyType -ieq 'builtin') {
+    #remove lastSyncedToArgOn metadata from built-in policies
     $lastSyncedToArgOnKey = $metadata.Keys | Where-Object { $_ -match '^lastSyncedToArgOn$' }
     foreach ($key in $lastSyncedToArgOnKey) {
+      $metadata.Remove($key)
+    }
+  } else {
+    #remove 'createdBy', 'createdOn', 'updatedBy', 'updatedOn' metadata from custom policies since they are system-populated.
+    $systemPopulatedMetadataKeys = $metadata.Keys | Where-Object { $_ -match '^(createdBy|createdOn|updatedBy|updatedOn)$' }
+    foreach ($key in $systemPopulatedMetadataKeys) {
       $metadata.Remove($key)
     }
   }
@@ -2805,10 +2812,17 @@ function buildPolicyInitiativeDetailedPageContent {
     }
   }
 
-  #remove lastSyncedToArgOn metadata from built-in policies
+  #remove system populated metadata that is not relevant to customers
   if ($initiative.properties.policyType -ieq 'builtin') {
+    #remove lastSyncedToArgOn metadata from built-in policies
     $lastSyncedToArgOnKey = $metadata.Keys | Where-Object { $_ -match '^lastSyncedToArgOn$' }
     foreach ($key in $lastSyncedToArgOnKey) {
+      $metadata.Remove($key)
+    }
+  } else {
+    #remove 'createdBy', 'createdOn', 'updatedBy', 'updatedOn' metadata from custom policies since they are system-populated.
+    $systemPopulatedMetadataKeys = $metadata.Keys | Where-Object { $_ -match '^(createdBy|createdOn|updatedBy|updatedOn)$' }
+    foreach ($key in $systemPopulatedMetadataKeys) {
       $metadata.Remove($key)
     }
   }
