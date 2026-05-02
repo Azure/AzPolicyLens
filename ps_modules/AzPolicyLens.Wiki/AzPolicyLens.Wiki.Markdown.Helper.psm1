@@ -2577,6 +2577,17 @@ function buildPolicyDefinitionDetailedPageContent {
     }
   }
   #build policy definition json
+  #determine the version
+  if ($definition.properties.policyType -ieq 'builtin') {
+    #for built-in policy definitions, use the version property.
+    $version = $definition.properties.version
+  } elseif ($metadata.ContainsKey('version')) {
+    # for custom definitions, use the version from metadata if it exists since custom policies don't support the native versioning yet.
+    $version = $metadata.version
+  } else {
+    #if the metadata does not contain version, use the original version property  which is always 1.0.0.
+    $version = $definition.properties.version
+  }
   $definitionData = [ordered]@{
     name       = $definition.name
     properties = [ordered]@{
@@ -2584,7 +2595,7 @@ function buildPolicyDefinitionDetailedPageContent {
       description = $definition.properties.description
       policyType  = $definition.properties.policyType
       metadata    = $metadata
-      version     = $definition.properties.version
+      version     = $definition.properties.policyType -ieq 'builtin' ? $definition.properties.version : $null
       mode        = $definition.properties.mode
       parameters  = $definition.properties.parameters
       policyRule  = [ordered]@{
@@ -2619,7 +2630,7 @@ function buildPolicyDefinitionDetailedPageContent {
     Id            = $definition.id
     Type          = $definition.properties.policyType
     Description   = $($definition.properties.description ? $($definition.properties.description) : $null)
-    Version       = $definition.properties.version ?? $metadata.version ?? $null
+    Version       = $version
     Effects       = $effects
     DefaultEffect = "``$defaultEffect``"
     InUse         = '``{0}``' -f ($(if ($definition.isInUse) { $definition.isInUse } else { 'false' })).ToString().ToUpper()
@@ -2791,6 +2802,18 @@ function buildPolicyInitiativeDetailedPageContent {
   #Get the assignments that are directly assigning this policy definition
   $relatedAssignments = $assignments | Where-Object { $_.properties.policyDefinitionId -ieq $initiative.id }
 
+  #determine the version
+  if ($initiative.properties.policyType -ieq 'builtin') {
+    #for built-in policy initiatives, use the version property.
+    $version = $initiative.properties.version
+  } elseif ($metadata.ContainsKey('version')) {
+    # for custom initiatives, use the version from metadata if it exists since custom policies don't support the native versioning yet.
+    $version = $metadata.version
+  } else {
+    #if the metadata does not contain version, use the original version property  which is always 1.0.0.
+    $version = $initiative.properties.version
+  }
+
   $definitionData = [ordered]@{
     name       = $initiative.name
     properties = [ordered]@{
@@ -2798,7 +2821,7 @@ function buildPolicyInitiativeDetailedPageContent {
       description            = $($initiative.properties.description ? $($initiative.properties.description) : $null)
       policyType             = $initiative.properties.policyType
       metadata               = $metadata
-      version                = $initiative.properties.version
+      version                = $initiative.properties.policyType -ieq 'builtin' ? $initiative.properties.version : $null
       parameters             = $initiative.properties.parameters
       policyDefinitionGroups = $initiative.properties.policyDefinitionGroups
       policyDefinitions      = $initiative.properties.policyDefinitions | select-Object -Property 'policyDefinitionReferenceId', 'policyDefinitionId', 'definitionVersion', 'parameters', 'groupNames'
@@ -2813,7 +2836,7 @@ function buildPolicyInitiativeDetailedPageContent {
     id          = $initiative.id
     type        = $initiative.properties.policyType
     description = $($initiative.properties.description ? $($initiative.properties.description) : $null)
-    version     = $initiative.properties.version ?? $metadata.version ?? $null
+    Version     = $version
     InUse       = '``{0}``' -f $initiative.isInUse.ToUpper()
   }
   if ($PageStyle -ieq 'detailed') {
