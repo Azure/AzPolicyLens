@@ -128,6 +128,11 @@ The table below summarizes the key features of each wiki type:
     <td style="text-align: center">✅</td>
     <td style="text-align: center"></td>
   </tr>
+    <tr>
+    <td>Syntax Validation for Policy Definitions and Initiatives</td>
+    <td style="text-align: center">✅</td>
+    <td style="text-align: center"></td>
+  </tr>
   <tr>
     <td colspan="3"><strong>Azure Resources</strong></td>
   </tr>
