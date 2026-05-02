@@ -2576,6 +2576,15 @@ function buildPolicyDefinitionDetailedPageContent {
       $metadata.Remove($hiddenMetadataName)
     }
   }
+
+  #remove lastSyncedToArgOn metadata from built-in policies
+  if ($definition.properties.policyType -ieq 'builtin') {
+    $lastSyncedToArgOnKey = $metadata.Keys | Where-Object { $_ -match '^lastSyncedToArgOn$' }
+    foreach ($key in $lastSyncedToArgOnKey) {
+      $metadata.Remove($key)
+    }
+  }
+
   #build policy definition json
   #determine the version
   if ($definition.properties.policyType -ieq 'builtin') {
@@ -2795,6 +2804,15 @@ function buildPolicyInitiativeDetailedPageContent {
       $metadata.Remove($hiddenMetadataName)
     }
   }
+
+  #remove lastSyncedToArgOn metadata from built-in policies
+  if ($initiative.properties.policyType -ieq 'builtin') {
+    $lastSyncedToArgOnKey = $metadata.Keys | Where-Object { $_ -match '^lastSyncedToArgOn$' }
+    foreach ($key in $lastSyncedToArgOnKey) {
+      $metadata.Remove($key)
+    }
+  }
+
   $SecurityControlSummaryFileNameMapping = getWikiPageFileName -summaryPageType security_control -wikiFileMapping $WikiFileMapping
   $SecurityControlSummaryFileBaseName = $SecurityControlSummaryFileNameMapping.FileBaseName
   $SecurityControlSummaryFolderPath = $SecurityControlSummaryFileNameMapping.FileParentDirectory
