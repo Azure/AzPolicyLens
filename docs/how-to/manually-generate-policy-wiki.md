@@ -8,6 +8,14 @@ This document provides instructions on how to manually generate a policy wiki wi
 
 You will need to generate the Azure oAuth token for the wiki generation process. You can use either the Azure CLI or the Az PowerShell module.
 
+### AzPolicyTest PowerShell Module
+
+The AzPolicyTest PowerShell module is required for the wiki generation process. Please ensure you have version 3.1.1 or later installed. You can install it using the following command:
+
+```powershell
+Install-Module -Name AzPolicyTest -RequiredVersion 3.1.1 -Force -Scope CurrentUser
+```
+
 ### Git
 
 You will need Git installed on your machine to clone the wiki repository.
