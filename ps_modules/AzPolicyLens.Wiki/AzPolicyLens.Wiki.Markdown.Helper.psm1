@@ -2581,12 +2581,14 @@ function buildPolicyDefinitionDetailedPageContent {
       displayName = $definition.properties.displayName
       description = $definition.properties.description
       metadata    = $metadata
+      version     = $definition.properties.version
       mode        = $definition.properties.mode
       parameters  = $definition.properties.parameters
       policyRule  = [ordered]@{
         if   = $definition.properties.policyRule.if
         then = $definition.properties.policyRule.then
       }
+      versions    = $definition.properties.versions
     }
     id         = $definition.id
   }
