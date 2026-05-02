@@ -2500,6 +2500,10 @@ function buildPolicySyntaxTestResultMarkdown {
   }
   $markdown += $(newMarkdownTable -data $summaryTable -Orientation 'vertical')
   $markdown += "`n`n"
+  $markdown += "`n`n"
+  $markdown += "<details>"
+  $markdown += "`n`n"
+  $markdown += "<summary>Click to expand</summary>"
 
   # Group tests by their immediate context (Block.Name). Preserve original order.
   $grouped = $executedTests | Group-Object -Property { $_.Block.Name }
@@ -2522,6 +2526,8 @@ function buildPolicySyntaxTestResultMarkdown {
       }
     }
     $markdown += $(newMarkdownTableFromArray -data $tableData -FormatTableHeader $false)
+    $markdown += "`n`n"
+    $markdown += "</details>"
     $markdown += "`n`n"
   }
   $markdown
@@ -2707,13 +2713,7 @@ function buildPolicyDefinitionDetailedPageContent {
     $notes += "It performs static analysis of the Policy definition against schema requirements and a curated set of best-practice assertions."
     $PageContent += buildQuotedAlert -type tip -messages $notes -contentStyle list -WikiStyle $WikiFileMapping.WikiStyle
     $PageContent += "`n`n"
-    $PageContent += "<details>"
-    $PageContent += "`n`n"
-    $PageContent += "<summary>Click to expand</summary>"
-    $PageContent += "`n`n"
     $PageContent += $(buildPolicySyntaxTestResultMarkdown -TestResult $syntaxTestResult)
-    $PageContent += "`n`n"
-    $PageContent += "</details>"
     $PageContent += "`n`n"
   }
   $PageContent += $(newMarkdownHeader -title "raw policy definition" -level 2 -caseStyle 'UpperCase')
@@ -2984,13 +2984,7 @@ function buildPolicyInitiativeDetailedPageContent {
     $notes += "It performs static analysis of the policy initiative against schema requirements and a curated set of best-practice assertions."
     $PageContent += buildQuotedAlert -type tip -messages $notes -contentStyle list -WikiStyle $WikiFileMapping.WikiStyle
     $PageContent += "`n`n"
-    $PageContent += "<details>"
-    $PageContent += "`n`n"
-    $PageContent += "<summary>Click to expand</summary>"
-    $PageContent += "`n`n"
     $PageContent += $(buildPolicySyntaxTestResultMarkdown -TestResult $syntaxTestResult)
-    $PageContent += "`n`n"
-    $PageContent += "</details>"
     $PageContent += "`n`n"
   }
   $PageContent += $(newMarkdownHeader -title "raw initiative definition" -level 2 -caseStyle 'UpperCase')
