@@ -2581,7 +2581,7 @@ function buildPolicyDefinitionDetailedPageContent {
   if ($definition.properties.policyType -ieq 'builtin') {
     #for built-in policy definitions, use the version property.
     $version = $definition.properties.version
-  } elseif ($metadata.ContainsKey('version')) {
+  } elseif ($metadata.version.length -gt 0) {
     # for custom definitions, use the version from metadata if it exists since custom policies don't support the native versioning yet.
     $version = $metadata.version
   } else {
@@ -2806,7 +2806,7 @@ function buildPolicyInitiativeDetailedPageContent {
   if ($initiative.properties.policyType -ieq 'builtin') {
     #for built-in policy initiatives, use the version property.
     $version = $initiative.properties.version
-  } elseif ($metadata.ContainsKey('version')) {
+  } elseif ($metadata.version.length -gt 0) {
     # for custom initiatives, use the version from metadata if it exists since custom policies don't support the native versioning yet.
     $version = $metadata.version
   } else {
