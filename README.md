@@ -14,6 +14,10 @@ Azure Policy can feel overwhelming due to its complexity and the sheer volume of
 
 > **Without reporting and collaboration, managing Azure policies at scale is error-prone, time-consuming, and lacks clarity across teams.**
 
+Watch the video from AzureTar YouTube channel to learn more about the solution and see a demo of the generated documentation:
+
+[![Watch video](https://img.youtube.com/vi/g2fRcfxRkBA/maxresdefault.jpg)](https://www.youtube.com/watch?v=g2fRcfxRkBA)
+
 This repository contains scripts and tools to automatically generate documentation for Azure Policy implementation as well as current compliance status and security posture of your Azure environment.
 
 ## Overview
