@@ -29,7 +29,8 @@ inputs:
   subscriptionIds:
     required: true
     default: ''
-    description: 'Comma separated list of subscription IDs to include in the wiki
+    description:
+      'Comma separated list of subscription IDs to include in the wiki
       generation. Leave empty to include all subscriptions in the environment.'
   childManagementGroupId:
     required: true
@@ -72,7 +73,7 @@ runs:
         }
         if (-not (Get-Module -ListAvailable -Name AzPolicyTest)) {
           Write-Output "Installing AzPolicyTest module..."
-          Install-Module -Name AzPolicyTest -RequiredVersion 3.1.1 -Force -Scope CurrentUser
+          Install-Module -Name AzPolicyTest -RequiredVersion 3.2.0 -Force -Scope CurrentUser
         }
     - name: Import Variables
       shell: pwsh # PowerShell Core

@@ -3146,7 +3146,7 @@ function buildPolicyExemptionDetailedPageContent {
     Description                  = $($exemption.description ? $($exemption.description) : $null)
     SubscriptionId               = $($exemption.subscriptionId ? "[$($exemption.subscriptionId)]($subscriptionLink)" : $null)
     ResourceGroup                = $($exemption.resourceGroup ? $($exemption.resourceGroup) : $null)
-    PolicyDefinitionReferenceIds = $exemption.PolicyDefinitionReferenceIds
+    PolicyDefinitionReferenceIds = $($exemption.PolicyDefinitionReferenceIds -join ', ')
     ExemptionCategory            = $exemption.exemptionCategory
     ExpiresOn                    = $exemptionExpiresOn
   }
