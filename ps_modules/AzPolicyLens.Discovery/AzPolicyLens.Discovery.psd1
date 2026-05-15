@@ -22,7 +22,7 @@
   Copyright         = '(c) Tao Yang. All rights reserved.'
 
   # Description of the functionality provided by this module
-  Description       = 'Generate Azure Policy documentation in Markdown format. This module is offers the discovery component for the AzPolicyLens module.'
+  Description       = 'Generate Azure Policy documentation in Markdown format. This module offers the discovery component for the AzPolicyLens module.'
 
   # Minimum version of the PowerShell engine required by this module
   PowerShellVersion = '7.0.0'

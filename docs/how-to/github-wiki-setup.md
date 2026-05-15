@@ -80,7 +80,7 @@ If you are using GitHub hosted runners, there is no additional software requirem
 - PowerShell 7.2 or above
 - Azure CLI or Az PowerShell Module (for generating Azure oAuth token during the wiki generation process)
 - Git (for pushing the generated wiki content to the Azure DevOps Wiki repository)
-- AzPolicyTest PowerShell Module version 3.1.1 or later (for syntax validation of policy definitions and initiatives during the wiki generation process)
+- AzPolicyTest PowerShell Module version 3.2.0 or later (for syntax validation of policy definitions and initiatives during the wiki generation process)
 
 For self-hosted runners, the runners must be able to access the Azure Resource Manager API endpoints (https://management.azure.com/).
 

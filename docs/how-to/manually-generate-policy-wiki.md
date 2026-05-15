@@ -10,7 +10,7 @@ You will need to generate the Azure oAuth token for the wiki generation process.
 
 ### AzPolicyTest PowerShell Module
 
-The AzPolicyTest PowerShell module is required for the wiki generation process. Please ensure you have version 3.1.1 or later installed. You can install it using the following command:
+The AzPolicyTest PowerShell module is required for the wiki generation process. Please ensure you have version 3.2.0 or later installed. You can install it using the following command:
 
 ```powershell
 Install-Module -Name AzPolicyTest -RequiredVersion 3.1.1 -Force -Scope CurrentUser
