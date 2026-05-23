@@ -4,7 +4,7 @@
   RootModule        = 'AzPolicyLens.Discovery.psm1'
 
   # Version number of this module.
-  ModuleVersion     = '2.2.0'
+  ModuleVersion     = '2.2.1'
 
   # Supported PSEditions
   # CompatiblePSEditions = @()
@@ -112,8 +112,8 @@
       # IconUri = ''
 
       # ReleaseNotes of this module
-      ReleaseNotes = '2.2.0 - May 2026
-Version 2.2.0 Release
+      ReleaseNotes = '2.2.1 - May 2026
+Version 2.2.1 Release
 '
 
       # Prerelease string of this module

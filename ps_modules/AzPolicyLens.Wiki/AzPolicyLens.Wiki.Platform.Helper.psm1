@@ -228,6 +228,8 @@ function getPolicyResourceAdoDirectoryPath {
 
   Write-Verbose "[$(getCurrentUTCString)]: Resource type is '$ResourceType'." -Verbose:($PSCmdlet.MyInvocation.BoundParameters["Verbose"].IsPresent -eq $true)
   if (!$getResourceTypeRoot) {
+    # Normalise ResourceId: remove any whitespace (spaces, tabs, newlines)
+    $ResourceId = $ResourceId -replace '\s+', ''
     #determine the parent resource based on the resource ID
     $parentResourceId = $ResourceId -replace '\/providers\/microsoft\.authorization\/policy(assignments|setdefinitions|definitions|exemptions)\/\S+', ''
     if ($parentResourceId.length -gt 0) {
