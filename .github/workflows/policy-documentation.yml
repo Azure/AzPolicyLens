@@ -135,7 +135,7 @@ jobs:
         id: generate_token
         uses: actions/create-github-app-token@v3
         with:
-          repositories: ${{ matrix.wiki.gitRepository }}
+          #repositories: ${{ matrix.wiki.gitRepository }}
           client-id: ${{ env.GithubAppId }}
           private-key: ${{ env.GithubAppPrivateKey }}
       - name: Generate Wiki
@@ -184,7 +184,7 @@ jobs:
         id: generate_token
         uses: actions/create-github-app-token@v3
         with:
-          repositories: ${{ matrix.wiki.gitRepository }}
+          #repositories: ${{ matrix.wiki.gitRepository }}
           client-id: ${{ env.GithubAppId }}
           private-key: ${{ env.GithubAppPrivateKey }}
       - name: Generate Wiki
