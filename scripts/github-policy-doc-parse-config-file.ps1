@@ -21,6 +21,29 @@ param (
   [string]$environment
 )
 
+#region functions
+function getGitHubRepoInfo {
+  param (
+    [string]$gitRepoUrl
+  )
+
+  # Supports both HTTPS (https://github.com/owner/repo[.git]) and SSH (git@github.com:owner/repo[.git]) formats
+  if ($gitRepoUrl -match '^git@[^:]+:(?<owner>[^/]+)/(?<repo>[^/]+?)(\.git)?$') {
+    $owner = $Matches['owner']
+    $repo = $Matches['repo']
+  } elseif ($gitRepoUrl -match '^(https?|ssh)://[^/]+/(?<owner>[^/]+)/(?<repo>[^/]+?)(\.git)?/?$') {
+    $owner = $Matches['owner']
+    $repo = $Matches['repo']
+  } else {
+    Throw "Unsupported git repository URL format: $gitRepoUrl"
+  }
+  return @{
+    owner = $owner
+    repo  = $repo
+  }
+}
+#endregion
+
 #region main
 #Schema validation
 try {
@@ -42,6 +65,7 @@ $wikis = @()
 $config = Get-Content $configFilePath | ConvertFrom-Json -AsHashtable -Depth 10
 $environmentConfig = $config.environment[$environment]
 foreach ($key in $environmentConfig.wiki.keys) {
+  $repoInfo = getGitHubRepoInfo -gitRepoUrl $environmentConfig.wiki[$key].gitRepository
   $wikiConfig = @{
     wikiAlias     = $key
     pageStyle     = $environmentConfig.wiki[$key].pageStyle
@@ -50,6 +74,8 @@ foreach ($key in $environmentConfig.wiki.keys) {
     gitBranch     = $environmentConfig.wiki[$key].gitBranch
     gitUserName   = $environmentConfig.wiki[$key].gitUserName
     gitUserEmail  = $environmentConfig.wiki[$key].gitUserEmail
+    gitRepoOwner  = $repoInfo.owner
+    gitRepoName   = $repoInfo.repo
   }
   if ($environmentConfig.wiki[$key].ContainsKey('childManagementGroupId')) {
     $wikiConfig.childManagementGroupId = $environmentConfig.wiki[$key].childManagementGroupId
@@ -61,6 +87,7 @@ foreach ($key in $environmentConfig.wiki.keys) {
   } else {
     $wikiConfig.subscriptionIds = ''
   }
+
   $wikis += $wikiConfig
 }
 

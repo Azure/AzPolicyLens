@@ -135,9 +135,11 @@ jobs:
         id: generate_token
         uses: actions/create-github-app-token@v3
         with:
-          #repositories: ${{ matrix.wiki.gitRepository }}
+          repositories: ${{ matrix.wiki.gitRepoName }}
           client-id: ${{ env.GithubAppId }}
           private-key: ${{ env.GithubAppPrivateKey }}
+          permission-contents: write
+          owner: ${{ matrix.wiki.gitRepoOwner }}
       - name: Generate Wiki
         uses: ./.github/actions/templates/policyDocGenerateWiki
         with:
@@ -184,9 +186,11 @@ jobs:
         id: generate_token
         uses: actions/create-github-app-token@v3
         with:
-          #repositories: ${{ matrix.wiki.gitRepository }}
+          repositories: ${{ matrix.wiki.gitRepoName }}
           client-id: ${{ env.GithubAppId }}
           private-key: ${{ env.GithubAppPrivateKey }}
+          permission-contents: write
+          owner: ${{ matrix.wiki.gitRepoOwner }}
       - name: Generate Wiki
         uses: ./.github/actions/templates/policyDocGenerateWiki
         with:
