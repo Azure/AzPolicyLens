@@ -7,7 +7,7 @@ on:
     # allows a manual run from the UI
     inputs:
       debug:
-        description: "Enable debug logging"
+        description: 'Enable debug logging'
         type: boolean
         default: false
 env:
@@ -124,11 +124,20 @@ jobs:
       EncryptionIV: ${{ secrets.ENCRYPTIONIV }}
       GithubUserId: ${{ secrets.GITHUBUSERID_DEV }}
       GithubToken: ${{ secrets.GITHUBTOKEN_DEV }}
+      GithubAppId: ${{ secrets.GITHUBAPPID_DEV }}
+      GithubAppPrivateKey: ${{ secrets.GITHUBAPPPRIVATEKEY_DEV }}
     steps:
       - name: 'Checkout'
         uses: actions/checkout@v6
         with:
           fetch-depth: 0
+      - name: 'Generate GitHub token'
+        id: generate_token
+        uses: actions/create-github-app-token@v3
+        with:
+          repositories: ${{ matrix.wiki.gitRepository }}
+          client-id: ${{ env.GithubAppId }}
+          private-key: ${{ env.GithubAppPrivateKey }}
       - name: Generate Wiki
         uses: ./.github/actions/templates/policyDocGenerateWiki
         with:
@@ -146,7 +155,7 @@ jobs:
           aesEncryptionKey: ${{ secrets.ENCRYPTIONKEY }}
           aesEncryptionIV: ${{ secrets.ENCRYPTIONIV }}
           githubUserId: ${{ env.GithubUserId }}
-          githubToken: ${{ env.GithubToken }}
+          githubToken: ${{ steps.generate_token.outputs.token }}
 
   job_generate_wiki_prod:
     name: 'Generate Wiki - Prod [${{ matrix.wiki.wikiAlias }}]'
@@ -164,11 +173,20 @@ jobs:
       EncryptionIV: ${{ secrets.ENCRYPTIONIV }}
       GithubUserId: ${{ secrets.GITHUBUSERID_PROD }}
       GithubToken: ${{ secrets.GITHUBTOKEN_PROD }}
+      GithubAppId: ${{ secrets.GITHUBAPPID_PROD }}
+      GithubAppPrivateKey: ${{ secrets.GITHUBAPPPRIVATEKEY_PROD }}
     steps:
       - name: 'Checkout'
         uses: actions/checkout@v6
         with:
           fetch-depth: 0
+      - name: 'Generate GitHub token'
+        id: generate_token
+        uses: actions/create-github-app-token@v3
+        with:
+          repositories: ${{ matrix.wiki.gitRepository }}
+          client-id: ${{ env.GithubAppId }}
+          private-key: ${{ env.GithubAppPrivateKey }}
       - name: Generate Wiki
         uses: ./.github/actions/templates/policyDocGenerateWiki
         with:
@@ -186,4 +204,4 @@ jobs:
           aesEncryptionKey: ${{ secrets.ENCRYPTIONKEY }}
           aesEncryptionIV: ${{ secrets.ENCRYPTIONIV }}
           githubUserId: ${{ env.GithubUserId }}
-          githubToken: ${{ env.GithubToken }}
+          githubToken: ${{ steps.generate_token.outputs.token }}
