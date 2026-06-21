@@ -119,6 +119,7 @@ runs:
         EncryptionKey: ${{ inputs.aesEncryptionKey }}
         EncryptionIV: ${{ inputs.aesEncryptionIV }}
         gitRepository: ${{ inputs.gitRepository }}
+        gitSshRepository: ${{ inputs.gitSshRepository }}
         gitUserName: ${{ inputs.gitUserName }}
         gitUserEmail: ${{ inputs.gitUserEmail }}
         githubToken: ${{ inputs.githubToken }}

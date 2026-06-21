@@ -148,10 +148,10 @@ if (-not (Test-Path -Path $gitRepoRootPath -PathType 'Container')) {
     #GitHub
     #If PAT ($githubToken) is provided, use it for authentication; otherwise, assume SSH key is used for authentication.
     if ($githubToken) {
-      Write-Output "Cloning the Git repo using embedded credentials in URL for authentication."
+      Write-Output "Cloning the Git repo '$gitRepository' using embedded credentials in URL for authentication."
       $authenticatedRepoUrl = $gitRepository -replace 'https://', "https://$githubUserID`:$githubToken@"
     } else {
-      Write-Output "Cloning the Git repo using SSH key for authentication."
+      Write-Output "Cloning the Git repo '$gitSshRepository' using SSH key for authentication."
       $authenticatedRepoUrl = $gitSshRepository
       #configure SSH key for git
       if ([string]::IsNullOrWhiteSpace($githubSshPrivateKey)) {
