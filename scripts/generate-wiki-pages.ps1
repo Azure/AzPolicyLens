@@ -72,16 +72,27 @@ if ($gitPlatform -eq 'ado') {
   $tokenType = "bearer"
 } else {
   Write-Verbose "Git platform is set to 'github'." -Verbose
-  $githubToken = $env:githubToken
+  $githubToken = $env:githubToken #if the GitHub token is provided, it will be used for authentication; otherwise, SSH key will be used for authentication.
+  $githubSshPrivateKey = $env:githubSshPrivateKey #if the GitHub token is null or empty, the SSH private key will be used for authentication.
   $githubUserID = $env:githubUserID
   $tokenType = "basic"
-  $gitTokenBytes = [System.Text.Encoding]::Unicode.GetBytes("$githubUserID`:$githubToken")
-  $gitToken = [Convert]::ToBase64String($gitTokenBytes)
+  if ($githubToken) {
+    $gitTokenBytes = [System.Text.Encoding]::Unicode.GetBytes("$githubUserID`:$githubToken")
+    $gitToken = [Convert]::ToBase64String($gitTokenBytes)
+  }
+  try {
+    $gitSshRepository = $env:gitSshRepository #SSH repository URL for GitHub wiki
+  } catch {
+    Write-Verbose "Git SSH repository URL not provided. Will attempt to use HTTPS URL for Git operations." -Verbose
+    $gitSshRepository = $null
+  }
 }
 
 $EncryptionKey = $env:EncryptionKey
 $EncryptionIV = $env:EncryptionIV
-$gitRepository = $env:gitRepository
+$gitRepository = $env:gitRepository #HTTPS repository URL for GitHub wiki or Azure DevOps wiki
+
+$githubSshRepoUrl = $env:githubSshRepoUrl
 $gitUserName = $env:gitUserName
 $gitUserEmail = $env:gitUserEmail
 Write-Output "Starting the wiki page generation script."
@@ -134,8 +145,39 @@ if (-not (Test-Path -Path $gitRepoRootPath -PathType 'Container')) {
     Write-Output "Cloning the Git repo using http.extraheader for authentication with $tokenType token."
     git -c http.extraheader="AUTHORIZATION: $tokenType $gitToken" clone $gitRepository $gitRepoRootPath --branch $gitBranch --single-branch
   } else {
-    Write-Output "Cloning the Git repo using embedded credentials in URL for authentication."
-    $authenticatedRepoUrl = $gitRepository -replace 'https://', "https://$githubUserID`:$githubToken@"
+    #GitHub
+    #If PAT ($githubToken) is provided, use it for authentication; otherwise, assume SSH key is used for authentication.
+    if ($githubToken) {
+      Write-Output "Cloning the Git repo using embedded credentials in URL for authentication."
+      $authenticatedRepoUrl = $gitRepository -replace 'https://', "https://$githubUserID`:$githubToken@"
+    } else {
+      Write-Output "Cloning the Git repo using SSH key for authentication."
+      $authenticatedRepoUrl = $gitSshRepository
+      #configure SSH key for git
+      if ([string]::IsNullOrWhiteSpace($githubSshPrivateKey)) {
+        Throw "Neither a GitHub token nor an SSH private key was provided. Unable to authenticate with the Git repository."
+      }
+      $sshDir = Join-Path -Path $HOME -ChildPath '.ssh'
+      if (-not (Test-Path -Path $sshDir -PathType 'Container')) {
+        New-Item -Path $sshDir -ItemType Directory -Force | Out-Null
+      }
+      $sshKeyPath = Join-Path -Path $sshDir -ChildPath 'azpl_id_rsa'
+      Write-Verbose "Writing the SSH private key to '$sshKeyPath'." -Verbose
+      #ensure the private key is written with a trailing newline and unix line endings
+      $normalizedKey = ($githubSshPrivateKey -replace "`r`n", "`n").TrimEnd("`n") + "`n"
+      [System.IO.File]::WriteAllText($sshKeyPath, $normalizedKey)
+      #restrict the permissions on the private key file (required by ssh)
+      if ($IsWindows) {
+        icacls $sshKeyPath /inheritance:r | Out-Null
+        icacls $sshKeyPath /grant:r "$($env:USERNAME):(R)" | Out-Null
+      } else {
+        chmod 600 $sshKeyPath
+      }
+      #configure git to use the SSH private key and skip host key verification for github.com
+      $sshCommand = "ssh -i `"$sshKeyPath`" -o StrictHostKeyChecking=accept-new -o IdentitiesOnly=yes"
+      Write-Verbose "Configuring git to use SSH command '$sshCommand'." -Verbose
+      $env:GIT_SSH_COMMAND = $sshCommand
+    }
     git clone $authenticatedRepoUrl $gitRepoRootPath --branch $gitBranch --single-branch
   }
   if ($gitPlatform -ieq 'ado') {
@@ -226,7 +268,14 @@ if ($gitStatus) {
     Write-Output "Pushing changes to the $gitBranch branch of the repository '$gitRepository' using embedded credentials in URL for authentication."
     git push origin $gitBranch --porcelain
   }
-
+  #make sure the ssh key is deleted before exiting to avoid leaving private key material on the runner
+  if ($gitPlatform -ieq 'github' -and $githubSshPrivateKey) {
+    $sshKeyPath = Join-Path -Path $HOME -ChildPath '.ssh\azpl_id_rsa'
+    if (Test-Path -Path $sshKeyPath -PathType 'leaf') {
+      Write-Verbose "Removing SSH private key file '$sshKeyPath'." -Verbose
+      Remove-Item -Path $sshKeyPath -Force
+    }
+  }
   if ($LASTEXITCODE -ne 0) {
     Write-Error "Failed to push to the $gitBranch branch of the repository '$gitRepository'."
     exit 1

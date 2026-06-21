@@ -16,7 +16,10 @@ inputs:
     description: 'Git branch to push the wiki changes to'
   gitRepository:
     required: true
-    description: 'Git repository URL for the wiki'
+    description: 'Git HTTPS repository URL for the wiki'
+  gitSshRepository:
+    required: true
+    description: 'Git SSH repository URL for the wiki'
   gitUserName:
     required: true
     description: 'Git user name'
@@ -55,7 +58,10 @@ inputs:
     required: true
   githubToken:
     description: 'Personal Access Token for GitHub'
-    required: true
+    required: false
+  githubSshPrivateKey:
+    description: 'SSH Private Key for GitHub'
+    required: false
 runs:
   using: 'composite'
   steps:
@@ -94,9 +100,13 @@ runs:
     - name: Configure Git
       shell: pwsh
       run: |
+        $pat = '${{ inputs.githubToken }}'
+        $sshKey = '${{ inputs.githubSshPrivateKey }}'
         Write-Output "Git Configuration"
-        $tokenBytes = [System.Text.Encoding]::Unicode.GetBytes("${env.policyDocGitHubUserID}:${{ inputs.githubToken }}")
-        $token = [Convert]::ToBase64String($tokenBytes)
+        if ($pat.length -gt 0){
+          $tokenBytes = [System.Text.Encoding]::Unicode.GetBytes("${env.policyDocGitHubUserID}:${{ inputs.githubToken }}")
+          $token = [Convert]::ToBase64String($tokenBytes)
+        }
         git config --global user.name "${inputs.gitUserName}"
         git config --global user.email "${inputs.gitUserEmail}"
         #git config --global http.extraheader "AUTHORIZATION: basic $token"
@@ -112,6 +122,7 @@ runs:
         gitUserName: ${{ inputs.gitUserName }}
         gitUserEmail: ${{ inputs.gitUserEmail }}
         githubToken: ${{ inputs.githubToken }}
+        githubSshPrivateKey: ${{ inputs.githubSshPrivateKey }}
         githubUserID: ${{ inputs.githubUserId }}
       run: |
         $ErrorActionPreference = 'Stop'

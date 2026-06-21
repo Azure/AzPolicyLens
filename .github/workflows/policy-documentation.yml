@@ -124,22 +124,13 @@ jobs:
       EncryptionIV: ${{ secrets.ENCRYPTIONIV }}
       GithubUserId: ${{ secrets.GITHUBUSERID_DEV }}
       GithubToken: ${{ secrets.GITHUBTOKEN_DEV }}
-      GithubAppId: ${{ secrets.GITHUBAPPID_DEV }}
-      GithubAppPrivateKey: ${{ secrets.GITHUBAPPPRIVATEKEY_DEV }}
+      GithubSshPrivateKey: ${{ secrets.GITHUBSSHPRIVATEKEY_DEV }}
     steps:
       - name: 'Checkout'
         uses: actions/checkout@v6
         with:
           fetch-depth: 0
-      - name: 'Generate GitHub token'
-        id: generate_token
-        uses: actions/create-github-app-token@v3
-        with:
-          repositories: ${{ matrix.wiki.gitRepoName }}
-          client-id: ${{ env.GithubAppId }}
-          private-key: ${{ env.GithubAppPrivateKey }}
-          permission-contents: write
-          owner: ${{ matrix.wiki.gitRepoOwner }}
+
       - name: Generate Wiki
         uses: ./.github/actions/templates/policyDocGenerateWiki
         with:
@@ -148,6 +139,7 @@ jobs:
           pageStyle: ${{ matrix.wiki.pageStyle }}
           gitBranch: ${{ matrix.wiki.gitBranch }}
           gitRepository: ${{ matrix.wiki.gitRepository }}
+          gitSshRepository: ${{ matrix.wiki.gitSshRepository }}
           gitUserName: ${{ matrix.wiki.gitUserName }}
           gitUserEmail: ${{ matrix.wiki.gitUserEmail }}
           gitCommitMessage: 'Policy Documentation from commit ${{ github.sha }}'
@@ -157,7 +149,8 @@ jobs:
           aesEncryptionKey: ${{ secrets.ENCRYPTIONKEY }}
           aesEncryptionIV: ${{ secrets.ENCRYPTIONIV }}
           githubUserId: ${{ env.GithubUserId }}
-          githubToken: ${{ steps.generate_token.outputs.token }}
+          githubToken: ${{ env.GithubToken }}
+          githubSshPrivateKey: ${{ env.GithubSshPrivateKey }}
 
   job_generate_wiki_prod:
     name: 'Generate Wiki - Prod [${{ matrix.wiki.wikiAlias }}]'
@@ -175,22 +168,12 @@ jobs:
       EncryptionIV: ${{ secrets.ENCRYPTIONIV }}
       GithubUserId: ${{ secrets.GITHUBUSERID_PROD }}
       GithubToken: ${{ secrets.GITHUBTOKEN_PROD }}
-      GithubAppId: ${{ secrets.GITHUBAPPID_PROD }}
-      GithubAppPrivateKey: ${{ secrets.GITHUBAPPPRIVATEKEY_PROD }}
+      GithubSshPrivateKey: ${{ secrets.GITHUBSSHPRIVATEKEY_PROD }}
     steps:
       - name: 'Checkout'
         uses: actions/checkout@v6
         with:
           fetch-depth: 0
-      - name: 'Generate GitHub token'
-        id: generate_token
-        uses: actions/create-github-app-token@v3
-        with:
-          repositories: ${{ matrix.wiki.gitRepoName }}
-          client-id: ${{ env.GithubAppId }}
-          private-key: ${{ env.GithubAppPrivateKey }}
-          permission-contents: write
-          owner: ${{ matrix.wiki.gitRepoOwner }}
       - name: Generate Wiki
         uses: ./.github/actions/templates/policyDocGenerateWiki
         with:
@@ -199,6 +182,7 @@ jobs:
           pageStyle: ${{ matrix.wiki.pageStyle }}
           gitBranch: ${{ matrix.wiki.gitBranch }}
           gitRepository: ${{ matrix.wiki.gitRepository }}
+          gitSshRepository: ${{ matrix.wiki.gitSshRepository }}
           gitUserName: ${{ matrix.wiki.gitUserName }}
           gitUserEmail: ${{ matrix.wiki.gitUserEmail }}
           gitCommitMessage: 'Policy Documentation from commit ${{ github.sha }}'
@@ -208,4 +192,5 @@ jobs:
           aesEncryptionKey: ${{ secrets.ENCRYPTIONKEY }}
           aesEncryptionIV: ${{ secrets.ENCRYPTIONIV }}
           githubUserId: ${{ env.GithubUserId }}
-          githubToken: ${{ steps.generate_token.outputs.token }}
+          githubToken: ${{ env.GithubToken }}
+          githubSshPrivateKey: ${{ env.GithubSshPrivateKey }}
