@@ -272,8 +272,10 @@ if ($gitStatus) {
   if ($gitPlatform -ieq 'github' -and $githubSshPrivateKey) {
     $sshKeyPath = Join-Path -Path $HOME -ChildPath '.ssh\azpl_id_rsa'
     if (Test-Path -Path $sshKeyPath -PathType 'leaf') {
-      Write-Verbose "Removing SSH private key file '$sshKeyPath'." -Verbose
+      Write-Output "Removing SSH private key file '$sshKeyPath'."
       Remove-Item -Path $sshKeyPath -Force
+    } else {
+      Write-Output "SSH private key file '$sshKeyPath' not found. It may have already been removed."
     }
   }
   if ($LASTEXITCODE -ne 0) {
