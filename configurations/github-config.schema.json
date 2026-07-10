@@ -89,6 +89,11 @@
           "type": "string",
           "description": "Optional Azure management group ID to scope policy documentation. Mutually exclusive with subscriptionIds.",
           "minLength": 1
+        },
+        "deployKeySecretName": {
+          "type": "string",
+          "description": "Optional name of the secret containing the deploy key for the wiki repository.",
+          "minLength": 1
         }
       },
       "not": {

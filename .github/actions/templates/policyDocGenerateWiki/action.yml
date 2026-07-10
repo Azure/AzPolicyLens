@@ -62,6 +62,9 @@ inputs:
   githubSshPrivateKey:
     description: 'SSH Private Key for GitHub'
     required: false
+  githubDeployKey:
+    description: 'The private key for the Deploy Key for GitHub'
+    required: false
 runs:
   using: 'composite'
   steps:
@@ -103,13 +106,8 @@ runs:
         $pat = '${{ inputs.githubToken }}'
         $sshKey = '${{ inputs.githubSshPrivateKey }}'
         Write-Output "Git Configuration"
-        if ($pat.length -gt 0){
-          $tokenBytes = [System.Text.Encoding]::Unicode.GetBytes("${env.policyDocGitHubUserID}:${{ inputs.githubToken }}")
-          $token = [Convert]::ToBase64String($tokenBytes)
-        }
         git config --global user.name "${inputs.gitUserName}"
         git config --global user.email "${inputs.gitUserEmail}"
-        #git config --global http.extraheader "AUTHORIZATION: basic $token"
 
     - name: Generate Wiki
       id: generate_wiki
@@ -124,6 +122,7 @@ runs:
         gitUserEmail: ${{ inputs.gitUserEmail }}
         githubToken: ${{ inputs.githubToken }}
         githubSshPrivateKey: ${{ inputs.githubSshPrivateKey }}
+        githubDeployKey: ${{ inputs.githubDeployKey }}
         githubUserID: ${{ inputs.githubUserId }}
       run: |
         $ErrorActionPreference = 'Stop'

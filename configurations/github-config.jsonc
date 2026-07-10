@@ -9,7 +9,8 @@
           "gitBranch": "master",
           "pageStyle": "detailed",
           "gitUserName": "AzPolicyLens Pipeline",
-          "gitUserEmail": "policyDoc@contoso.com"
+          "gitUserEmail": "policyDoc@contoso.com",
+          "deployKeySecretName": "GITHUBDEPLOYKEY_DEV_ESLZ"
         },
         "app1": {
           "title": "APP 1 DEV POLICY",
@@ -30,7 +31,8 @@
           "pageStyle": "detailed",
           "gitUserName": "AzPolicyLens Pipeline",
           "gitUserEmail": "policyDoc@contoso.com",
-          "childManagementGroupId": "CONTOSO-DEV-Platform"
+          "childManagementGroupId": "CONTOSO-DEV-Platform",
+          "deployKeySecretName": "GITHUBDEPLOYKEY_DEV_PLATFORM"
         }
       }
     },

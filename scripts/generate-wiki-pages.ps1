@@ -75,6 +75,7 @@ if ($gitPlatform -eq 'ado') {
   $githubToken = $env:githubToken #if the GitHub token is provided, it will be used for authentication; otherwise, SSH key will be used for authentication.
   $githubSshPrivateKey = $env:githubSshPrivateKey #if the GitHub token is null or empty, the SSH private key will be used for authentication.
   $githubUserID = $env:githubUserID
+  $githubDeployKey = $env:githubDeployKey #if the GitHub deploy key is provided, it will be used for authentication; otherwise, SSH key or PAT will be used.
   $tokenType = "basic"
   if ($githubToken) {
     $gitTokenBytes = [System.Text.Encoding]::Unicode.GetBytes("$githubUserID`:$githubToken")
@@ -105,7 +106,14 @@ Write-Output "  - gitBranch: $gitBranch"
 if ($gitPlatform -eq 'ado') {
   Write-Output "  - gitRepoPath: $gitRepoPath"
 }
-Write-Output "  - GitHub User ID: $githubUserID"
+if ($githubUserID.length -gt 0) {
+  Write-Output "  - GitHub User ID: $githubUserID"
+}
+if ($githubDeployKey.length -gt 0) {
+  Write-Output "  - GitHub Deploy Key: Provided"
+} else {
+  Write-Output "  - GitHub Deploy Key: Not provided"
+}
 if ($SubscriptionIds) {
   Write-Output "  - SubscriptionIds: $SubscriptionIds"
 } else {
@@ -146,25 +154,43 @@ if (-not (Test-Path -Path $gitRepoRootPath -PathType 'Container')) {
     git -c http.extraheader="AUTHORIZATION: $tokenType $gitToken" clone $gitRepository $gitRepoRootPath --branch $gitBranch --single-branch
   } else {
     #GitHub
-    #If PAT ($githubToken) is provided, use it for authentication; otherwise, assume SSH key is used for authentication.
-    if ($githubToken) {
+    #If repo-specific deploy key is used, use it. otherwise, if PAT ($githubToken) is provided, use it for authentication; otherwise, assume SSH key is used for authentication.
+    $bUseDeployKey = $false
+    $bUsePAT = $false
+    $bUseSSHKey = $false
+    if ($githubDeployKey.length -gt 0) {
+      $bUseDeployKey = $true
+    } elseif ($githubToken.length -gt 0) {
+      $bUsePAT = $true
+    } elseif ($githubSshPrivateKey.length -gt 0) {
+      $bUseSSHKey = $true
+    }
+    if ($bUsePAT) {
       Write-Output "Cloning the Git repo '$gitRepository' using embedded credentials in URL for authentication."
       $authenticatedRepoUrl = $gitRepository -replace 'https://', "https://$githubUserID`:$githubToken@"
     } else {
-      Write-Output "Cloning the Git repo '$gitSshRepository' using SSH key for authentication."
+      if ($bUseDeployKey) {
+        Write-Output "Cloning the Git repo '$gitSshRepository' using the provided GitHub deploy key for authentication."
+      } elseif ($bUseSSHKey) {
+        Write-Output "Cloning the Git repo '$gitSshRepository' using SSH key for authentication."
+      } else {
+        Throw "Neither a GitHub token nor repository-specific deploy key nor an SSH private key was provided. Unable to authenticate with the Git repository."
+        Exit 1
+      }
       $authenticatedRepoUrl = $gitSshRepository
       #configure SSH key for git
-      if ([string]::IsNullOrWhiteSpace($githubSshPrivateKey)) {
-        Throw "Neither a GitHub token nor an SSH private key was provided. Unable to authenticate with the Git repository."
-      }
       $sshDir = Join-Path -Path $HOME -ChildPath '.ssh'
       if (-not (Test-Path -Path $sshDir -PathType 'Container')) {
         New-Item -Path $sshDir -ItemType Directory -Force | Out-Null
       }
-      $sshKeyPath = Join-Path -Path $sshDir -ChildPath 'azpl_id_rsa'
+      $sshKeyPath = Join-Path -Path $sshDir -ChildPath 'azpl_id'
       Write-Verbose "Writing the SSH private key to '$sshKeyPath'." -Verbose
       #ensure the private key is written with a trailing newline and unix line endings
-      $normalizedKey = ($githubSshPrivateKey -replace "`r`n", "`n").TrimEnd("`n") + "`n"
+      if ($githubDeployKey.length -gt 0) {
+        $normalizedKey = ($githubDeployKey -replace "`r`n", "`n").TrimEnd("`n") + "`n"
+      } else {
+        $normalizedKey = ($githubSshPrivateKey -replace "`r`n", "`n").TrimEnd("`n") + "`n"
+      }
       [System.IO.File]::WriteAllText($sshKeyPath, $normalizedKey)
       #restrict the permissions on the private key file (required by ssh)
       if ($IsWindows) {
