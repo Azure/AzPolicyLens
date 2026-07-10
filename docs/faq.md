@@ -140,7 +140,9 @@ When using the Cloud-hosted pipeline platforms such as Azure DevOps or GitHub Ac
 
 For both Azure DevOps and GitHub Actions pipelines, the encryption keys used to encrypt the environment discovery artifacts are kept as secrets in the pipeline platform's secret management system (Azure Devops variable groups or GitHub Actions Secrets). With Azure DevOps, to further enhance security, you can also configure the variable group to use Azure Key Vault to manage the secrets.
 
-The encryption keys can be disposed or updated by updating the secret in the pipeline platform's secret management system. After the encryption key is updated, the next environment discovery run will use the new encryption key to encrypt the artifact. Note that after the encryption key is updated, any previously generated environment discovery artifacts cannot be decrypted using the new key. If you need to access the data in previously generated artifacts, you must use the old encryption key to decrypt them.
+The encryption keys can be disposed or updated by updating the secret in the pipeline platform's secret management system. After the encryption key is updated, the next environment discovery run will use the new encryption key to encrypt the artifact. Note that after the encryption key is updated, any previously generated environment discovery artifacts cannot be decrypted using the new key.
+
+If you need to access the data in previously generated artifacts, you must use the old encryption key to decrypt them.
 
 </details>
 
@@ -302,6 +304,28 @@ Looks like the font color is not rendered when you use the back button on the br
 
 </details>
 
+### Understanding the different authentication methods for GitHub Actions Workflow to push the generated wiki content to the GitHub repositories
+
+<details>
+
+<summary>Click to expand the answer</summary>
+
+The GitHub Actions Workflow can use either a Personal Access Token (PAT) or an SSH key to authenticate and push the generated wiki content to the GitHub repositories.
+
+- **Personal Access Token (PAT)**: A PAT is a token that you generate in your GitHub account with specific permissions. It is used to authenticate the workflow and grant it access to the repositories where the wiki content will be pushed. The PAT should have `Read and write` permissions for `Commit statuses` and `Contents`.
+
+- **SSH Key**: An SSH key can be added to the GitHub account used by the workflow. The workflow can then use the SSH key to authenticate and push the generated wiki content to the repositories.
+
+The choice between using a PAT or an SSH key depends on your organization's security policies and preferences. Some organizations may have restricted access or maximum lifespan for PATs, while others may prefer using SSH keys for authentication.
+
+Although both methods provide secure authentication for the GitHub Actions Workflow to push the generated wiki content to the GitHub repositories, a fine-grained Personal Access Token (PAT) is generally recommended because it allows for more granular control over the permissions granted to the workflow as well as limiting accesses to specific repositories. This can help reduce the risk in case the PAT is compromised.
+
+On the other hand, SSH keys are associated to a specific GitHub user and you cannot configure a subset of repositories and permissions for the SSH key. If the SSH key is compromised, it can be used to access all repositories that the user has access to.
+
+:memo:**Note:** GitHub app provides another authentication method in GitHub, but it does not currently support authenticating to wiki repositories. Therefore, it is not a suitable option for the GitHub Actions Workflow at this stage.
+
+</details>
+
 ## Other Questions
 
 ### Why are the hidden tags and metadata not included in the basic wiki page style?
@@ -312,7 +336,9 @@ Looks like the font color is not rendered when you use the back button on the br
 
 It is a common practice for the cloud platform teams to use hidden tags to store information about the resources that are not intended to be visible to end users (application teams in this case) from the Azure portal. Including the hidden tags ain the basic wiki page style may lead to unintended exposure of information that are supposed to be hidden from end users.
 
-Although Azure Policy resources do not support tags, they do support metadata which serves the same purpose. Some customers may have adopted this practice and implemented similar patterns for policy resources by using `hidden-` or `hidden_` prefixes for metadata names to indicate that the metadata should be hidden from end users. To respect this common practice, the basic wiki page style excludes hidden tags and metadata to prevent unintended exposure these information to the application teams.
+Although Azure Policy resources do not support tags, they do support metadata which serves the same purpose. Some customers may have adopted this practice and implemented similar patterns for policy resources by using `hidden-` or `hidden_` prefixes for metadata names to indicate that the metadata should be hidden from end users.
+
+To respect this common practice, the basic wiki page style excludes hidden tags and metadata to prevent unintended exposure these information to the application teams.
 
 </details>
 

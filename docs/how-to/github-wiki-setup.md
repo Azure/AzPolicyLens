@@ -2,29 +2,11 @@
 
 ## Introduction
 
-This documentation provides a step-by-step guide on how to set up the GitHub Actions Workflow to automatically generate and publish the policy wiki to your Azure DevOps Wiki repository.
+This documentation provides a step-by-step guide on how to set up the GitHub Actions Workflow to automatically generate and publish the policy wiki to your GitHub Wiki repository.
 
 This workflow is configured to run on a schedule, ensuring that the documentation is always up-to-date with the latest policies.
 
 The workflow retrieves all relevant Azure resources using Azure Resource Graph queries and then generates policy documentations in markdown files that are compatible with the GitHub wiki.
-
-```mermaid
-flowchart TD
-    A[Scheduled Start] --> B["Environment Discovery (Retrieve Azure Resources)"]
-    B --> C[Store Discovered Data in Build Artifact]
-    C --> D0[Download Build Artifact]
-    D0 --> D1[Generate Wiki For Engineering Team]
-    D1 --> D2[Publish Engineering Wiki to Azure DevOps]
-    C --> E0[Download Build Artifact]
-    E0 --> E1[Generate Wiki For Customer 1]
-    E1 --> E2[Publish Customer 1 Wiki to Azure DevOps]
-    C --> F0[Download Build Artifact]
-    F0 --> F1[Generate Wiki For Customer 2]
-    F1 --> F2[Publish Customer 2 Wiki to Azure DevOps]
-    D2 --> G[End]
-    E2 --> G[End]
-    F2 --> G[End]
-```
 
 ## Prerequisites
 
@@ -46,9 +28,13 @@ You need to create a Service Principal in Entra ID that has the **Reader** role 
 
 Follow the documentation for the GitHub [Azure Login Action](https://github.com/marketplace/actions/azure-login) to create the necessary Entra ID identities and grant them the `Reader` role to the Azure Management Groups.
 
-### 4. Personal Access Token (PAT) for Pushing Wiki Content to GitHub Wiki Repositories
+### 4. Personal Access Token (PAT) or SSH key for Pushing Wiki Content to GitHub Wiki Repositories
 
-For the GitHub Action workflow to push the generated wiki content to the GitHub repositories, you need to create a fine-grained Personal Access Token (PAT) in GitHub with the necessary permissions to access these repositories.
+For the GitHub Action workflow to push the generated wiki content to the GitHub repositories, you need to create either a fine-grained Personal Access Token (PAT) in GitHub with the necessary permissions to access these repositories or add an SSH key to the GitHub account that you will use for the workflow.
+
+To help you understand the difference between the two options, refer to the [FAQ - Understanding the different authentication methods for GitHub Actions Workflow to push the generated wiki content to the GitHub repositories](../faq.md#understanding-the-different-authentication-methods-for-github-actions-workflow-to-push-the-generated-wiki-content-to-the-github-repositories).
+
+#### 4.1 Option 1: Create a Personal Access Token (PAT) in GitHub
 
 To create the token:
 
@@ -73,13 +59,19 @@ After the PAT is generated, you will see the following permissions summary for t
 
 ![3](../images/github-pat-03.jpg)
 
+#### 4.2 Option 2: Create an SSH Key for the GitHub Account
+
+1. To create an SSH key for the GitHub account, follow the steps in the GitHub documentation [Generating a new SSH key and adding it to the ssh-agent](https://docs.github.com/en/authentication/connecting-to-github-with-ssh/generating-a-new-ssh-key-and-adding-it-to-the-ssh-agent).
+
+2. Add the public key to the GitHub account by following the steps in the GitHub documentation [Adding a new SSH key to your GitHub account](https://docs.github.com/en/authentication/connecting-to-github-with-ssh/adding-a-new-ssh-key-to-your-github-account).
+
 ### 5. Software requirements for the GitHub action runner
 
 If you are using GitHub hosted runners, there is no additional software requirement as the necessary tools are already installed. If you are using self-hosted runners, please ensure that the following software is installed:
 
 - PowerShell 7.2 or above
 - Azure CLI or Az PowerShell Module (for generating Azure oAuth token during the wiki generation process)
-- Git (for pushing the generated wiki content to the Azure DevOps Wiki repository)
+- Git (for pushing the generated wiki content to the GitHub Wiki repository)
 - AzPolicyTest PowerShell Module version 3.2.0 or later (for syntax validation of policy definitions and initiatives during the wiki generation process)
 
 For self-hosted runners, the runners must be able to access the Azure Resource Manager API endpoints (https://management.azure.com/).
@@ -147,10 +139,13 @@ The following secrets need to be stored in the GitHub repository where the wiki 
 | `EncryptionKey` | The content of the encryption key file you generated in step 6. |
 | `EncryptionIV` | The initialization vector (IV) for the encryption key you generated in step 6. |
 
-For each wiki instance, you will also need to store the following secrets:
+For each wiki instance, depending on the authentication method you chose in prerequisite step 4, you will also need to store the following secrets:
 
- - GitHub user ID
- - GitHub fine-grained PAT with access to the wiki repository that you have created earlier.
+- If using a Personal Access Token (PAT):
+  - GitHub user ID
+  - GitHub fine-grained PAT with access to the wiki repository that you have created earlier.
+- If using an SSH key:
+  - The SSH private key with access to the wiki repository that you have created earlier.
 
 For each environment (Azure Management Group) that you want to generate wiki for, you will also need to store the following secrets:
 
@@ -179,15 +174,23 @@ In this example, the secret name `MG_DEV_READER` references the Action secret cr
 
 ![5](../images/github-action-02.jpg)
 
-**3. Update the GitHub User ID and PAT secrets for each wiki generation job in the workflow file**
+**3. Update the GitHub User ID and PAT / SSH secrets for each wiki generation job in the workflow file**
 
-For each wiki generation job (`job_generate_wiki_<environment>`), set the `GithubUserId` and `GithubToken` environment variables to reference the corresponding GitHub Action secrets that contain the GitHub user ID and PAT for pushing the generated wiki content to the GitHub wiki repository. i.e.
+For each wiki generation job (`job_generate_wiki_<environment>`), if you are using PAT to authenticate to GitHub: set both `GithubUserId` and `GithubToken` environment variables to reference the corresponding GitHub Action secrets that contain the GitHub user ID and PAT for pushing the generated wiki content to the GitHub wiki repository. i.e.
 
 ![6](../images/github-action-03.jpg)
 
-In this example, the secret names `GITHUBUSERID` and `GITHUBTOKEN` reference the Action secrets created earlier.
+In this example, the secret names `GithubUserId` and `GithubToken` reference the Action secrets created earlier.
 
 ![7](../images/github-action-04.jpg)
+
+If you are using SSH key to authenticate to GitHub, set the `GithubSshPrivateKey` environment variable to reference the corresponding GitHub Action secret that contains the SSH private key for pushing the generated wiki content to the GitHub wiki repository. i.e.
+
+![8](../images/github-action-11.jpg)
+
+In this example, the secret name `GithubSshPrivateKey` references the Action secret created earlier.
+
+![9](../images/github-action-12.jpg)
 
 **4. Make sure the `buildArtifactName` input for each discovery job matches the `buildArtifactName` input in the corresponding wiki generation job**
 
