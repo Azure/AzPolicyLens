@@ -122,8 +122,6 @@ jobs:
     env:
       EncryptionKey: ${{ secrets.ENCRYPTIONKEY }}
       EncryptionIV: ${{ secrets.ENCRYPTIONIV }}
-      GithubUserId: ${{ secrets.GITHUBUSERID_DEV }}
-      GithubToken: ${{ secrets.GITHUBTOKEN_DEV }}
       GithubSshPrivateKey: ${{ secrets.GITHUBSSHPRIVATEKEY_DEV }}
     steps:
       - name: 'Checkout'
