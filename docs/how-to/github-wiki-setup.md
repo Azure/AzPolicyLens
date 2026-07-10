@@ -139,10 +139,13 @@ The following secrets need to be stored in the GitHub repository where the wiki 
 | `EncryptionKey` | The content of the encryption key file you generated in step 6. |
 | `EncryptionIV` | The initialization vector (IV) for the encryption key you generated in step 6. |
 
-For each wiki instance, you will also need to store the following secrets:
+For each wiki instance, depending on the authentication method you chose in prerequisite step 4, you will also need to store the following secrets:
 
- - GitHub user ID
- - GitHub fine-grained PAT with access to the wiki repository that you have created earlier.
+- If using a Personal Access Token (PAT):
+  - GitHub user ID
+  - GitHub fine-grained PAT with access to the wiki repository that you have created earlier.
+- If using an SSH key:
+  - The SSH private key with access to the wiki repository that you have created earlier.
 
 For each environment (Azure Management Group) that you want to generate wiki for, you will also need to store the following secrets:
 
