@@ -123,6 +123,7 @@ jobs:
       EncryptionKey: ${{ secrets.ENCRYPTIONKEY }}
       EncryptionIV: ${{ secrets.ENCRYPTIONIV }}
       GithubSshPrivateKey: ${{ secrets.GITHUBSSHPRIVATEKEY_DEV }}
+      GithubDeployKey: ${{ secrets[matrix.wiki.deployKeySecretName] }}
     steps:
       - name: 'Checkout'
         uses: actions/checkout@v6
@@ -149,6 +150,7 @@ jobs:
           githubUserId: ${{ env.GithubUserId }}
           githubToken: ${{ env.GithubToken }}
           githubSshPrivateKey: ${{ env.GithubSshPrivateKey }}
+          githubDeployKey: ${{ env.GithubDeployKey }}
 
   job_generate_wiki_prod:
     name: 'Generate Wiki - Prod [${{ matrix.wiki.wikiAlias }}]'
@@ -167,6 +169,7 @@ jobs:
       GithubUserId: ${{ secrets.GITHUBUSERID_PROD }}
       GithubToken: ${{ secrets.GITHUBTOKEN_PROD }}
       GithubSshPrivateKey: ${{ secrets.GITHUBSSHPRIVATEKEY_PROD }}
+      GithubDeployKey: ${{ secrets[matrix.wiki.deployKeySecretName] }}
     steps:
       - name: 'Checkout'
         uses: actions/checkout@v6
@@ -192,3 +195,4 @@ jobs:
           githubUserId: ${{ env.GithubUserId }}
           githubToken: ${{ env.GithubToken }}
           githubSshPrivateKey: ${{ env.GithubSshPrivateKey }}
+          githubDeployKey: ${{ env.GithubDeployKey }}
