@@ -976,15 +976,22 @@ function buildComplianceRatingMermaidDiagram {
   }
   $green = '#428000'
   $red = '#FF0000'
-  # Mermaid pie maps pie1/pie2 to slices in declaration order. Always declare
-  # Compliant first with pie1=green and Non-Compliant second with pie2=red so
-  # the colors are deterministic regardless of slice values.
   if ($compliantCount -eq 0 -and $nonCompliantCount -eq 0) {
     #both zero - mimic the Azure portal UI (all green)
     $compliantCount = 1
   }
-  $themeVars = "'pie1': '$green', 'pie2': '$red'"
-  $slices = "`"Compliant`": $compliantCount`n`"Non-Compliant`": $nonCompliantCount"
+  # GitHub mermaid maps pie1/pie2 to slices in declaration order, but ADO maps
+  # them to slices sorted by value (largest slice gets pie1, ties keep insertion
+  # order). To keep Compliant green and Non-Compliant red on both platforms, for
+  # ADO we declare the slices largest-first and, on a tie, declare Non-Compliant
+  # first so it always resolves to red.
+  if ($WikiStyle -eq 'ado' -and $nonCompliantCount -ge $compliantCount) {
+    $themeVars = "'pie1': '$red', 'pie2': '$green'"
+    $slices = "`"Non-Compliant`": $nonCompliantCount`n`"Compliant`": $compliantCount"
+  } else {
+    $themeVars = "'pie1': '$green', 'pie2': '$red'"
+    $slices = "`"Compliant`": $compliantCount`n`"Non-Compliant`": $nonCompliantCount"
+  }
 
   # Start building Mermaid diagram. The init directive must come before the
   # `pie` keyword so the theme variables apply.
