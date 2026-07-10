@@ -111,8 +111,6 @@ if ($githubUserID.length -gt 0) {
 }
 if ($githubDeployKey.length -gt 0) {
   Write-Output "  - GitHub Deploy Key: Provided"
-} else {
-  Write-Output "  - GitHub Deploy Key: Not provided"
 }
 if ($SubscriptionIds) {
   Write-Output "  - SubscriptionIds: $SubscriptionIds"
@@ -144,7 +142,6 @@ if (-not (Test-Path -Path $OutputPath -PathType 'Container')) {
 } else {
   Write-Verbose "The output path '$OutputPath' already exists." -Verbose
 }
-
 
 #clone the git repository if provided
 $gitRepoRootPath = Join-Path -Path $OutputPath -ChildPath 'repo'

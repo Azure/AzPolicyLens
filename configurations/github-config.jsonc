@@ -22,7 +22,8 @@
           "subscriptionIds": [
             "dc2d72b7-a48d-45e8-91cc-81193ecc659b",
             "f793e6e7-9219-4d57-8582-89bb7be49bba"
-          ]
+          ],
+          "deployKeySecretName": "GITHUBDEPLOYKEY_DEV_APP1"
         },
         "platform": {
           "title": "PLATFORM DEV POLICY",
