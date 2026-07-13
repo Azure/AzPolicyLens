@@ -4,7 +4,7 @@
   RootModule        = 'AzPolicyLens.Wiki.psm1'
 
   # Version number of this module.
-  ModuleVersion     = '2.2.2'
+  ModuleVersion     = '2.3.0'
 
   # Supported PSEditions
   # CompatiblePSEditions = @()
@@ -44,7 +44,7 @@
 
   # Modules that must be imported into the global environment prior to importing this module
   RequiredModules   = @(
-    @{ ModuleName = 'AzPolicyTest'; ModuleVersion = '3.2.0'; GUID = '600b36cd-1af5-4add-bd9d-010112095911' }
+    @{ ModuleName = 'AzPolicyTest'; ModuleVersion = '3.3.0'; GUID = '600b36cd-1af5-4add-bd9d-010112095911' }
   )
 
   # Assemblies that must be loaded prior to importing this module
@@ -132,8 +132,8 @@
       # IconUri = ''
 
       # ReleaseNotes of this module
-      ReleaseNotes = '2.2.2 - July 2026
-Version 2.2.2 Release
+      ReleaseNotes = '2.3.0 - July 2026
+Version 2.3.0 Release
 '
 
       # Prerelease string of this module
