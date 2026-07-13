@@ -2675,7 +2675,7 @@ function buildPolicyDefinitionDetailedPageContent {
 
   if ($PageStyle -ieq 'detailed') {
     #Use AzPolicyTest to test definition syntax when the page style is detailed, exclude 2 tests for the DINE policies since many built-in policies violate these rules and they are not critical.
-    $syntaxTestResult = Test-AzPolicyDefinition -content $definitionJson -PesterVerbosity 'None' -ExcludeTags 'DINETemplateVariables', 'DINETemplateOutputs'
+    $syntaxTestResult = Test-AzPolicyDefinition -content $definitionJson -PesterVerbosity 'None' -ExcludeTags 'DINETemplateVariables', 'DINETemplateOutputs', 'Mandatory'
     $coloredSyntaxTestResult = FormatTestResult -result $syntaxTestResult.Result -WikiStyle $WikiStyle
     $definitionOverviewTableData.Add('TestResult', $coloredSyntaxTestResult)
   }
@@ -2894,7 +2894,7 @@ function buildPolicyInitiativeDetailedPageContent {
   }
   if ($PageStyle -ieq 'detailed') {
     #Use AzPolicyTest to test definition syntax when the page style is detailed.
-    $syntaxTestResult = Test-AzPolicySetDefinition -content $definitionJson -PesterVerbosity 'None'
+    $syntaxTestResult = Test-AzPolicySetDefinition -content $definitionJson -PesterVerbosity 'None' -ExcludeTags 'Mandatory'
     $coloredSyntaxTestResult = FormatTestResult -result $syntaxTestResult.Result -WikiStyle $WikiStyle
     $definitionOverviewTableData.Add('TestResult', $coloredSyntaxTestResult)
   }
