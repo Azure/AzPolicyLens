@@ -214,7 +214,7 @@ The following additional prerequisites are required for `GitHub` wikis:
 | GitHub Repository for the Auto Documentation Pipelines | A GitHub repository to host the policy documentation pipelines. |
 | GitHub Repositories for the Wikis | Separate GitHub repositories to host the generated wikis. |
 | A GitHub Account that has access to the wiki repositories | A GitHub account with write access to the wiki repositories to allow the pipelines to publish the generated wikis. |
-| Fine grained Personal Access Token (PAT) or SSH Key for GitHub | A GitHub PAT or SSH key to be used by the GitHub Action workflow to publish the wikis to wiki repositories. |
+| Fine grained Personal Access Token (PAT) or SSH Keys for GitHub | A GitHub PAT or SSH key (account level keys or repo scoped deploy keys) to be used by the GitHub Action workflow to publish the wikis to wiki repositories. |
 
 ## Repository File Structure
 

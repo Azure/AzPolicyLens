@@ -28,11 +28,17 @@ You need to create a Service Principal in Entra ID that has the **Reader** role 
 
 Follow the documentation for the GitHub [Azure Login Action](https://github.com/marketplace/actions/azure-login) to create the necessary Entra ID identities and grant them the `Reader` role to the Azure Management Groups.
 
-### 4. Personal Access Token (PAT) or SSH key for Pushing Wiki Content to GitHub Wiki Repositories
+### 4. Personal Access Token (PAT), SSH Key, or Deploy Key for Pushing Wiki Content to GitHub Wiki Repositories
 
-For the GitHub Action workflow to push the generated wiki content to the GitHub repositories, you need to create either a fine-grained Personal Access Token (PAT) in GitHub with the necessary permissions to access these repositories or add an SSH key to the GitHub account that you will use for the workflow.
+For the GitHub Action workflow to push the generated wiki content to the GitHub repositories, you need to create credentials for the workflow to write to the wiki repositories. The following 3 options are available:
 
-To help you understand the difference between the two options, refer to the [FAQ - Understanding the different authentication methods for GitHub Actions Workflow to push the generated wiki content to the GitHub repositories](../faq.md#understanding-the-different-authentication-methods-for-github-actions-workflow-to-push-the-generated-wiki-content-to-the-github-repositories).
+| Authentication Method | Scope | Description |
+| :-------------------- | :---- | :---------- |
+| Personal Access Token (PAT) | Account | Either a classic or a fine-grained Personal Access Token (PAT) in GitHub with the necessary permissions to push the generated wiki content to the GitHub repositories. |
+| SSH Key | Account | An SSH key pair that is associated with the GitHub account that has access to the GitHub repositories. The private key is stored as a GitHub Action secret in the repository where the workflow is hosted, and the public key is added to the GitHub account. |
+| Deploy Key | Repository | A deploy key is an SSH key that is associated with a specific GitHub repository. The private key is stored as a GitHub Action secret in the repository where the workflow is hosted, and the public key is added to the GitHub repository where the wiki content will be pushed. When working with multiple repositories, you must create separate deploy keys for each repository. |
+
+To help you understand the difference between the three options, refer to the [FAQ - Understanding the different authentication methods for GitHub Actions Workflow to push the generated wiki content to the GitHub repositories](../faq.md#understanding-the-different-authentication-methods-for-github-actions-workflow-to-push-the-generated-wiki-content-to-the-github-repositories).
 
 #### 4.1 Option 1: Create a Personal Access Token (PAT) in GitHub
 
@@ -61,9 +67,20 @@ After the PAT is generated, you will see the following permissions summary for t
 
 #### 4.2 Option 2: Create an SSH Key for the GitHub Account
 
-1. To create an SSH key for the GitHub account, follow the steps in the GitHub documentation [Generating a new SSH key and adding it to the ssh-agent](https://docs.github.com/en/authentication/connecting-to-github-with-ssh/generating-a-new-ssh-key-and-adding-it-to-the-ssh-agent).
+> :memo: **NOTE:** You only need to generate the SSH key pair, do not use passphrase, and no need to add the key to SSH agent.
+
+1. To create an SSH key for the GitHub account, follow the steps in the GitHub documentation [Generating a new SSH key](https://docs.github.com/en/authentication/connecting-to-github-with-ssh/generating-a-new-ssh-key-and-adding-it-to-the-ssh-agent#generating-a-new-ssh-key).
 
 2. Add the public key to the GitHub account by following the steps in the GitHub documentation [Adding a new SSH key to your GitHub account](https://docs.github.com/en/authentication/connecting-to-github-with-ssh/adding-a-new-ssh-key-to-your-github-account).
+
+
+#### 4.3 Option 3: Create a Deploy Key for Each Wiki Repository
+
+> :memo: **NOTE:** You only need to generate the SSH key pair, do not use passphrase, and no need to add the key to SSH agent.
+
+1. To create an SSH key pair for each wiki repository, follow the steps in the GitHub documentation [Generating a new SSH key](https://docs.github.com/en/authentication/connecting-to-github-with-ssh/generating-a-new-ssh-key-and-adding-it-to-the-ssh-agent#generating-a-new-ssh-key).
+
+2. Add the public key to the GitHub repository by following the steps in the GitHub documentation [Set up deploy keys](https://docs.github.com/en/authentication/connecting-to-github-with-ssh/managing-deploy-keys#set-up-deploy-keys). Make sure to enable the **Allow write access** option for the deploy key so that the workflow can push the generated wiki content to the repository.
 
 ### 5. Software requirements for the GitHub action runner
 
@@ -84,19 +101,19 @@ For each git repository that you have created to host the wiki content, you need
 
 For each Wiki repository you have created, enable the GitHub wiki feature under the `General` settings of the repository. Make sure `Restrict editing to collaborators only` option is also ticked.
 
-![14](../images/github-wiki-setup-01.jpg)
+![4](../images/github-wiki-setup-01.jpg)
 
 Then go to the `Wiki` tab of the repository and click on `Create the first page` to initialize the wiki repository.
 
-![15](../images/github-wiki-setup-02.jpg)
+![5](../images/github-wiki-setup-02.jpg)
 
 Create a dummy page and publish it to initialize the wiki repository. This page will be deleted later when the workflow runs and pushes the generated wiki content to the repository.
 
-![16](../images/github-wiki-setup-03.jpg)
+![6](../images/github-wiki-setup-03.jpg)
 
 :memo: You will need to capture the Wiki repository URL in the `github-config.jsonc` file in the next step.
 
-![17](../images/github-wiki-setup-04.jpg)
+![7](../images/github-wiki-setup-04.jpg)
 
 ### 2. Configure the Pipeline to Publish to the Wiki Repository
 
@@ -144,8 +161,12 @@ For each wiki instance, depending on the authentication method you chose in prer
 - If using a Personal Access Token (PAT):
   - GitHub user ID
   - GitHub fine-grained PAT with access to the wiki repository that you have created earlier.
-- If using an SSH key:
+- If using account-level SSH keys:
   - The SSH private key with access to the wiki repository that you have created earlier.
+- If using deploy keys:
+  - The SSH private keys with access to each wiki repository that you have created earlier.
+
+>:memo: **NOTE:** You can name above mentioned secrets as you like, but make sure to reference the correct secret names in the workflow file for each wiki instance.
 
 For each environment (Azure Management Group) that you want to generate wiki for, you will also need to store the following secrets:
 
@@ -157,71 +178,88 @@ Please refer to the GitHub documentation for `Azure Login Action` for how to cre
 
 ### 8. Configure the Workflow Variables
 
-**1. Update the `settings.yml` file**
+#### 8.1. Update the `settings.yml` file
+
 The common Azure DevOps pipeline and GitHub Action workflow variables are defined in the [settings.yml](../../settings.yml) file in the root directory of this repository. This file contains common variables that are used in both Azure DevOps Pipeline and GitHub Actions workflow.
 
 The variables are explained in detail in the [Managing Pipeline and Workflow Variable File](./pipeline-variable-file.md) guide.
 
 Please review and configure the variables in the `settings.yml` file as needed before running the workflow.
 
-**2. Update the Azure credential secrets for each discovery job in the workflow file**
+#### 8.2. Update the Azure credential secrets for each discovery job in the workflow file
 
 For each discovery job (`job_discovery_<environment>`), Set the `AZURE_CREDENTIALS` environment variable to reference the corresponding GitHub Action secret that contains the credential json string for the Azure Login Action. i.e.
 
-![4](../images/github-action-01.jpg)
+![8](../images/github-action-01.jpg)
 
 In this example, the secret name `MG_DEV_READER` references the Action secret created earlier.
 
-![5](../images/github-action-02.jpg)
+![9](../images/github-action-02.jpg)
 
-**3. Update the GitHub User ID and PAT / SSH secrets for each wiki generation job in the workflow file**
+#### 8.3. Update the GitHub User ID and PAT / SSH / Deploy Key secrets for each wiki generation job in the workflow file
 
-For each wiki generation job (`job_generate_wiki_<environment>`), if you are using PAT to authenticate to GitHub: set both `GithubUserId` and `GithubToken` environment variables to reference the corresponding GitHub Action secrets that contain the GitHub user ID and PAT for pushing the generated wiki content to the GitHub wiki repository. i.e.
+**Option 1: Using Personal Access Token (PAT)**
 
-![6](../images/github-action-03.jpg)
+For each wiki generation job (`job_generate_wiki_<environment>`), if you are using PAT to authenticate to GitHub (described in [Pre-requisite section 4.1](#41-option-1-create-a-personal-access-token-pat-in-github)), set both `GithubUserId` and `GithubToken` environment variables to reference the corresponding GitHub Action secrets that contain the GitHub user ID and PAT for pushing the generated wiki content to the GitHub wiki repository. i.e.
+
+![10](../images/github-action-03.jpg)
 
 In this example, the secret names `GithubUserId` and `GithubToken` reference the Action secrets created earlier.
 
-![7](../images/github-action-04.jpg)
+![11](../images/github-action-04.jpg)
 
-If you are using SSH key to authenticate to GitHub, set the `GithubSshPrivateKey` environment variable to reference the corresponding GitHub Action secret that contains the SSH private key for pushing the generated wiki content to the GitHub wiki repository. i.e.
+**Option 2: Using Account Level SSH Keys**
 
-![8](../images/github-action-11.jpg)
+If you are using account level SSH keys to authenticate to GitHub (described in [Pre-requisite section 4.2](#42-option-2-create-an-ssh-key-for-the-github-account)), set the `GithubSshPrivateKey` environment variable to reference the corresponding GitHub Action secret that contains the SSH private key for pushing the generated wiki content to the GitHub wiki repository. i.e.
+
+![12](../images/github-action-11.jpg)
 
 In this example, the secret name `GithubSshPrivateKey` references the Action secret created earlier.
 
-![9](../images/github-action-12.jpg)
+![13](../images/github-action-12.jpg)
 
-**4. Make sure the `buildArtifactName` input for each discovery job matches the `buildArtifactName` input in the corresponding wiki generation job**
+**Option 3: Using Repository Level Deploy Keys**
+
+If you are using repository level deploy keys to authenticate to GitHub (described in [Pre-requisite section 4.3](#43-option-3-create-a-deploy-key-for-each-wiki-repository)), define `deployKeySecretName` in the [github-config.jsonc](../../configurations/github-config.jsonc) file for each wiki instance to reference the corresponding GitHub Action secret that contains the SSH private key that is added to the GitHub wiki repository. i.e.
+
+![14](../images/github-action-13.jpg)
+
+In this example, the secret names `GITHUBDEPLOYKEY_DEV_ESLZ` and `GITHUBDEPLOYKEY_DEV_APP1` reference the Action secret created earlier.
+
+![15](../images/github-action-14.jpg)
+
+:memo: **NOTE:** If you would like to use a mixture of authentication methods for different wiki instances, refer to the [FAQ - Understanding the different authentication methods for GitHub Actions Workflow to push the generated wiki content to the GitHub repositories](../faq.md#understanding-the-different-authentication-methods-for-github-actions-workflow-to-push-the-generated-wiki-content-to-the-github-repositories) for details.
+
+#### 8.4. Make sure the `buildArtifactName` input for each discovery job matches the `buildArtifactName` input in the corresponding wiki generation job
 
 The discovery job generates a build artifact that contains the discovered environment data, and the wiki generation job consumes this artifact to generate the wiki content. Therefore, the `buildArtifactName` input in the discovery job must match the `buildArtifactName` input in the corresponding wiki generation job to ensure that the correct artifact is consumed.
 
 For example, the `job_discovery_dev` job has the `buildArtifactName` input set to `policy_doc_dev`:
 
-![8](../images/github-action-05.jpg)
+![16](../images/github-action-05.jpg)
 
 In the Wiki generation job, `job_generate_wiki_dev`, the `buildArtifactName` variable is also set to `policy_doc_dev`:
 
-![9](../images/github-action-06.jpg)
+![17](../images/github-action-06.jpg)
 
 
-**5. Make sure the `environment` input for each wiki discovery job and parse configuration job matches the corresponding environment name in the `github-config.jsonc` file for the wiki instance you want to generate.**
+#### 8.5. Make sure the `environment` input for each wiki discovery job and parse configuration job matches the corresponding environment name in the `github-config.jsonc` file for the wiki instance you want to generate.
 
 For example, the `dev` environment is defined in the following 3 locations:
 
 - In the [github-config.jsonc](../../configurations/github-config.jsonc) file
 
-![10](../images/github-action-07.jpg)
+![18](../images/github-action-07.jpg)
 
 - In the `job_discovery_dev` job as the value for the `environment` input
 
-![11](../images/github-action-08.jpg)
+![19](../images/github-action-08.jpg)
 
 - In the `job_parse_config_dev` job as the value for the `environment` input
 
-![12](../images/github-action-09.jpg)
+![20](../images/github-action-09.jpg)
 
-  :memo: By default the pipeline is configured to use the GitHub hosted runner image `ubuntu-latest`. If you want to use self-hosted runners, job in the workflow YAML file, replace `runs-on: ubuntu-latest` with self hosted runners. Details about self-hosted runner can be found in the GitHub documentation [Using self-hosted runners in a workflow](https://docs.github.com/en/actions/how-tos/manage-runners/self-hosted-runners/use-in-a-workflow).
+  :memo: By default the pipeline is configured to use the GitHub hosted runner image `ubuntu-latest`. If you want to use self-hosted runners, replace `runs-on: ubuntu-latest` with your self-hosted runners for each job in the workflow YAML file. Details about self-hosted runners can be found in the GitHub documentation [Using self-hosted runners in a workflow](https://docs.github.com/en/actions/how-tos/manage-runners/self-hosted-runners/use-in-a-workflow).
 
 ### 9. Commit and push the changes to the GitHub repository
 
@@ -231,7 +269,7 @@ After all the necessary configurations are done, commit and push the changes to 
 
 You can manually trigger a run of the workflow to verify that the workflow can successfully generate and publish the wiki to the GitHub Wiki repository.
 
-![13](../images/github-action-10.jpg)
+![21](../images/github-action-10.jpg)
 
 :memo: Note: the wiki instances generated in the `prod` stage of the workflow can only be generated when the workflow is kicked off from the default branch (i.e. main branch). If you are testing the workflow in a feature branch, the wiki will only be generated in the `dev` stage
 

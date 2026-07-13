@@ -310,19 +310,39 @@ Looks like the font color is not rendered when you use the back button on the br
 
 <summary>Click to expand the answer</summary>
 
-The GitHub Actions Workflow can use either a Personal Access Token (PAT) or an SSH key to authenticate and push the generated wiki content to the GitHub repositories.
+The GitHub Actions Workflow can use Personal Access Tokens (PAT), account-level SSH keys, or repository-level deploy keys to authenticate and push the generated wiki content to the GitHub repositories.
 
 - **Personal Access Token (PAT)**: A PAT is a token that you generate in your GitHub account with specific permissions. It is used to authenticate the workflow and grant it access to the repositories where the wiki content will be pushed. The PAT should have `Read and write` permissions for `Commit statuses` and `Contents`.
 
-- **SSH Key**: An SSH key can be added to the GitHub account used by the workflow. The workflow can then use the SSH key to authenticate and push the generated wiki content to the repositories.
+- **Account Level SSH Key**: An SSH key can be added to the GitHub account used by the workflow. The workflow can then use the SSH key to authenticate and push the generated wiki content to the repositories.
 
-The choice between using a PAT or an SSH key depends on your organization's security policies and preferences. Some organizations may have restricted access or maximum lifespan for PATs, while others may prefer using SSH keys for authentication.
+- **Repository Level Deploy Key**: A deploy key is an SSH key that is associated with a specific repository. The workflow can use the deploy key to authenticate and push the generated wiki content to the specific repository.
 
-Although both methods provide secure authentication for the GitHub Actions Workflow to push the generated wiki content to the GitHub repositories, a fine-grained Personal Access Token (PAT) is generally recommended because it allows for more granular control over the permissions granted to the workflow as well as limiting accesses to specific repositories. This can help reduce the risk in case the PAT is compromised.
+The choice between these methods depends on your organization's security policies and preferences. Some organizations may have restricted access or maximum lifespan for PATs, while others may have restricted use of SSH keys for authentication.
 
-On the other hand, SSH keys are associated to a specific GitHub user and you cannot configure a subset of repositories and permissions for the SSH key. If the SSH key is compromised, it can be used to access all repositories that the user has access to.
+The table below summarizes the differences between the three authentication methods:
 
-:memo:**Note:** GitHub app provides another authentication method in GitHub, but it does not currently support authenticating to wiki repositories. Therefore, it is not a suitable option for the GitHub Actions Workflow at this stage.
+| Authentication Method | Description | Setup Complexity | Pros | Cons |
+| :-------------------- | :---------- |:---------------: | :---- | :----|
+| Personal Access Token (PAT) | A token generated in your GitHub account with specific permissions. | Low | - Granular control over permissions<br>- Can be easily revoked or regenerated<br>- Can be used across multiple repositories | - Requires management of token expiration and rotation<br>- If compromised, can be used to access all repositories the token has access to |
+| Account Level SSH Key | An SSH key added to the GitHub account used by the workflow. | Medium | - Can be used across multiple repositories<br>- Can be easily revoked or regenerated | - Cannot scope permissions to a subset of repositories <br>- Inherits all permissions of the user<br>- If compromised, can be used to access all repositories the user has access to |
+| Repository Level Deploy Key | An SSH key associated with a specific repository. | High | - Can be restricted to a specific repository<br>- Can be easily revoked or regenerated | - Cannot be used across multiple repositories<br>- If compromised, can be used to access the specific repository it is associated with |
+
+Although all three methods provide secure authentication for the GitHub Actions Workflow to push the generated wiki content to the GitHub repositories, a fine-grained Personal Access Token (PAT) is generally recommended because it allows for more granular control over the permissions granted to the workflow as well as limiting accesses to specific repositories. This can help reduce the risk in case the PAT is compromised.
+
+On the other hand, account level SSH keys are associated to a specific GitHub user and you cannot configure a subset of repositories and permissions for the SSH key. If the SSH key is compromised, it can be used to access all repositories that the user has access to.
+
+Repository level deploy keys addresses the security concern of account level SSH keys by restricting the access to a specific repository. However, it requires more setup and management overhead as you need to create and manage separate deploy keys for each repository.
+
+:memo: **Note:** GitHub app provides another authentication method in GitHub, but it does not currently support authenticating to wiki repositories. Therefore, it is not a suitable option for the GitHub Actions Workflow at this stage.
+
+You can configure a mixture of the above authentication methods for different wiki repositories based on your preferences. When all three methods are configured, the order of precedence for authentication is as follows:
+
+1. Repository Level Deploy Key
+2. Personal Access Token (PAT)
+3. Account Level SSH Key
+
+Account Level SSH key is the least preferred method because it is the least secured method among the three. It is recommended to use either Personal Access Token (PAT) or Repository Level Deploy Key for better security.
 
 </details>
 
