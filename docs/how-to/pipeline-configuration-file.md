@@ -144,7 +144,8 @@ Below is the sample content of this configuration file:
           "gitBranch": "master",
           "pageStyle": "detailed",
           "gitUserName": "AzPolicyLens Pipeline",
-          "gitUserEmail": "policyDoc@contoso.com"
+          "gitUserEmail": "policyDoc@contoso.com",
+          "deployKeySecretName": "GITHUBDEPLOYKEY_DEV_ESLZ"
         },
         "app1": {
           "title": "APP 1 DEV POLICY",
@@ -155,7 +156,8 @@ Below is the sample content of this configuration file:
           "gitUserEmail": "policyDoc@contoso.com",
           "subscriptionIds": [
             "46aa6fb9-01f8-4acc-b67c-ee355f6b6fa0"
-          ]
+          ],
+          "deployKeySecretName": "GITHUBDEPLOYKEY_DEV_APP1"
         },
         "platform": {
           "title": "PLATFORM DEV POLICY",
@@ -164,7 +166,8 @@ Below is the sample content of this configuration file:
           "pageStyle": "detailed",
           "gitUserName": "AzPolicyLens Pipeline",
           "gitUserEmail": "policyDoc@contoso.com",
-          "childManagementGroupId": "CONTOSO-DEV-Platform"
+          "childManagementGroupId": "CONTOSO-DEV-Platform",
+          "deployKeySecretName": "GITHUBDEPLOYKEY_DEV_PLATFORM"
         }
       }
     },
@@ -214,7 +217,8 @@ Under each environment, each property under `wiki` represents a wiki instance. f
 - `gitRepository`: the git repository URL of the GitHub repository that hosts the wiki. Both `https` (e.g. `https://github.com/owner/repo.wiki.git`) and `ssh` (e.g. `git@github.com:owner/repo.wiki.git`) URL formats are supported. The workflow automatically derives both the HTTPS and SSH URLs from the value you provide, so it will use the correct URL based on the authentication method (PAT or SSH key) configured for the wiki generation job.
 - `gitBranch`: the git branch that you want to publish the generated wiki to. Note: for GitHub wiki, the branch is typically `master`.
 - `pageStyle`: the page style for the generated wiki, which can be either `detailed` or `basic`. Generally speaking, the `detailed` page style is designed for the cloud platform team, cloud architect and security operations teams on the enterprise level. Whereas the 'basic' page style is normally limited to a subset of subscriptions and is designed for application teams.
-- `gitUserName`: the git username to use when committing changes to the git repository. Note: This is not the username for authentication, but just the name that will be displayed in the commit history for the commits made by the workflow. The GitHub Actions workflow uses either a pre-defined fine grained personal access token (PAT) or an SSH key for pushing changes to the git repository. details can be found in the [GitHub Wiki Setup Guide](github-wiki-setup.md).
+- `gitUserName`: the git username to use when committing changes to the git repository. Note: This is not the username for authentication, but just the name that will be displayed in the commit history for the commits made by the workflow. The GitHub Actions workflow uses a pre-defined fine grained personal access token (PAT), an account level SSH key, or a repository level deploy key for pushing changes to the git repository. details can be found in the [GitHub Wiki Setup Guide](github-wiki-setup.md).
 - `gitUserEmail`: the git email address to use when committing changes to the git repository.
 - `subscriptionIds`: optional. An array of subscription IDs that the wiki is associated with. This is typically used for 'basic' page style wikis. This setting cannot be used together with `childManagementGroupId`.
 - `childManagementGroupId`: optional. The child management group ID that the wiki is associated with. This is used when you want to generate wiki content for policies that are assigned at the management group level and you want to scope down the wiki content to only include the policies that are assigned at a specific child management group. This is can be used in both 'detailed' and 'basic' page style wikis. This setting cannot be used together with `subscriptionIds`.
+- `deployKeySecretName`: optional. The name of the GitHub Action secret that holds the repository level deploy key (SSH private key) for pushing the generated wiki content to the wiki repository. This is only used for GitHub wikis when authenticating with repository level deploy keys. Refer to the [GitHub Wiki Setup Guide](github-wiki-setup.md) for details.

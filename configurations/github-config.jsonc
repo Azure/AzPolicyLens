@@ -9,7 +9,8 @@
           "gitBranch": "master",
           "pageStyle": "detailed",
           "gitUserName": "AzPolicyLens Pipeline",
-          "gitUserEmail": "policyDoc@contoso.com"
+          "gitUserEmail": "policyDoc@contoso.com",
+          "deployKeySecretName": "GITHUBDEPLOYKEY_DEV_ESLZ"
         },
         "app1": {
           "title": "APP 1 DEV POLICY",
@@ -21,7 +22,8 @@
           "subscriptionIds": [
             "dc2d72b7-a48d-45e8-91cc-81193ecc659b",
             "f793e6e7-9219-4d57-8582-89bb7be49bba"
-          ]
+          ],
+          "deployKeySecretName": "GITHUBDEPLOYKEY_DEV_APP1"
         },
         "platform": {
           "title": "PLATFORM DEV POLICY",
@@ -30,7 +32,8 @@
           "pageStyle": "detailed",
           "gitUserName": "AzPolicyLens Pipeline",
           "gitUserEmail": "policyDoc@contoso.com",
-          "childManagementGroupId": "CONTOSO-DEV-Platform"
+          "childManagementGroupId": "CONTOSO-DEV-Platform",
+          "deployKeySecretName": "GITHUBDEPLOYKEY_DEV_PLATFORM"
         }
       }
     },

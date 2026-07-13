@@ -124,7 +124,11 @@ foreach ($key in $environmentConfig.wiki.keys) {
   } else {
     $wikiConfig.subscriptionIds = ''
   }
-
+  if ($environmentConfig.wiki[$key].ContainsKey('deployKeySecretName')) {
+    $wikiConfig.deployKeySecretName = $environmentConfig.wiki[$key].deployKeySecretName
+  } else {
+    $wikiConfig.deployKeySecretName = ''
+  }
   $wikis += $wikiConfig
 }
 
