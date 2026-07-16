@@ -47,6 +47,9 @@ inputs:
   buildArtifactName:
     required: true
     description: 'Pipeline build artifact name to get the environment discovery data from'
+  azPolicyLensModuleVersion:
+    description: 'The version of the AzPolicyLens.Discovery module to use. Defaults to latest if not specified.'
+    required: false
   aesEncryptionKey:
     required: true
     description: 'AES Encryption Key'
@@ -75,14 +78,19 @@ runs:
 
     - name: 'Install PowerShell Modules'
       shell: pwsh
+      env:
+        AZPOLICYLENS_MODULE_VERSION: ${{ inputs.azPolicyLensModuleVersion }}
       run: |
         if (-not (Get-Module -ListAvailable -Name powershell-yaml)) {
           Write-Output "Installing powershell-yaml module..."
           Install-Module -Name powershell-yaml -Force -Scope CurrentUser
         }
-        if (-not (Get-Module -ListAvailable -Name AzPolicyTest)) {
-          Write-Output "Installing AzPolicyTest module..."
-          Install-Module -Name AzPolicyTest -RequiredVersion 3.3.0 -Force -Scope CurrentUser
+        if ($env:AZPOLICYLENS_MODULE_VERSION) {
+          Write-Output "Installing AzPolicyLens.Wiki module version $env:AZPOLICYLENS_MODULE_VERSION..."
+          Install-Module -Name AzPolicyLens.Wiki -RequiredVersion $env:AZPOLICYLENS_MODULE_VERSION -Force -Scope CurrentUser
+        } else {
+          Write-Output "Installing latest AzPolicyLens.Wiki module..."
+          Install-Module -Name AzPolicyLens.Wiki -Force -Scope CurrentUser
         }
     - name: Import Variables
       shell: pwsh # PowerShell Core

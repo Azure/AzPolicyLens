@@ -1,4 +1,4 @@
-using module ../ps_modules/AzPolicyLens.Discovery/AzPolicyLens.Discovery.psd1
+#requires -Module AzPolicyLens.Discovery
 <#
 ====================================================================================
 AUTHOR: Tao Yang
@@ -22,6 +22,8 @@ param (
   [ValidateNotNullOrEmpty()]
   [string]$OutputFilePath
 )
+
+Import-Module AzPolicyLens.Discovery -ErrorAction Stop
 
 #functions
 

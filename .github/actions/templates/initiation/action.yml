@@ -8,6 +8,22 @@ inputs:
 runs:
   using: 'composite'
   steps:
+    - name: 'Install powerShell-yaml PowerShell Module'
+      shell: pwsh
+      env:
+        AZPOLICYLENS_MODULE_VERSION: ${{ inputs.azPolicyLensModuleVersion }}
+      run: |
+        if (-not (Get-Module -ListAvailable -Name powershell-yaml)) {
+          Write-Output "Installing powershell-yaml module..."
+          Install-Module -Name powershell-yaml -Force -Scope CurrentUser
+        }
+    - name: Import Variables
+      id: import-variables
+      shell: pwsh # PowerShell Core
+      env:
+        variablesPath: '${{ inputs.variablesPath }}'
+      run: |
+        ./scripts/github-set-variables.ps1 -configFilePath ${{ env.variablesPath }}
     - name: List Environment Variables
       shell: pwsh # PowerShell Core
       run: |
@@ -23,3 +39,8 @@ runs:
         git config --list
         Write-Output "----------------------------------------"
         Write-Output '::endgroup::'
+
+outputs:
+  azPolicyLensModuleVersion:
+    description: 'AzPolicyLens.Discovery module version'
+    value: ${{ steps.import-variables.outputs.AzPolicyLensModuleVersion }}

@@ -4,7 +4,7 @@
   RootModule        = 'AzPolicyLens.Wiki.psm1'
 
   # Version number of this module.
-  ModuleVersion     = '2.3.0'
+  ModuleVersion     = '2.3.2'
 
   # Supported PSEditions
   # CompatiblePSEditions = @()
@@ -44,7 +44,7 @@
 
   # Modules that must be imported into the global environment prior to importing this module
   RequiredModules   = @(
-    @{ ModuleName = 'AzPolicyTest'; ModuleVersion = '3.3.0'; GUID = '600b36cd-1af5-4add-bd9d-010112095911' }
+    @{ ModuleName = 'AzPolicyTest'; RequiredVersion = '3.3.0'; GUID = '600b36cd-1af5-4add-bd9d-010112095911' }
   )
 
   # Assemblies that must be loaded prior to importing this module
@@ -89,16 +89,7 @@
   # DscResourcesToExport = @()
 
   # List of all modules packaged with this module
-  ModuleList        = @(
-    'AzPolicyLens.Wiki.Azure.Helper.psm1',
-    'AzPolicyLens.Wiki.Encryption.Helper.psm1',
-    'AzPolicyLens.Wiki.Generic.Helper.psm1',
-    'AzPolicyLens.Wiki.Markdown.Helper.psm1',
-    'AzPolicyLens.Wiki.Pages.Helper.psm1',
-    'AzPolicyLens.Wiki.Platform.Helper.psm1',
-    'AzPolicyLens.Wiki.Utility.Helper.psm1',
-    'AzPolicyLens.Wiki.psm1'
-  )
+  ModuleList        = @()
 
   # List of all files packaged with this module
   FileList          = @(
@@ -120,20 +111,20 @@
     PSData = @{
 
       # Tags applied to this module. These help with module discovery in online galleries.
-      Tags         = @('Azure', 'AzurePolicy', 'Azure DevOps', 'GitHub')
+      Tags         = @('Azure', 'AzurePolicy', 'AzureDevOps', 'GitHub')
 
       # A URL to the license for this module.
-      # LicenseUri = ''
+      LicenseUri   = 'https://github.com/Azure/AzPolicyLens/blob/main/LICENSE'
 
       # A URL to the main website for this project.
-      # ProjectUri = ''
+      ProjectUri   = 'https://aka.ms/AzPolicyLens'
 
       # A URL to an icon representing this module.
       # IconUri = ''
 
       # ReleaseNotes of this module
-      ReleaseNotes = '2.3.0 - July 2026
-Version 2.3.0 Release
+      ReleaseNotes = '2.3.2 - July 2026
+Version 2.3.2 Release
 '
 
       # Prerelease string of this module

@@ -11,7 +11,7 @@ This document describes the file and folder structure of the `policy.documentati
 | [.vscode](#vscode) | Visual Studio Code workspace settings and recommended extensions for working with the repository. |
 | [configurations](#configurations) |  Configuration files used by the pipelines. |
 | docs | Documentation |
-| [ps_modules](#ps_modules) | PowerShell modules used by the pipelines. |
+| [ps_modules](#ps_modules) | Source of the AzPolicyLens PowerShell modules. These modules are published to the PowerShell Gallery and installed from there by the pipelines. |
 | [scripts](#scripts) | PowerShell scripts used by the pipelines. |
 | [security-controls](#security-controls) | Sample custom security controls that are defined by the organization and used by the custom Azure Policy. They are included in the Policy Wiki documentation. |
 | [.gitignore](./../.gitignore) | Specifies files and folders to be ignored by Git. |
@@ -50,6 +50,8 @@ This document describes the file and folder structure of the `policy.documentati
 - [github-config.jsonc](../configurations/github-config.jsonc): The configuration file for the GitHub Actions Policy Documentation workflow.
 
 ### ps_modules
+
+These are the source of the AzPolicyLens PowerShell modules. The modules are published to the [PowerShell Gallery](https://www.powershellgallery.com/) and the pipelines install them from PowerShell Gallery at runtime rather than using this folder directly.
 
 - [AzPolicyLens](../ps_modules/AzPolicyLens): The AzPolicyLens module provides cmdlets to generate Azure Policy documentation wikis.
 - [AzPolicyLens.Discovery](../ps_modules/AzPolicyLens.Discovery): The child module for AzPolicyLens. This module provides cmdlets to perform environment discovery for Azure Policy documentation wiki.

@@ -77,6 +77,20 @@ stages:
       steps:
         - checkout: self
           fetchDepth: 0
+        - task: PowerShell@2
+          displayName: "Install PowerShell modules"
+          inputs:
+            targetType: "inline"
+            pwsh: true
+            script: |
+              if ('$(AzPolicyLensModuleVersion)'.length -gt 0) {
+                Write-Output "Installing AzPolicyLens.Discovery module version $(AzPolicyLensModuleVersion)..."
+                Install-Module -Name AzPolicyLens.Discovery -RequiredVersion '$(AzPolicyLensModuleVersion)' -Force -Scope CurrentUser
+              }
+              else {
+                Write-Output "Installing latest AzPolicyLens.Discovery module..."
+                Install-Module -Name AzPolicyLens.Discovery -Force -Scope CurrentUser
+              }
         - task: AzurePowerShell@5
           displayName: "Discover Environment Data"
           env:

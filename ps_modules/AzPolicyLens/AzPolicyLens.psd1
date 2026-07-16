@@ -1,7 +1,7 @@
 @{
 
   # Script module or binary module file associated with this manifest.
-  RootModule        = 'AzPolicyLens.Discovery.psm1'
+  RootModule        = 'AzPolicyLens.psm1'
 
   # Version number of this module.
   ModuleVersion     = '2.3.2'
@@ -10,7 +10,7 @@
   # CompatiblePSEditions = @()
 
   # ID used to uniquely identify this module
-  GUID              = '5f02c83b-9899-4b93-bdb8-2813835f4b1d'
+  GUID              = 'bb8b84f6-f9fb-4568-a6c7-f51fa2527a17'
 
   # Author of this module
   Author            = 'Microsoft Corporation'
@@ -22,7 +22,7 @@
   Copyright         = '(c) Microsoft Corporation. All rights reserved.'
 
   # Description of the functionality provided by this module
-  Description       = 'Generate Azure Policy documentation in Markdown format. This module offers the discovery component for the AzPolicyLens module.'
+  Description       = 'Generate Azure Policy documentation in Markdown format, compatible with Azure DevOps or GitHub wiki formats.'
 
   # Minimum version of the PowerShell engine required by this module
   PowerShellVersion = '7.0.0'
@@ -43,7 +43,11 @@
   # ProcessorArchitecture = ''
 
   # Modules that must be imported into the global environment prior to importing this module
-  RequiredModules   = @()
+  RequiredModules   = @(
+    @{ ModuleName = 'AzPolicyTest'; ModuleVersion = '3.3.0'; GUID = '600b36cd-1af5-4add-bd9d-010112095911' },
+    @{ModuleName = 'AzPolicyLens.Discovery'; RequiredVersion = '2.3.2'; Guid = "5f02c83b-9899-4b93-bdb8-2813835f4b1d" },
+    @{ModuleName = 'AzPolicyLens.Wiki'; RequiredVersion = '2.3.2'; Guid = "d8e25613-aa1b-46db-b893-d1aae3064b9a" }
+  )
 
   # Assemblies that must be loaded prior to importing this module
   # RequiredAssemblies = @()
@@ -58,19 +62,16 @@
   # FormatsToProcess = @()
 
   # Modules to import as nested modules of the module specified in RootModule/ModuleToProcess
-  NestedModules     = @('AzPolicyLens.Discovery.helper.psm1')
+  # NestedModules     = @()
 
   # Functions to export from this module, for best performance, do not use wildcards and do not delete the entry, use an empty array if there are no functions to export.
-  FunctionsToExport = @(
-    'New-AzplEncryptionKey'
-    'Invoke-AzplEnvironmentDiscovery'
-  )
+  FunctionsToExport = @()
 
   # Cmdlets to export from this module, for best performance, do not use wildcards and do not delete the entry, use an empty array if there are no cmdlets to export.
-  #CmdletsToExport   = @()
+  CmdletsToExport   = @()
 
   # Variables to export from this module
-  VariablesToExport = '*'
+  # VariablesToExport = @()
 
   # Aliases to export from this module, for best performance, do not use wildcards and do not delete the entry, use an empty array if there are no aliases to export.
   AliasesToExport   = @()
@@ -79,16 +80,10 @@
   # DscResourcesToExport = @()
 
   # List of all modules packaged with this module
-  ModuleList        = @()
+  ModuleList        = @( )
 
   # List of all files packaged with this module
-  FileList          = @(
-    'AzPolicyLens.Discovery.helper.psm1',
-    'AzPolicyLens.Discovery.type.psm1',
-    'AzPolicyLens.Discovery.psm1',
-    'AzPolicyLens.Discovery.psd1',
-    'AzPolicyLens.Discovery-help.xml'
-  )
+  # FileList          = @()
 
   # Private data to pass to the module specified in RootModule/ModuleToProcess. This may also contain a PSData hashtable with additional module metadata used by PowerShell.
   PrivateData       = @{
@@ -119,7 +114,7 @@ Version 2.3.2 Release
       # RequireLicenseAcceptance = $false
 
       # External dependent modules of this module
-      #ExternalModuleDependencies = @()
+      # ExternalModuleDependencies = @()
 
     } # End of PSData hashtable
 

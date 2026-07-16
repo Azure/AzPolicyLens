@@ -46,4 +46,5 @@ foreach ($item in $config.variables) {
   # Set GitHub Action output variable
   Write-Output "Setting variable: '$name' with value: '$value'"
   Write-Output ('{0}={1}' -f $name, $value) | Out-File -FilePath $env:GITHUB_ENV -Encoding utf8 -Append
+  Write-Output ('{0}={1}' -f $name, $value) | Out-File -FilePath $env:GITHUB_OUTPUT -Encoding utf8 -Append
 }

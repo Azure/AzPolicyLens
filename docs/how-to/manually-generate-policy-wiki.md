@@ -8,13 +8,19 @@ This document provides instructions on how to manually generate a policy wiki wi
 
 You will need to generate the Azure oAuth token for the wiki generation process. You can use either the Azure CLI or the Az PowerShell module.
 
-### AzPolicyTest PowerShell Module
+### AzPolicyLens PowerShell Modules
 
-The AzPolicyTest PowerShell module is required for the wiki generation process. Please ensure you have version 3.2.0 or later installed. You can install it using the following command:
+The AzPolicyLens PowerShell modules are required for the wiki generation process. Please ensure you have version 3.2.0 or later installed. You can install them using the following command:
 
 ```powershell
-Install-Module -Name AzPolicyTest -RequiredVersion 3.1.1 -Force -Scope CurrentUser
+Install-Module -Name AzPolicyLens -Force -Scope CurrentUser
 ```
+
+This command will install the AzPolicyLens wrapper module, which will install the following required modules:
+
+- `AzPolicyLens.Discovery`
+- `AzPolicyLens.Wiki`
+- `AzPolicyTest`
 
 ### Git
 
@@ -99,7 +105,7 @@ You will need Git installed on your machine to clone the wiki repository.
       $discoveryFileDirectory = "<Directory path to save the environment discovery artifact>"
     ```
 
-1. Specify optional variables in PowerShell if required
+6. Specify optional variables in PowerShell if required
 
     * Optional: Specify the file base name for the environment discovery artifact. The final environment discovery artifact will be saved as a zip file with the name format of `<file base name>.zip` in the specified directory. if not specified, the default value is the name of the top level management group name.
 
@@ -140,7 +146,7 @@ You will need Git installed on your machine to clone the wiki repository.
       }
     ```
 
-2. **Import AzPolicyLens Modules**
+7. **Import AzPolicyLens Modules**
 
   ```powershell
   function Get-GitRoot {
@@ -151,11 +157,7 @@ You will need Git installed on your machine to clone the wiki repository.
   }
 
   $gitRoot = Get-GitRoot
-  $discoveryModulePath = Join-Path $gitRoot 'ps_modules/AzPolicyLens.Discovery'
-  $wikiModulePath = Join-Path $gitRoot 'ps_modules/AzPolicyLens.Wiki'
-
-  Import-module $discoveryModulePath
-  Import-module $wikiModulePath
+  Import-module AzPolicyLens
   ```
 
 8. **Invoke Environment Discovery**

@@ -14,3 +14,4 @@ These variables must be configured in the file before running the pipelines.
 | `policyDocExemptionExpiresOnWarningDays` | The number of days before policy exemption expiration to trigger a warning. | `30` |
 | `policyDocComplianceWarningPercentageThreshold` | The compliance percentage threshold below which a warning is displayed. | `80` |
 | `policyDocDiscoveryFileName` | The file name for the environment discovery artifact (ZIP file). | `environment-discovery.zip` |
+| `AzPolicyLensModuleVersion` | The version of the AzPolicyLens module to be used in the pipelines. The specific version will be installed from the PowerShell Gallery. If not specified, the latest version will be used. | `2.3.2` |
