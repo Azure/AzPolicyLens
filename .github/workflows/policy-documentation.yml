@@ -27,6 +27,7 @@ jobs:
         with:
           fetch-depth: 0
       - name: 'Initiation'
+        id: initiation
         uses: ./.github/actions/templates/initiation
         with:
           variablesPath: '${{ env.variablesPath }}'
