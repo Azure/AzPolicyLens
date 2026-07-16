@@ -6,22 +6,12 @@ Although the environment discovery data does not contain sensitive information, 
 
 ## How to Create an Encryption Key
 
-After cloned this repository,  navigate to the root directory of the repository in PowerShell.
-
-You can create an encryption key using the AzPolicyLens PowerShell module with the following command:
+Install the AzPolicyLens PowerShell module from the PowerShell Gallery, then create an encryption key using the following command:
 
 ```powershell
-  function Get-GitRoot {
-    $gitRootDir = Invoke-expression 'git rev-parse --show-toplevel 2>&1' -ErrorAction SilentlyContinue
-    if (Test-Path $gitRootDir) {
-      Convert-Path $gitRootDir
-    }
-  }
+  Install-Module -Name AzPolicyLens -Force -Scope CurrentUser
 
-  $gitRoot = Get-GitRoot
-  $discoveryModulePath = Join-Path $gitRoot 'ps_modules/AzPolicyLens.Discovery'
-
-  Import-module $discoveryModulePath
+  Import-Module AzPolicyLens.Discovery
 
   New-AzplEncryptionKey -OutputDir 'C:\Temp' -FileName 'MyEncryptionKey.json'
 ```
