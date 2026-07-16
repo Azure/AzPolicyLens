@@ -83,7 +83,7 @@ stages:
             targetType: "inline"
             pwsh: true
             script: |
-              if ('$(AzPolicyLensModuleVersion)') {
+              if ('$(AzPolicyLensModuleVersion)'.length -gt 0) {
                 Write-Output "Installing AzPolicyLens.Discovery module version $(AzPolicyLensModuleVersion)..."
                 Install-Module -Name AzPolicyLens.Discovery -RequiredVersion '$(AzPolicyLensModuleVersion)' -Force -Scope CurrentUser
               }
