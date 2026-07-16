@@ -3,7 +3,8 @@ description: 'Perform environment data discovery for the policy documentation wi
 
 inputs:
   preferredAzurePowerShellVersion:
-    description: 'Preferred version of the Azure PowerShell module to use. Defaults
+    description:
+      'Preferred version of the Azure PowerShell module to use. Defaults
       to latest if not specified.'
     required: false
   topLevelManagementGroupName:
@@ -15,7 +16,9 @@ inputs:
   environment:
     description: 'The environment name for the discovery.'
     required: true
-
+  azPolicyLensModuleVersion:
+    description: 'The version of the AzPolicyLens.Discovery module to use. Defaults to latest if not specified.'
+    required: false
 runs:
   using: 'composite'
   steps:
@@ -23,14 +26,22 @@ runs:
       uses: actions/checkout@v6
       with:
         fetch-depth: 0
-    - name: 'Install PowerShell-Yaml Module'
+    - name: 'Install PowerShell Modules'
       shell: pwsh
+      env:
+        AZPOLICYLENS_MODULE_VERSION: ${{ inputs.azPolicyLensModuleVersion }}
       run: |
         if (-not (Get-Module -ListAvailable -Name powershell-yaml)) {
           Write-Output "Installing powershell-yaml module..."
           Install-Module -Name powershell-yaml -Force -Scope CurrentUser
         }
-
+        if ($env:AZPOLICYLENS_MODULE_VERSION) {
+          Write-Output "Installing AzPolicyLens.Discovery module version $env:AZPOLICYLENS_MODULE_VERSION..."
+          Install-Module -Name AzPolicyLens.Discovery -RequiredVersion $env:AZPOLICYLENS_MODULE_VERSION -Force -Scope CurrentUser
+        } else {
+          Write-Output "Installing latest AzPolicyLens.Discovery module..."
+          Install-Module -Name AzPolicyLens.Discovery -Force -Scope CurrentUser
+        }
     - name: Import Variables
       shell: pwsh # PowerShell Core
       env:
@@ -46,7 +57,8 @@ runs:
     - name: 'Discover Environment Data'
       uses: azure/powershell@v3
       with:
-        inlineScript: ./scripts/environment-discovery.ps1 -TopLevelManagementGroupName
+        inlineScript:
+          ./scripts/environment-discovery.ps1 -TopLevelManagementGroupName
           '${{ inputs.topLevelManagementGroupName }}'
           -AdditionalBuiltInPolicyMetadataConfigFilePath '${{
           env.policyDocAdditionalBuiltInPolicyMetadataConfigFilePath }}'

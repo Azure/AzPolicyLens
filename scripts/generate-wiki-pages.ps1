@@ -1,4 +1,4 @@
-using module ../ps_modules/AzPolicyLens.Wiki/AzPolicyLens.Wiki.psd1
+#requires -module AzPolicyLens.Wiki
 <#
 =================================================================================================================
 AUTHOR: Tao Yang
@@ -66,6 +66,7 @@ param (
 )
 
 #region main
+Import-Module -Name AzPolicyLens.Wiki -Force -ErrorAction Stop
 if ($gitPlatform -eq 'ado') {
   Write-Verbose "Git platform is set to 'ado'." -Verbose
   $gitToken = $env:SYSTEM_ACCESSTOKEN

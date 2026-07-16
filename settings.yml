@@ -11,3 +11,5 @@ variables:
     value: 80
   - name: policyDocDiscoveryFileName
     value: "EnvironmentDiscovery.zip"
+  - name: AzPolicyLensModuleVersion
+    value: 2.3.2

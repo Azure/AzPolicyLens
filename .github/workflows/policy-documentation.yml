@@ -19,6 +19,8 @@ jobs:
   job_call_initiation:
     name: Initiation
     runs-on: ubuntu-latest
+    outputs:
+      azPolicyLensModuleVersion: ${{ steps.initiation.outputs.azPolicyLensModuleVersion }}
     steps:
       - name: 'Checkout'
         uses: actions/checkout@v6
@@ -48,6 +50,7 @@ jobs:
           topLevelManagementGroupName: 'contoso-dev'
           environment: 'dev'
           buildArtifactName: 'policy_doc_dev'
+          azPolicyLensModuleVersion: ${{ needs.job_call_initiation.outputs.azPolicyLensModuleVersion }}
 
   job_discovery_prod:
     name: Environment Discovery - Prod
@@ -70,6 +73,7 @@ jobs:
           topLevelManagementGroupName: 'contoso'
           environment: 'prod'
           buildArtifactName: 'policy_doc_prod'
+          azPolicyLensModuleVersion: ${{ needs.job_call_initiation.outputs.azPolicyLensModuleVersion }}
 
   job_parse_config_dev:
     name: Parse Config - Dev
@@ -145,6 +149,7 @@ jobs:
           subscriptionIds: ${{ matrix.wiki.subscriptionIds }}
           childManagementGroupId: ${{ matrix.wiki.childManagementGroupId }}
           buildArtifactName: 'policy_doc_dev'
+          azPolicyLensModuleVersion: ${{ needs.job_call_initiation.outputs.azPolicyLensModuleVersion }}
           aesEncryptionKey: ${{ secrets.ENCRYPTIONKEY }}
           aesEncryptionIV: ${{ secrets.ENCRYPTIONIV }}
           githubUserId: ${{ env.GithubUserId }}
@@ -190,6 +195,7 @@ jobs:
           subscriptionIds: ${{ matrix.wiki.subscriptionIds }}
           childManagementGroupId: ${{ matrix.wiki.childManagementGroupId }}
           buildArtifactName: 'policy_doc_prod'
+          azPolicyLensModuleVersion: ${{ needs.job_call_initiation.outputs.azPolicyLensModuleVersion }}
           aesEncryptionKey: ${{ secrets.ENCRYPTIONKEY }}
           aesEncryptionIV: ${{ secrets.ENCRYPTIONIV }}
           githubUserId: ${{ env.GithubUserId }}
