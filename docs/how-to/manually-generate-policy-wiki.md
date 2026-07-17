@@ -128,6 +128,14 @@ You will need Git installed on your machine to clone the wiki repository.
     * Optional: Specify the path to the custom security control definitions if you have custom security controls that you want to include in the generated wiki. If not, you can leave it empty or remove the line in the code.
 
     ```powershell
+      function Get-GitRoot {
+        $gitRootDir = Invoke-expression 'git rev-parse --show-toplevel 2>&1' -ErrorAction SilentlyContinue
+        if (Test-Path $gitRootDir) {
+          Convert-Path $gitRootDir
+        }
+      }
+
+      $gitRoot = Get-GitRoot
       $CustomSecurityControlPath = Join-Path $gitRoot 'security-controls' # Path to custom security control definitions, change as needed
     ```
 
@@ -149,14 +157,7 @@ You will need Git installed on your machine to clone the wiki repository.
 7. **Import AzPolicyLens Modules**
 
   ```powershell
-  function Get-GitRoot {
-    $gitRootDir = Invoke-expression 'git rev-parse --show-toplevel 2>&1' -ErrorAction SilentlyContinue
-    if (Test-Path $gitRootDir) {
-      Convert-Path $gitRootDir
-    }
-  }
 
-  $gitRoot = Get-GitRoot
   Import-module AzPolicyLens
   ```
 
@@ -207,7 +208,7 @@ You will need Git installed on your machine to clone the wiki repository.
     ExemptionExpiresOnWarningDays = $ExemptionExpiresOnWarningDays #Optional, default value is 30 (days)
     ComplianceWarningPercentageThreshold = $ComplianceWarningPercentageThreshold #Optional, default value is 80(%)
     Title = $policyWikiTitle
-    BaseOutputPath = $GitHubEngDevRepoPath
+    BaseOutputPath = $WikiRepositoryPath
     WikiStyle = $wikiStyle
     PageStyle = $pageStyle
     CustomSecurityControlPath = $CustomSecurityControlPath #Remove this line if not using custom security controls

@@ -7,7 +7,9 @@ This section provides answers to some of the most common questions regarding the
 ### Can I manually generate policy documentation without using the pipelines?
 
 <details>
+
 <summary>Click to expand the answer</summary>
+
 You can manually generate policy documentation using the AzPolicyLens PowerShell module. The process is documented in the [How to Manually Generate Policy Wiki](how-to/manually-generate-policy-wiki.md) guide.
 
 </details>

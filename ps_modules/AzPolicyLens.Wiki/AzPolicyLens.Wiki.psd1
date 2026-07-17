@@ -4,7 +4,7 @@
   RootModule        = 'AzPolicyLens.Wiki.psm1'
 
   # Version number of this module.
-  ModuleVersion     = '2.3.2'
+  ModuleVersion     = '2.3.3'
 
   # Supported PSEditions
   # CompatiblePSEditions = @()
@@ -13,13 +13,13 @@
   GUID              = 'd8e25613-aa1b-46db-b893-d1aae3064b9a'
 
   # Author of this module
-  Author            = 'Tao Yang'
+  Author            = 'Microsoft Corporation'
 
   # Company or vendor of this module
-  CompanyName       = 'Tao Yang'
+  CompanyName       = 'Microsoft Corporation'
 
   # Copyright statement for this module
-  Copyright         = '(c) Tao Yang. All rights reserved.'
+  Copyright         = '(c) Microsoft Corporation. All rights reserved.'
 
   # Description of the functionality provided by this module
   Description       = 'Generate Azure Policy documentation in Markdown format. This module is designed to generate documentation in either Azure DevOps or GitHub wiki formats.'
@@ -123,8 +123,8 @@
       # IconUri = ''
 
       # ReleaseNotes of this module
-      ReleaseNotes = '2.3.2 - July 2026
-Version 2.3.2 Release
+      ReleaseNotes = '2.3.3 - July 2026
+Version 2.3.3 Release
 '
 
       # Prerelease string of this module
