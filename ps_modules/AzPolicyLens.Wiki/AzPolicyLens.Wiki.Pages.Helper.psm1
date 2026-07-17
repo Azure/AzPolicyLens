@@ -1561,7 +1561,10 @@ function newPolicyAssignmentPage {
     Write-Verbose "  - [$(getCurrentUTCString)]: Found assigned $($definitionType) '$($Definition.name)'"
     $assignmentOverviewTableData.add('definitionType', $(ConvertToTitleCase -InputString $definitionType))
     if ($item.properties.notScopes.count -gt 0) {
-      $assignmentOverviewTableData.add('excludedScopes', $item.properties.notScopes)
+      $assignmentNotScopes = $item.properties.notScopes | ForEach-Object { "<ul><li>``$($_)``</li></ul>" }
+      $assignmentOverviewTableData.add('excludedScopes', $assignmentNotScopes)
+    } else {
+      $assignmentOverviewTableData.add('excludedScopes', '`None`')
     }
     Write-Verbose "  - [$(getCurrentUTCString)]: Generate Markdown table for the assignment details."
     $assignmentDetailsMarkdownTable = newMarkdownTable -data $assignmentOverviewTableData -Orientation 'vertical' -KeyFormatting @{ 'id' = 'code'; 'scope' = 'code'; "$overViewTableKeyPrefix`Id" = 'code' }
