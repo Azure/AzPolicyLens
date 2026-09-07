@@ -23,7 +23,7 @@ jobs:
       azPolicyLensModuleVersion: ${{ steps.initiation.outputs.azPolicyLensModuleVersion }}
     steps:
       - name: 'Checkout'
-        uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6.1.0
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
           fetch-depth: 0
       - name: 'Initiation'
@@ -42,7 +42,7 @@ jobs:
       AZURE_CREDENTIALS: ${{ secrets.MG_DEV_READER }}
     steps:
       - name: 'Checkout'
-        uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6.1.0
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
           fetch-depth: 0
       - name: Discovery
@@ -65,7 +65,7 @@ jobs:
       AZURE_CREDENTIALS: ${{ secrets.MG_PROD_READER }}
     steps:
       - name: 'Checkout'
-        uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6.1.0
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
           fetch-depth: 0
       - name: Discovery
@@ -87,7 +87,7 @@ jobs:
       - job_discovery_dev
     steps:
       - id: checkout
-        uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6.1.0
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
           fetch-depth: 0
       - id: parse-config
@@ -106,7 +106,7 @@ jobs:
       - job_discovery_prod
     steps:
       - id: checkout
-        uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6.1.0
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
           fetch-depth: 0
       - id: parse-config
@@ -131,7 +131,7 @@ jobs:
       GithubDeployKey: ${{ secrets[matrix.wiki.deployKeySecretName] }}
     steps:
       - name: 'Checkout'
-        uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6.1.0
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
           fetch-depth: 0
 
@@ -178,7 +178,7 @@ jobs:
       GithubDeployKey: ${{ secrets[matrix.wiki.deployKeySecretName] }}
     steps:
       - name: 'Checkout'
-        uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6.1.0
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
           fetch-depth: 0
       - name: Generate Wiki
