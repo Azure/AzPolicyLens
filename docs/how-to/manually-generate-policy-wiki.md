@@ -167,6 +167,7 @@ You will need Git installed on your machine to clone the wiki repository.
     $DiscoveryParams = @{
       TopLevelManagementGroupName = $mg
       Token = $token
+      TokenProvider = { az account get-access-token --resource="https://management.azure.com/" --query "accessToken" -o tsv } #Optional, gets a new token if it expires during a long run
       EncryptionKeyFilePath = $encryptionFilePath #Optional
       OutputFileDirectory = $discoveryFileDirectory
       OutputFileBaseName = $discoveryFileBaseName #Optional

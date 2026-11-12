@@ -38,6 +38,9 @@ Function Invoke-AzplEnvironmentDiscovery {
     [ValidateNotNullOrEmpty()]
     [string]$Token,
 
+    [parameter(Mandatory = $false, HelpMessage = "Optional script block that returns a new Azure OAuth token for 'https://management.azure.com/'. It is called when a request is rejected with HTTP 401, for example when the token expires during a long run.")]
+    [scriptblock]$TokenProvider,
+
     [parameter(Mandatory = $true, ParameterSetName = 'EncryptionViaKeyFile', HelpMessage = 'Additional builtin Policy Metadata from security control frameworks to include.')]
     [parameter(Mandatory = $true, ParameterSetName = 'EncryptionViaKeyText', HelpMessage = 'Additional builtin Policy Metadata from security control frameworks to include.')]
     [parameter(Mandatory = $true, ParameterSetName = 'NoEncryption', HelpMessage = 'Additional builtin Policy Metadata from security control frameworks to include.')]
@@ -75,6 +78,8 @@ Function Invoke-AzplEnvironmentDiscovery {
   $policyExemptionFilePath = Join-Path -Path $OutputFileDirectory -ChildPath 'policyExemptions.json'
   $policyMetadataFilePath = Join-Path -Path $OutputFileDirectory -ChildPath 'policyMetadata.json'
   $complianceDataFilePath = Join-Path -Path $OutputFileDirectory -ChildPath 'complianceData.json'
+
+  setTokenProvider -tokenProvider $TokenProvider
 
   #Get policy resources
   $utcNow = (Get-Date).ToUniversalTime()

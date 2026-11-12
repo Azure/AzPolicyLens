@@ -205,6 +205,17 @@ function ConvertToOrderedHashtable {
   }
 }
 
+#function to set the optional script block that returns a new access token when a request is rejected with HTTP 401
+function setTokenProvider {
+  [CmdletBinding()]
+  param (
+    [parameter(Mandatory = $false)]
+    [scriptblock]$tokenProvider
+  )
+  $script:tokenProvider = $tokenProvider
+  $script:renewedToken = $null
+}
+
 #function to query Azure resource graph using the rest API
 function invokeARGQueryREST {
   [CmdletBinding()]
@@ -244,6 +255,11 @@ function invokeARGQueryREST {
 
   # Build the request URI
   $uri = 'https://management.azure.com/providers/Microsoft.ResourceGraph/resources?api-version=2024-04-01'
+
+  # Use the token renewed by an earlier request, if any
+  if ($script:renewedToken) {
+    $token = $script:renewedToken
+  }
 
   # Build request headers
   $headers = @{
@@ -292,6 +308,7 @@ function invokeARGQueryREST {
     }
 
     $retryCount = 0
+    $tokenRenewed = $false
     $success = $false
     $pageResult = $null
 
@@ -359,6 +376,13 @@ function invokeARGQueryREST {
           # Bad request - don't retry
           Write-Error "[$(getCurrentUTCString)]: Bad request. Please check your query syntax and parameters."
           return $null
+        } elseif ($statusCode -eq 401 -and $script:tokenProvider -and !$tokenRenewed) {
+          # Token expired or revoked - get a new one from the token provider and retry this request once
+          Write-Verbose "[$(getCurrentUTCString)]: Request rejected with HTTP 401. Getting a new token from the token provider." -Verbose
+          $script:renewedToken = & $script:tokenProvider
+          $headers['Authorization'] = "Bearer $($script:renewedToken)"
+          $tokenRenewed = $true
+          $retryCount--
         } elseif ($statusCode -eq 401 -or $statusCode -eq 403) {
           # Authentication/authorization error - don't retry
           Write-Error "[$(getCurrentUTCString)]: Authentication or authorization failed. Please check your permissions."
